@@ -19,6 +19,8 @@ export default function HomeCard({
         className="mt-9 mb-14 w-4/6 h-4/6 object-cover m-auto rounded-full shadow-lg"
         src={picture}
         alt="Illustration feature"
+        width={400}
+        height={300}
       />
 
       <div className="text-base text-center  mb-10">
