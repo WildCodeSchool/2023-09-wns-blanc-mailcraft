@@ -4,11 +4,15 @@ import HomeCard from "../components/Cards/HomeCard";
 
 describe("HomeCard", () => {
   it("renders the first home card component", () => {
-    render(<HomeCard title="Personnalisez vos templates" picture="images/builder.jpg" description="Notre interface drag & drop intuitive vous aide à créer des modèles personnalisés et attrayants en toute simplicité." />);
+    const title = "Importez vos fichiers";
+    const picture = "../../public/images/import.jpg";
+    const description = "Importez et stockez vos fichiers dans votre médiathèque pour les réutiliser facilement dans vos templates.";
+
+    render(<HomeCard title={title} picture={picture} description={description} />);
 
     const cardTitle = screen.getByRole("heading", { level: 1 });
     const cardPicture = screen.getByRole("img");
-    const cardDescription = screen.getByRole("p");
+    const cardDescription = screen.getByText(description);
 
     expect(cardTitle).toBeInTheDocument();
     expect(cardPicture).toBeInTheDocument();
@@ -16,11 +20,15 @@ describe("HomeCard", () => {
   });
 
   it("renders the second home card component", () => {
-    render(<HomeCard title="Importez vos fichiers" picture="images/import.jpg" description="Importez et stockez vos fichiers dans votre médiathèque pour les réutiliser facilement dans vos templates." />);
+    const title = "Personnalisez vos templates";
+    const picture = "../../public/images/builder.jpg";
+    const description = "Notre interface drag & drop intuitive vous aide à créer des modèles personnalisés et attrayants en toute simplicité.";
+
+    render(<HomeCard title={title} picture={picture} description={description} />);
 
     const cardTitle = screen.getByRole("heading", { level: 1 });
     const cardPicture = screen.getByRole("img");
-    const cardDescription = screen.getByRole("p");
+    const cardDescription = screen.getByText(description);
 
     expect(cardTitle).toBeInTheDocument();
     expect(cardPicture).toBeInTheDocument();
@@ -28,11 +36,15 @@ describe("HomeCard", () => {
   });
 
   it("renders the third home card component", () => {
-    render(<HomeCard title="Envoyez vos mails" picture="images/send.jpg" description="Une fois votre template créé, testez le résultat en envoyant vos mails aux contacts de votre choix !" />);
+    const title = "Envoyez vos mails";
+    const picture = "../../public/images/send.jpg";
+    const description = "Une fois votre template créé, testez le résultat en envoyant vos mails aux contacts de votre choix !";
+
+    render(<HomeCard title={title} picture={picture} description={description} />);
 
     const cardTitle = screen.getByRole("heading", { level: 1 });
     const cardPicture = screen.getByRole("img");
-    const cardDescription = screen.getByRole("p");
+    const cardDescription = screen.getByText(description);
 
     expect(cardTitle).toBeInTheDocument();
     expect(cardPicture).toBeInTheDocument();
