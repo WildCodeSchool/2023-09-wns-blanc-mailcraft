@@ -54,6 +54,8 @@ export default function HomeCard({
         className="w-4/6 object-cover m-auto shadow-2xl rounded-lg"
         src={picture}
         alt="Illustration feature"
+        width={400}
+        height={300}
       />
     </div>
       )}
