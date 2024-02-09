@@ -5,11 +5,13 @@ import preview from "@/assets/home_preview.png";
 import mediaLibrary from "../../public/images/import.jpg";
 import builder from "../../public/images/builder.jpg";
 import emailSender from "../../public/images/send.jpg";
+import NavBar from "@/components/NavBar";
 
 export default function Home() {
   return (
     <section className="xl:custom-bg w-full">
       <section className="w-[80%] xl:w-[70%] mx-auto ">
+      <NavBar />
         <section className="flex xl:justify-between flex-col xl:flex-row">
           <div className="xl:text-white mx-auto text-[#000]">
             <h1 className="xl:text-4xl text-3xl xl:w-[60%]">
