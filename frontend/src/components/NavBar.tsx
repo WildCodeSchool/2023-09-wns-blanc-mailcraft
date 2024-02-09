@@ -6,7 +6,7 @@ export default function NavBar() {
         <nav>
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-8 mb-10">
                 <a href="#" className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="images/logo.png" className="h-[5dvh] w-[26dvw] md:h-[8dvh] md:w-[11dvw]" alt="Flowbite Logo" />
+                    <img src="images/logo.png" className="h-[5dvh] w-[30dvw] md:h-[8dvh] md:w-[11dvw]" alt="Flowbite Logo" />
                 </a>
                 <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                     <button type="button" className="text-white text-md bg-[#E83B4E] hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-200 font-medium rounded-lg px-3 md:px-4 py-2 text-center">S'inscrire</button>
@@ -20,16 +20,16 @@ export default function NavBar() {
                 <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-cta">
                     <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-20 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                         <li>
-                            <Link href="/" className="block py-2 px-3 md:p-0 text-xl text-white bg-red-500 rounded md:bg-transparent md:text-red-500" aria-current="page">Accueil</Link>
+                            <Link href="/" className="block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:text-red-500 md:text-xl" aria-current="page">Accueil</Link>
                         </li>
                         <li>
-                            <Link href="/ressources" className="block py-2 px-3 md:p-0 text-xl text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-500">Ressouces</Link>
+                            <Link href="/ressources" className="block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl">Ressouces</Link>
                         </li>
                         <li>
-                            <Link href="/prix" className="block py-2 px-3 md:p-0 text-xl text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-500">Prix</Link>
+                            <Link href="/prix" className="block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl">Prix</Link>
                         </li>
                         <li>
-                            <a href="#" className="block py-2 px-3 md:p-0 text-lg text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-500">Déconnexion</a>
+                            <a href="#" className="block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl">A propos</a>
                         </li>
                     </ul>
                 </div>

@@ -7,7 +7,6 @@ import mediaLibrary from "../../public/images/import.jpg";
 import builder from "../../public/images/builder.jpg";
 import emailSender from "../../public/images/send.jpg";
 
-
 export default function Home() {
   return (
     <section className="xl:custom-bg w-full">
