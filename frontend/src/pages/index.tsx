@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Redbutton from "@/components/buttons/Redbutton";
 import HomeCard from "@/components/Cards/HomeCard";
-import NavBar from "@/components/NavBar";
 import preview from "@/assets/home_preview.png";
 import mediaLibrary from "../../public/images/import.jpg";
 import builder from "../../public/images/builder.jpg";
