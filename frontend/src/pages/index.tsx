@@ -21,7 +21,7 @@ export default function Home() {
             <p className="xl:w-[31%] leading-[30px] my-7">
               Tout ce dont vous avez besoin pour vos modèles d'e-mails
               personnalisés en une seule plateforme, prêt à l'envoi en quelques
-              minutes. Glissez, déposez , envoyez !
+              minutes. Glissez, déposez, envoyez !
             </p>
             <div className="mx-auto xl:mx-0 w-1/2">
               <Redbutton
@@ -37,7 +37,7 @@ export default function Home() {
             <Image src={preview} alt="app preview" width={600} height={200} />
           </div>
         </section>
-        <div className="flex flex-col xl:flex-row justify-between mt-10">
+        <div className="flex flex-col items-center xl:flex-row justify-between mt-10">
           <h2 className="xl:hidden text-center text-2xl  text-[#000]">
             Découvrez nos services :
           </h2>
