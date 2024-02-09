@@ -29,7 +29,7 @@ export default function NavBar() {
                             <Link href="/prix" className="block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl">Prix</Link>
                         </li>
                         <li>
-                            <a href="#" className="block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl">A propos</a>
+                            <Link href="/about" className="block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl">A propos</Link>
                         </li>
                     </ul>
                 </div>
