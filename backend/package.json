@@ -7,13 +7,30 @@
     "test": "test"
   },
   "scripts": {
+    "start": "ts-node-dev ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ts-node": "^10.9.2",
+    "apollo-server": "^3.13.0",
+    "argon2": "^0.40.1",
+    "class-validator": "^0.14.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "graphql": "^15.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.3",
+    "reflect-metadata": "^0.2.1",
+    "type-graphql": "^1.1.1",
+    "typeorm": "^0.3.20",
     "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.11.16",
+    "ts-node": "^10.9.2"
   }
 }
