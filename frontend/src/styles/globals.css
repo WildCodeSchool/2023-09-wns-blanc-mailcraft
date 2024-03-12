@@ -4,7 +4,7 @@
 
 @layer utilities {
   .custom-bg {
-    background-image: url("../assets/bg_home.png");
+    background-image: url("../assets/homepage/bg_home.png");
     background-size: cover;
     background-repeat: no-repeat;
   }
