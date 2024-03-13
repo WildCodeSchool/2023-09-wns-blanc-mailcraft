@@ -12,7 +12,7 @@ jobs:
         run: cd frontend && npm i && npm test
   docker:
     needs: test-front
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -28,5 +28,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mailcraft:latest
-          context: "./frontend"
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mailcraft-frontend:latest
+          context: "{{defaultContext}}:frontend"
