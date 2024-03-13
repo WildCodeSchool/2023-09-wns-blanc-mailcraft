@@ -8,8 +8,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - name: Goto client and run tests
-        run: cd client && npm i && npm test
+      - name: Go to frontend and run tests
+        run: cd frontend && npm i && npm test
   docker:
     needs: test-front
     if: github.ref == 'refs/heads/main'
@@ -29,4 +29,4 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/mailcraft:latest
-          context: "{{defaultContext}}:client"
+          context: "./frontend"
