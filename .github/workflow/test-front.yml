@@ -1,4 +1,4 @@
-name: jest-and-docker-ci
+name: jest-docker-ci
 
 on: push
 
@@ -8,8 +8,9 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - name: Go to frontend and run tests
+      - name: Goto frontend and run tests
         run: cd frontend && npm i && npm test
+
   docker:
     needs: test-front
     if: github.ref == 'refs/heads/main'
@@ -28,5 +29,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mailcraft-frontend:latest
           context: "{{defaultContext}}:frontend"
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mailcraft-frontend:latest
