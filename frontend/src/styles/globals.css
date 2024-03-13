@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .custom-bg {
+    background-image: url("../assets/homepage/bg_home.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
