@@ -11,6 +11,8 @@ COPY postcss.config.js postcss.config.js
 COPY next.config.mjs next.config.mjs
 COPY postcss.config.js postcss.config.js
 COPY tailwind.config.ts tailwind.config.ts
+COPY jest.config.ts jest.config.ts
+COPY jest.setup.ts jest.setup.ts
 
 RUN npm i
 
