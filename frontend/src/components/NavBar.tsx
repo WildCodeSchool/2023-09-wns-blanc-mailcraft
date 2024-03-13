@@ -51,7 +51,7 @@ export default function NavBar() {
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-20 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
             <li>
               <Link
-                href="/"
+                href="/template"
                 className="block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:text-red-500 md:text-xl"
                 aria-current="page"
               >
