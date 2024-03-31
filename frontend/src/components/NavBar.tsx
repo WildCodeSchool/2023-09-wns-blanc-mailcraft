@@ -1,6 +1,7 @@
 import Link from "next/link";
 import logo from "@/assets/homepage/logo.png";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router"; // Import useRouter
 
 interface NavBarProps {
@@ -9,7 +10,11 @@ interface NavBarProps {
 
 export default function NavBar({ issignUpPage }: NavBarProps) {
   const router = useRouter();
-
+  const { isAuthentificated, setIsAuthenticated } = useAuth();
+  const logOut = () => {
+    localStorage.removeItem("token");
+    router.push("/").then(() => window.location.reload());
+  };
   return (
     <nav>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-8 mb-10">
@@ -21,14 +26,25 @@ export default function NavBar({ issignUpPage }: NavBarProps) {
           />
         </a>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          <Link href="/signUp">
+          {!isAuthentificated ? (
+            <Link href="/signUp">
+              <button
+                type="button"
+                className="text-white text-md bg-[#E83B4E] hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-200 font-medium rounded-lg px-3 md:px-4 py-2 text-center"
+              >
+                S&apos;inscrire
+              </button>
+            </Link>
+          ) : (
             <button
               type="button"
               className="text-white text-md bg-[#E83B4E] hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-200 font-medium rounded-lg px-3 md:px-4 py-2 text-center"
+              onClick={logOut}
             >
-                S&apos;inscrire
+              Déconnexion
             </button>
-          </Link>
+          )}
+
           <button
             data-collapse-toggle="navbar-cta"
             type="button"
@@ -62,7 +78,11 @@ export default function NavBar({ issignUpPage }: NavBarProps) {
             <li>
               <Link
                 href="/"
-                className={!issignUpPage ? "block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:text-red-500 md:text-xl" : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"}
+                className={
+                  !issignUpPage
+                    ? "block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:text-red-500 md:text-xl"
+                    : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
+                }
                 aria-current="page"
               >
                 Accueil
@@ -71,7 +91,11 @@ export default function NavBar({ issignUpPage }: NavBarProps) {
             <li>
               <Link
                 href="/ressources"
-                className={!issignUpPage ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl" : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"}
+                className={
+                  !issignUpPage
+                    ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
+                    : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
+                }
               >
                 Ressources
               </Link>
@@ -79,7 +103,11 @@ export default function NavBar({ issignUpPage }: NavBarProps) {
             <li>
               <Link
                 href="/prix"
-                className={!issignUpPage ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl" : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"}
+                className={
+                  !issignUpPage
+                    ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
+                    : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
+                }
               >
                 Prix
               </Link>
@@ -87,7 +115,11 @@ export default function NavBar({ issignUpPage }: NavBarProps) {
             <li>
               <Link
                 href="/about"
-                className={!issignUpPage ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl" : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"}
+                className={
+                  !issignUpPage
+                    ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
+                    : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
+                }
               >
                 A propos
               </Link>
