@@ -222,8 +222,8 @@ const TemplatePage: FunctionComponent = () => {
         newTemplateId = response.data.createTemplate.id;
         // Création de chq zone avec l'id template crée
         const zonePromises = zones.map((zone) => {
-          if (zone.moduleType === "Logo") {
-            console.log("do something here before return");
+          if (zone.moduleType === "logo" || zone.moduleType === "image") {
+            console.log("image upload handling here");
           }
           return createZone({
             variables: {
