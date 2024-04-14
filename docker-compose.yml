@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   backend:
     build: ./backend
@@ -51,6 +49,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  image:
+    build: ./image
+    volumes:
+      - ./image/src:/app/src
+    ports:
+      - 5000:5000
 
   adminer:
     image: adminer

@@ -2,6 +2,8 @@ import * as dotenv from "dotenv";
 import { dataSource } from "./db";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "../resolvers/user.resolver";
+import { TemplateResolver } from "../resolvers/template.resolver";
+import { ZoneResolver } from "../resolvers/zone.resolver";
 import { verifyToken } from "../services/auth.service";
 import { getByEmail } from "../services/user.service";
 import { GraphQLError } from "graphql";
@@ -12,7 +14,7 @@ async function createServer(): Promise<ApolloServer> {
   await dataSource.initialize();
 
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, TemplateResolver, ZoneResolver],
     validate: { forbidUnknownValues: false },
     authChecker: async ({ context }, roles) => {
       try {
