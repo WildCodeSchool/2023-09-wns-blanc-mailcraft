@@ -13,7 +13,7 @@ import { onError } from "@apollo/client/link/error";
 import Layout from "@/components/Layout";
 
 import "@/styles/globals.css";
-// import { AuthContextProvider } from "@/contexts/AuthContext";
+import { AuthContextProvider } from "@/contexts/AuthContext";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql", // temporaire à passer en variable d'env
@@ -49,11 +49,11 @@ const client = new ApolloClient({
 function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      {/* <AuthContextProvider> */}
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-      {/* </AuthContextProvider> */}
+      <AuthContextProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </AuthContextProvider>
     </ApolloProvider>
   );
 }
