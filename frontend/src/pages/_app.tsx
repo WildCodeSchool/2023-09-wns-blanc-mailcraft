@@ -1,11 +1,12 @@
+import dynamic from "next/dynamic";
 import "@/styles/globals.css";
 import Layout from "@/components/Layout";
 import type { AppProps } from "next/app";
 
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
-  );
-}
+const App = ({ Component, pageProps }: AppProps) => (
+  <Layout>
+    <Component {...pageProps} />
+  </Layout>
+);
+
+export default dynamic(() => Promise.resolve(App), { ssr: false });
