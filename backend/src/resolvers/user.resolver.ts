@@ -12,10 +12,14 @@ export class UserResolver {
     return context.user;
   }
 
-  @Mutation(() => User)
-  async signUp(@Arg("userData") userData: UserInput): Promise<User> {
-    const userFromDB = await UserService.create(userData);
-    return userFromDB;
+  @Mutation(() => String)
+  async signUp(@Arg("userData") userData: UserInput): Promise<string> {
+    try {
+      const creationResult = await UserService.create(userData);
+      return creationResult;
+    } catch (error) {
+      throw new Error(String(error));
+    }
   }
 
   @Mutation(() => String)
