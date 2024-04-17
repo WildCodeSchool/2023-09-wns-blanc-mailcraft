@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import "@/styles/globals.css";
 import {
   ApolloClient,
