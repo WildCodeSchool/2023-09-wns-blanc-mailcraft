@@ -8,7 +8,7 @@ COPY next.config.js next.config.js
 
 COPY tailwind.config.ts tailwind.config.ts
 COPY postcss.config.js postcss.config.js
-COPY next.config.mjs next.config.mjs
+COPY next.config.js next.config.js
 COPY next-env.d.ts next-env.d.ts
 COPY package.json package.json
 COPY package-lock.json package-lock.json
