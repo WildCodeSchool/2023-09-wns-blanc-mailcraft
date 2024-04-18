@@ -4,7 +4,6 @@ RUN apk --no-cache add curl
 
 WORKDIR /app
 
-
 COPY tailwind.config.ts tailwind.config.ts
 COPY postcss.config.js postcss.config.js
 COPY next.config.js next.config.js
@@ -29,7 +28,6 @@ WORKDIR /app
 
 # Copier les dossiers à partir de l'image précédente
 COPY --from=builder /app/package.json /app/package.json
-COPY --from=builder /app/public /app/public
 COPY --from=builder /app/.next /app/.next
 
 RUN npm i --production
