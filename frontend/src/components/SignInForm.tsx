@@ -6,6 +6,7 @@ import { gql, useMutation } from "@apollo/client";
 import Image from "next/image";
 import emailSender from "@/assets/homepage/send.jpg";
 import builderImage from "@/assets/homepage/builder.jpg";
+import Link from "next/link";
 
 const SIGN_IN = gql`
   mutation SignIn($password: String!, $email: String!) {
@@ -79,7 +80,7 @@ export default function SignInForm() {
         </div>
       </div>
       <div className="flex items-center">
-        <a href="/signUp">Pas de compte ? Inscrivez-vous.</a>
+        <Link href="/signUp">Pas de compte ? Inscrivez-vous.</Link>
       </div>
       <div className="absolute z-[-1] bottom-20 left-20 transform rotate-[-20deg]">
         <Image src={emailSender} alt="import" width={600} height={200} />

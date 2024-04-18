@@ -18,13 +18,13 @@ export default function NavBar({ issignUpPage }: NavBarProps) {
   return (
     <nav>
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-8 mb-10">
-        <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+        <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Image
             src={logo}
             className="h-[5dvh] w-[30dvw] md:h-[8dvh] md:w-[11dvw]"
             alt="Flowbite Logo"
           />
-        </a>
+        </Link>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           {!isAuthentificated ? (
             <Link href="/signUp">

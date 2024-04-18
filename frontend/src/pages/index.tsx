@@ -22,8 +22,8 @@ export default function Home() {
               <Image src={preview} alt="app preview" width={600} height={200} />
             </div>
             <p className="xl:w-[31%] leading-[30px] my-7">
-              Tout ce dont vous avez besoin pour vos modèles d'e-mails
-              personnalisés en une seule plateforme, prêt à l'envoi en quelques
+              Tout ce dont vous avez besoin pour vos modèles d&apos;e-mails
+              personnalisés en une seule plateforme, prêt à l&apos;envoi en quelques
               minutes. Glissez, déposez, envoyez !
             </p>
             <div className="mx-auto xl:mx-0 w-1/2">
