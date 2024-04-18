@@ -4,7 +4,6 @@ RUN apk --no-cache add curl
 
 WORKDIR /app
 
-COPY next.config.js next.config.js
 
 COPY tailwind.config.ts tailwind.config.ts
 COPY postcss.config.js postcss.config.js
