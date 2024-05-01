@@ -29,7 +29,7 @@ export default function Home() {
             <div className="mx-auto xl:mx-0 w-1/2">
               <Redbutton
                 text="Je m'inscris !"
-                padding={"p-3"}
+                padding={"px-4 py-2"}
                 isBold={false}
                 size={"lg"}
                 link={"/"}

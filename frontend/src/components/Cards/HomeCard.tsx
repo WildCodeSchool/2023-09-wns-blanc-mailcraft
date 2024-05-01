@@ -29,7 +29,7 @@ export default function HomeCard({
   return (
     <div>
       {isDesktop ? (
-        <div className="flex flex-col p-4 bg-[#fff] w-[90dvw]  my-8 md:w-[18dvw] rounded-xl xl:shadow-lg">
+        <div className="flex flex-col p-4 bg-[#fff] w-[90dvw]  my-8 md:w-[18dvw] md:h-[65dvh] rounded-xl xl:shadow-lg">
         <h1 className="font-bold text-lg text-center mt-7">{title}</h1>
   
         <Image
