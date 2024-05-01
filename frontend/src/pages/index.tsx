@@ -32,7 +32,7 @@ export default function Home() {
                 padding={"px-4 py-2"}
                 isBold={false}
                 size={"lg"}
-                link={"/"}
+                link={"/signin"}
                 type="button"
               />
             </div>

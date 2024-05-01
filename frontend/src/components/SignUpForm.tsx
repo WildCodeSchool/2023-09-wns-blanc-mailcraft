@@ -159,7 +159,7 @@ export default function SignupForm() {
           />
         </div>
       </form>
-      <div className="flex items-center">
+      <div className="flex items-center hover:underline mt-5">
         <Link href="/signIn">Déjà inscrit ? Connectez-vous.</Link>
       </div>
       <div className="absolute z-[-1] bottom-25 left-20 transform rotate-[-20deg]">
