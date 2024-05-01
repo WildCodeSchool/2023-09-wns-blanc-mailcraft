@@ -76,7 +76,7 @@ export default function SignupForm() {
         className="pt-6 w-full flex flex-col flex-wrap items-center"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-2xl mb-10">Créer un compte gratuitement</h2>
+        <h2 className="text-2xl mb-10">Créez un compte gratuitement</h2>
         <div className="form-control w-full mb-6 flex justify-center">
           <input
             type="text"
@@ -108,7 +108,7 @@ export default function SignupForm() {
             id="lastname"
             placeholder="Nom"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-black border-0 pl-6"
+            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
             onChange={(e) => handleInputChange(e)}
           />
         </div>
@@ -120,7 +120,7 @@ export default function SignupForm() {
             id="email"
             placeholder="Adresse mail"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-black border-0 pl-6"
+            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
             onChange={(e) => handleInputChange(e)}
           />
         </div>
@@ -132,7 +132,7 @@ export default function SignupForm() {
             id="password"
             placeholder="Mot de passe"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-black border-0 pl-6"
+            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
             onChange={(e) => handleInputChange(e)}
           />
         </div>
@@ -142,15 +142,15 @@ export default function SignupForm() {
             type="password"
             name="password"
             id="password"
-            placeholder="Confirmer le mot de passe"
+            placeholder="Confirmez le mot de passe"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-black border-0 pl-6"
+            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
           />
         </div>
         {<p className="text-red-500"></p>}
-        <div className="mb-6">
+        <div className="mb-6 mt-2">
           <RedButton
-            text="Je m'inscris !"
+            text="Inscription"
             padding={"p-3"}
             isBold={false}
             size={"lg"}

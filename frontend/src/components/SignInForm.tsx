@@ -21,23 +21,23 @@ export default function SignInForm() {
 
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (token) {
-      router.push("/");
-    }
-  });
+  // useEffect(() => {
+  //   if (token) {
+  //     router.push("/");
+  //   }
+  // });
 
-  const [signIn] = useMutation(SIGN_IN, {
-    variables: {
-      email,
-      password,
-    },
-    onCompleted(data: any) {
-      localStorage.setItem("token", data.signIn);
-      setIsAuthenticated(true);
-      router.push("/");
-    },
-  });
+  // const [signIn] = useMutation(SIGN_IN, {
+  //   variables: {
+  //     email,
+  //     password,
+  //   },
+  //   onCompleted(data: any) {
+  //     localStorage.setItem("token", data.signIn);
+  //     setIsAuthenticated(true);
+  //     router.push("/");
+  //   },
+  // });
 
   return (
     <div className="max-w-screen-xl w-full flex flex-col flex-wrap items-center mx-auto py-8 mb-10">
@@ -52,7 +52,7 @@ export default function SignInForm() {
             }}
             placeholder="Adresse mail"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-black border-0 pl-6"
+            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
           />
         </div>
 
@@ -64,21 +64,22 @@ export default function SignInForm() {
             }}
             placeholder="Mot de passe"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-black border-0 pl-6"
+            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
           />
         </div>
-        <div className="mb-6">
+        <div className="mb-6 mt-2">
           <RedButton
             text="Connexion"
             padding={"p-3"}
             isBold={false}
             size={"lg"}
-            onClick={signIn}
+            // onClick={signIn}
             type="submit"
+            link={"/"}
           />
         </div>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center hover:underline mt-5">
         <a href="/signUp">Pas de compte ? Inscrivez-vous.</a>
       </div>
       <div className="absolute z-[-1] bottom-20 left-20 transform rotate-[-20deg]">
