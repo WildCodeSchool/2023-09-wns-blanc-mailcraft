@@ -84,7 +84,7 @@ export default function SignupForm() {
             id="pseudo"
             placeholder="Nom d'utilisateur"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 placeholder:opacity-90 border-0 pl-6"
+            className="input input-bordered border-2 border-red-300 w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 placeholder:opacity-90 border-0 pl-6"
             onChange={(e) => handleInputChange(e)}
           />
         </div>
@@ -96,7 +96,7 @@ export default function SignupForm() {
             id="firstname"
             placeholder="Prénom"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 placeholder:opacity-90 border-0 pl-6"
+            className="input input-bordered border-2 border-red-300 w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 placeholder:opacity-90 border-0 pl-6"
             onChange={(e) => handleInputChange(e)}
           />
         </div>
@@ -108,7 +108,7 @@ export default function SignupForm() {
             id="lastname"
             placeholder="Nom"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
+            className="input input-bordered border-2 border-red-300 w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
             onChange={(e) => handleInputChange(e)}
           />
         </div>
@@ -120,7 +120,7 @@ export default function SignupForm() {
             id="email"
             placeholder="Adresse mail"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
+            className="input input-bordered border-2 border-red-300 w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
             onChange={(e) => handleInputChange(e)}
           />
         </div>
@@ -132,7 +132,7 @@ export default function SignupForm() {
             id="password"
             placeholder="Mot de passe"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
+            className="input input-bordered border-2 border-red-300 w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
             onChange={(e) => handleInputChange(e)}
           />
         </div>
@@ -144,7 +144,7 @@ export default function SignupForm() {
             id="password"
             placeholder="Confirmez le mot de passe"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
+            className="input input-bordered border-2 border-red-300 w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
           />
         </div>
         {<p className="text-red-500"></p>}

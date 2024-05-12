@@ -52,7 +52,7 @@ export default function SignInForm() {
             }}
             placeholder="Adresse mail"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
+            className="input input-bordered border-2 border-red-300 w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
           />
         </div>
 
@@ -64,7 +64,7 @@ export default function SignInForm() {
             }}
             placeholder="Mot de passe"
             required
-            className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
+            className="input input-bordered border-2 border-red-300 w-2/6 rounded-3xl bg-red-100 placeholder:text-gray-400 border-0 pl-6"
           />
         </div>
         <div className="mb-6 mt-2">
