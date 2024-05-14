@@ -29,7 +29,7 @@ export default function HomeCard({
   return (
     <div>
       {isDesktop ? (
-        <div className="flex flex-col p-4 bg-[#fff] w-[90dvw]  my-8 md:w-[18dvw] md:h-[60dvh] rounded-xl xl:shadow-lg">
+        <div className="flex flex-col px-2 bg-[#fff] w-[90dvw] my-8 md:w-[18dvw] md:h-[64dvh] rounded-xl xl:shadow-lg">
         <h1 className="font-bold text-lg text-center mt-7">{title}</h1>
   
         <Image
@@ -38,12 +38,12 @@ export default function HomeCard({
           alt="Illustration feature"
         />
   
-        <div className="text-base text-center  mb-10">
+        <div className="text-base text-center mb-10">
           <p>{description}</p>
         </div>
       </div>
       ) : (
-        <div className="flex flex-col p-4 bg-[#fff] w-[90dvw]  my-8 md:w-[18dvw] rounded-xl xl:shadow-lg">
+        <div className="flex flex-col p-4 bg-[#fff] w-[90dvw] my-8 md:w-[18dvw] rounded-xl xl:shadow-lg">
       <h1 className="font-bold text-2xl text-center mt-7 mb-7">{title}</h1>
 
       <div className="text-base text-center mb-7">

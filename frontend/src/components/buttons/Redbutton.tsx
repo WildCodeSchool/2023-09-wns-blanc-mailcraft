@@ -21,7 +21,7 @@ const RedButton = ({
   onClick,
 }: RedButtonProps) => {
   const buttonClasses = `${padding} ${isBold ? "font-bold" : "font-normal"
-    } text-white bg-red-500 rounded-xl text-${size} w-full xl:w-[9dvw] border hover:border-red-500 hover:bg-white hover:text-red-500 transition duration-300`;
+    } text-white bg-red-500 rounded-xl text-${size} w-full xl:w-[12dvw] border hover:border-red-500 hover:bg-white hover:text-red-500 transition duration-300`;
 
   return (
     <Link href={link}>

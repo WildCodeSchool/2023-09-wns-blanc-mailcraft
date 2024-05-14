@@ -21,7 +21,7 @@ export default function Home() {
             <div className="xl:hidden my-7">
               <Image src={preview} alt="app preview" width={600} height={200} />
             </div>
-            <p className="xl:w-[31%] leading-[30px] my-7">
+            <p className="xl:w-[38%] leading-[30px] my-7">
               Tout ce dont vous avez besoin pour vos modèles d'e-mails
               personnalisés en une seule plateforme, prêt à l'envoi en quelques
               minutes. Glissez, déposez, envoyez !
@@ -29,7 +29,7 @@ export default function Home() {
             <div className="mx-auto xl:mx-0 w-1/2">
               <Redbutton
                 text="Je m'inscris !"
-                padding={"px-4 py-2"}
+                padding={"px-4 py-3"}
                 isBold={false}
                 size={"lg"}
                 link={"/signUp"}
@@ -37,12 +37,12 @@ export default function Home() {
               />
             </div>
           </div>
-          <div className="hidden xl:block">
+          {/* <div className="hidden xl:block">
             <Image src={preview} alt="app preview" width={600} height={200} />
-          </div>
+          </div> */}
         </section>
         <div className="flex flex-col items-center xl:flex-row justify-between mt-10">
-          <h2 className="xl:hidden text-center text-2xl  text-[#000]">
+          <h2 className="xl:hidden text-center text-2xl text-[#000]">
             Découvrez nos services :
           </h2>
           <HomeCard
@@ -50,13 +50,11 @@ export default function Home() {
             picture={mediaLibrary}
             description="Importez et stockez vos fichiers dans votre médiathèque pour les réutiliser facilement dans vos templates."
           />
-
           <HomeCard
             title="Personnalisez vos templates"
             picture={builder}
             description="Notre interface drag & drop intuitive vous aide à créer des modèles personnalisés et attrayants en toute simplicité."
           />
-
           <HomeCard
             title="Envoyez vos mails"
             picture={emailSender}
