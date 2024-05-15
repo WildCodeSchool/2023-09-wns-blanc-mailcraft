@@ -21,23 +21,23 @@ export default function SignInForm() {
 
   const token = localStorage.getItem("token");
 
-  // useEffect(() => {
-  //   if (token) {
-  //     router.push("/");
-  //   }
-  // });
+  useEffect(() => {
+    if (token) {
+      router.push("/");
+    }
+  });
 
-  // const [signIn] = useMutation(SIGN_IN, {
-  //   variables: {
-  //     email,
-  //     password,
-  //   },
-  //   onCompleted(data: any) {
-  //     localStorage.setItem("token", data.signIn);
-  //     setIsAuthenticated(true);
-  //     router.push("/");
-  //   },
-  // });
+  const [signIn] = useMutation(SIGN_IN, {
+    variables: {
+      email,
+      password,
+    },
+    onCompleted(data: any) {
+      localStorage.setItem("token", data.signIn);
+      setIsAuthenticated(true);
+      router.push("/");
+    },
+  });
 
   return (
     <div className="max-w-screen-xl w-full flex flex-col flex-wrap items-center mx-auto py-8 mb-10">
