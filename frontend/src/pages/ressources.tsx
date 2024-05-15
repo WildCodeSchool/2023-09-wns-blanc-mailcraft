@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
-
-const TextStyle = dynamic(() => import('@/components/TextStyle/TextStyle'), { ssr: false });
+import TextStyle from '@/components/TextDesign/TextStyle';
+import TextColor from '@/components/TextDesign/TextColor';
 
 const RessourcesPage: React.FC = () => {
   const [content, setContent] = useState('Ressources');
@@ -11,10 +10,11 @@ const RessourcesPage: React.FC = () => {
     underline: false,
     fontSize: '',
     fontFamily: '',
-    textAlign: ''
+    textAlign: '',
+    color: ''
   });
 
-  const applyStyle = (style: string, value?: string) => {
+  const applyStyle = (style: string, value?: string | boolean) => {
     setStyles((prevStyles) => ({
       ...prevStyles,
       [style]: value !== undefined ? value : !prevStyles[style],
@@ -31,6 +31,7 @@ const RessourcesPage: React.FC = () => {
       ${styles.fontSize ? `font-size: ${styles.fontSize};` : ''}
       ${styles.fontFamily ? `font-family: ${styles.fontFamily};` : ''}
       ${styles.textAlign ? `text-align: ${styles.textAlign};` : ''}
+      ${styles.color ? `color: ${styles.color};` : ''}
     `;
 
     return `<span style="${styleString}">${styledContent}</span>`;
@@ -47,6 +48,9 @@ const RessourcesPage: React.FC = () => {
           onFontSizeChange={(size) => applyStyle('fontSize', size)}
           onFontFamilyChange={(family) => applyStyle('fontFamily', family)}
           onJustify={(align) => applyStyle('textAlign', align)}
+        />
+        <TextColor
+          onColorChange={(color) => applyStyle('color', color)}
         />
       </div>
     </>
