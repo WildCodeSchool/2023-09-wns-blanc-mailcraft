@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Redbutton from "@/components/buttons/Redbutton";
+import Redbutton from "@/components/Buttons/Redbutton";
 import HomeCard from "@/components/Cards/HomeCard";
 import preview from "@/assets/homepage/home_preview.png";
 import mediaLibrary from "@/assets/homepage/import.jpg";

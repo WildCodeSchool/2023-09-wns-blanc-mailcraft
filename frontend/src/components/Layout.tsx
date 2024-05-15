@@ -1,5 +1,6 @@
 import Head from "next/head";
 import React from "react";
+import { Editor } from "@tinymce/tinymce-react";
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
