@@ -4,7 +4,7 @@ import underlineIcon from "@/assets/template-page/underlineIcon.png";
 import alignLeft from "@/assets/template-page/alignLeft.png";
 import alignCenter from "@/assets/template-page/alignCenter.png";
 import alignRight from "@/assets/template-page/alignRight.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface StyleIconProps {
   src: string;

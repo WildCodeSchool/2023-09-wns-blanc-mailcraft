@@ -10,10 +10,13 @@ import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
-import Layout from "@/components/Layout";
-
-import "@/styles/globals.css";
 import { AuthContextProvider } from "@/contexts/AuthContext";
+import { TemplateProvider } from "@/contexts/TemplateContext";
+import Modal from "react-modal";
+
+Modal.setAppElement("#__next");
+
+const Layout = dynamic(() => import("@/components/Layout"), { ssr: false });
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql", // temporaire à passer en variable d'env
@@ -50,9 +53,11 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <AuthContextProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <TemplateProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </TemplateProvider>
       </AuthContextProvider>
     </ApolloProvider>
   );

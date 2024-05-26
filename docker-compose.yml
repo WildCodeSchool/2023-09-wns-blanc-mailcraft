@@ -52,6 +52,8 @@ services:
 
   image:
     build: ./image
+    env_file:
+      - .env
     volumes:
       - ./image/src:/app/src
     ports:

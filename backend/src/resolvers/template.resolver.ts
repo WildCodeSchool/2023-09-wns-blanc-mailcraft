@@ -26,4 +26,35 @@ export class TemplateResolver {
       throw new Error(`error while deleting template` + e);
     }
   }
+
+  @Query(() => [Template])
+  async getAllUserCreatedTemplates(
+    @Arg("userId") userId: number
+  ): Promise<Template[] | string> {
+    try {
+      return await templateService.getAllUserCreatedTemplates(userId);
+    } catch (error) {
+      throw new Error(`error while fetching templates` + error);
+    }
+  }
+
+  @Query(() => [Template])
+  async getAllUserDraftTemplates(
+    @Arg("userId") userId: number
+  ): Promise<Template[] | string> {
+    try {
+      return await templateService.getAllUserDraftTemplates(userId);
+    } catch (error) {
+      throw new Error(`error while fetching templates` + error);
+    }
+  }
+
+  @Query(() => [Template])
+  async getAllTemplates(): Promise<Template[] | string> {
+    try {
+      return await templateService.getAllTemplates();
+    } catch (error) {
+      throw new Error(`error while fetching templates` + error);
+    }
+  }
 }
