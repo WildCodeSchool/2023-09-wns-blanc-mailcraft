@@ -1,11 +1,12 @@
 import { useTemplate } from "@/contexts/TemplateContext";
-import { useEffect } from "react";
-const ZoneCreation = () => {
-  const { setZones, zones } = useTemplate();
+import React from "react";
 
-  useEffect(() => {
-    console.log("zones are", zones);
-  }, [zones]);
+interface ZoneCreationProps {
+  arrayToSet?: string;
+}
+
+const ZoneCreation: React.FC<ZoneCreationProps> = ({ arrayToSet }) => {
+  const { setZones, setTemplateToModify, templateToModify } = useTemplate();
 
   const createZones = (number: number) => {
     const newZones = Array.from({ length: number }).map((_, index) => ({
@@ -15,7 +16,11 @@ const ZoneCreation = () => {
       content: "",
     }));
 
-    setZones(newZones);
+    if (arrayToSet === "templateToModify" && templateToModify) {
+      setTemplateToModify({ ...templateToModify, zones: newZones });
+    } else {
+      setZones(newZones);
+    }
   };
 
   return (

@@ -45,6 +45,7 @@ const MyTemplates = () => {
           data.getAllUserCreatedTemplates.map((template: any) => (
             <TemplateCard
               key={template.id}
+              templateId={template.id}
               title={template.title}
               zones={template.zones}
               isCreated={true}

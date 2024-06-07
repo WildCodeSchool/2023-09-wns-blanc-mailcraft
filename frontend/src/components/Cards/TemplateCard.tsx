@@ -1,13 +1,15 @@
 import React from "react";
 import { IZone } from "@/types/interfaces/template/template-interfaces";
-import dynamic from "next/dynamic";
+import Link from "next/link";
 interface TemplateCardProps {
+  templateId: number;
   title: string;
   zones: IZone[];
   isCreated: boolean;
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({
+  templateId,
   title,
   zones,
   isCreated,
@@ -33,9 +35,11 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           </div>
         ))}
         <div className="action-panel absolute top-0 right-0 h-full w-16 bg-gray-100 flex flex-col items-center justify-center transform translate-x-full opacity-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:opacity-100">
-          <button className="mb-2 text-green-600 hover:text-green-800">
-            <i className="fas fa-save"></i>
-          </button>
+          <Link href={`/template/modification/${templateId}`}>
+            <button className="mb-2 text-green-600 hover:text-green-800">
+              <i className="fas fa-save"></i>
+            </button>
+          </Link>
           <button className="text-red-600 hover:text-red-800">
             <i className="fas fa-trash"></i>
           </button>

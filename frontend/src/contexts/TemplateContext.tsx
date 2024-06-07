@@ -20,6 +20,10 @@ interface TemplateContextType {
   setImgPreviews: React.Dispatch<
     React.SetStateAction<ImgPreviews[] | undefined>
   >;
+  templateToModify: Template | null;
+  setTemplateToModify: React.Dispatch<React.SetStateAction<Template | null>>;
+  oldZonesId: any;
+  setOldZonesId: React.Dispatch<React.SetStateAction<any>>;
   // listElements: IListElement[];
 }
 
@@ -46,6 +50,10 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
   const [imgPreviews, setImgPreviews] = useState<ImgPreviews[] | undefined>(
     undefined
   );
+  const [templateToModify, setTemplateToModify] = useState<Template | null>(
+    null
+  );
+  const [oldZonesId, setOldZonesId] = useState<any>(null);
 
   // const listElements: IListElement[] = [
   //   {
@@ -77,6 +85,10 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
         imgPreviews,
         setImgPreviews,
         // listElements,
+        templateToModify,
+        setTemplateToModify,
+        oldZonesId,
+        setOldZonesId,
       }}
     >
       {children}

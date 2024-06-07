@@ -1,7 +1,7 @@
 import { Field, InputType } from "type-graphql";
 import { Length, IsOptional } from "class-validator";
 @InputType()
-export class TemplateInput {
+export class TemplateCreationInput {
   @Field()
   title: string;
 

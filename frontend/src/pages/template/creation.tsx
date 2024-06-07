@@ -6,13 +6,25 @@ import TemplateCreationZone from "@/components/dragNdrop/TemplateCreationZone";
 import DesignCard from "@/components/dragNdrop/DesignCard";
 import Link from "next/link";
 import { useTemplateUtils } from "@/utils/templateUtils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ArrayToIterate } from "@/types/interfaces/template/template-interfaces";
 
 // La vue principale regroupant toute la logique de création d'un template
 
 const TemplatePage: React.FC = () => {
   const { listElements } = useTemplateUtils();
-  const { zones, setZones } = useTemplate();
+  const { zones, setZones, imgPreviews, setImgPreviews } = useTemplate();
+  const [arrayToIterate, setArrayToIterate] = useState<ArrayToIterate | null>(
+    null
+  );
+  useEffect(() => {
+    if (zones) {
+      setArrayToIterate({
+        zones: zones || [],
+        key: "zones",
+      });
+    }
+  }, [zones]);
 
   const onDragEnd = (result: any) => {
     console.log("Result is", result);
@@ -21,8 +33,6 @@ const TemplatePage: React.FC = () => {
     if (!destination) return;
 
     const newZones = zones.map((zone) => {
-      console.log("ID = ", zone.id);
-
       if (zone.id === destination.droppableId) {
         const droppedElement = listElements.find((el) => el.id === draggableId);
         return {
@@ -45,7 +55,7 @@ const TemplatePage: React.FC = () => {
             href="/user/myTemplates"
             className="p-2 border-red-950 border-solid border-4 text-black bg-white my-5"
           >
-            Mes Templates
+            Mes Templates test
           </Link>
           <Link
             href="/user/myTemplatesDrafts"
@@ -59,7 +69,7 @@ const TemplatePage: React.FC = () => {
       <section className="w-full flex justify-between">
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
           <DroppableArea />
-          <TemplateCreationZone />
+          <TemplateCreationZone arrayToIterate={arrayToIterate} />
         </DragDropContext>
         <DesignCard />
       </section>

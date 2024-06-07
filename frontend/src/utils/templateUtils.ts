@@ -1,7 +1,12 @@
 import axios from "axios";
 import { ApolloError, gql, useMutation } from "@apollo/client";
 import { useTemplate } from "@/contexts/TemplateContext";
-import { IListElement } from "@/types/interfaces/template/template-interfaces";
+
+import {
+  IListElement,
+  IZone,
+  Template,
+} from "@/types/interfaces/template/template-interfaces";
 import { useState, useEffect } from "react";
 import imageIconSrc from "@/assets/template-page/icon-image.png";
 import logoIconSrc from "@/assets/template-page/lien-de-partage.png";
@@ -10,11 +15,15 @@ import {
   CREATE_TEMPLATE,
   CREATE_ZONE,
   DELETE_TEMPLATE,
+  MODIFY_TEMPLATE,
+  MODIFY_TEMPLATE_ZONES,
 } from "@/client/mutations/template/template-mutations";
+import { useRouter } from "next/router";
 
 // Template utils la plupart des fonctions seront stockées ici
 
 export const useTemplateUtils = () => {
+  const router = useRouter();
   const listElements: IListElement[] = [
     {
       id: "1",
@@ -43,9 +52,14 @@ export const useTemplateUtils = () => {
     setImgPreview,
     imgPreviews,
     setImgPreviews,
+    templateToModify,
+    setTemplateToModify,
+    oldZonesId,
+    setOldZonesId,
   } = useTemplate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalModifyOpen, setIsModalModifyOpen] = useState(false);
   const [templateId, setTemplateId] = useState<number | null>(null);
 
   const [createTemplate] = useMutation(CREATE_TEMPLATE, {
@@ -55,6 +69,22 @@ export const useTemplateUtils = () => {
     },
     onError: (error) => {
       console.error("Error creating template:", error);
+    },
+  });
+
+  const [modifyTemplate] = useMutation(MODIFY_TEMPLATE, {
+    onCompleted: (data) => {
+      setTemplateId(data.modifyTemplate.id);
+      console.log("Template modified with ID:", data.modifyTemplate.id);
+    },
+    onError: (error) => {
+      console.error("Error modifying template:", error);
+    },
+  });
+
+  const [modifyTemplateZones] = useMutation(MODIFY_TEMPLATE_ZONES, {
+    onCompleted: () => {
+      console.log("Zone created");
     },
   });
 
@@ -74,14 +104,16 @@ export const useTemplateUtils = () => {
   });
 
   const saveTemplate = async (templateStatus: string) => {
-    let newTemplateId;
+    let newTemplateId: Number;
     try {
       // 1e étape crée le template qui va accueilir les zones ensuite, avec le statut passé en argument
+
       const response = await createTemplate({
         variables: {
           templateData: { ...template, status: templateStatus },
         },
       });
+
       newTemplateId = response.data.createTemplate.id;
 
       // Création de chaque zone avec l'id template créé
@@ -111,7 +143,7 @@ export const useTemplateUtils = () => {
               moduleType: zone.moduleType,
               content: zoneCloudinaryUrl,
               templateId: newTemplateId,
-              ...(zone.size ? { size: zone.size } : {}),
+              ...(zone.size ? { size: zone.size.toString() } : {}),
             },
           },
         });
@@ -121,7 +153,7 @@ export const useTemplateUtils = () => {
       console.log("Toutes les zones ont été créées avec succès.");
       // Réinitialiser l'état après la création réussie
       setTemplateId(null);
-      resetZones();
+      resetZones("zones");
       if (isModalOpen) {
         closeModal();
       }
@@ -152,18 +184,104 @@ export const useTemplateUtils = () => {
     }
   };
 
-  const handleResetZones = () => {
-    // check d'abord si des zones ont du contenus avant de reset
-    if (zones.some((zone) => zone.content)) {
-      setIsModalOpen(true);
-    } else {
-      resetZones();
+  const saveTemplateToModify = async (template, status: string) => {
+    const templateData = {
+      title: template.title,
+      description: template.description,
+      templateNature: template.templateNature,
+      status: status,
+    };
+    try {
+      const response = await modifyTemplate({
+        variables: {
+          templateId: template.id,
+          templateData: templateData,
+        },
+      });
+
+      const newZonesData = await Promise.all(
+        template?.zones?.map(async (zone: IZone) => {
+          let zoneCloudinaryUrl = zone.content;
+
+          if (
+            (zone.moduleType === "logo" || zone.moduleType === "image") &&
+            zone.content instanceof FileList &&
+            zone.content.length > 0
+          ) {
+            const formData = new FormData();
+            formData.append("file", zone.content[0]);
+            console.log(`Zone DATA IS === ${JSON.stringify(zone)}`);
+
+            const uploadResponse = await axios.post(
+              "http://localhost:5000/template-images-upload",
+              formData,
+              {
+                headers: { "Content-Type": "multipart/form-data" },
+              }
+            );
+            zoneCloudinaryUrl = uploadResponse.data.url;
+            console.log("Uploaded Image URL:", zoneCloudinaryUrl);
+          }
+
+          return {
+            moduleType: zone.moduleType,
+            content: zoneCloudinaryUrl,
+            size: zone.size,
+            templateId: template.id,
+          };
+        })
+      );
+
+      await modifyTemplateZones({
+        variables: {
+          templateId: template.id,
+          newZonesData: newZonesData,
+          oldZonesId: oldZonesId,
+        },
+      });
+      resetZones("templateToModify");
+      if (isModalOpen) {
+        closeModal();
+      }
+      if (status === "created") {
+        router.push("/user/myTemplates").then(() => {
+          window.location.reload();
+        });
+      } else {
+        router.push("/user/myTemplatesDrafts").then(() => {
+          window.location.reload();
+        });
+      }
+
+      console.log("Zones have been successfully updated.");
+    } catch (error) {
+      console.error("Error while updating the template or zones:", error);
     }
   };
 
-  const resetZones = () => {
+  const handleResetZones = (keyToIdentify: string) => {
+    if (keyToIdentify === "templateToModify") {
+      resetZones(keyToIdentify);
+    } else {
+      // check d'abord si des zones ont du contenus avant de reset
+      if (zones.some((zone) => zone.content)) {
+        setIsModalOpen(true);
+      } else {
+        resetZones("zones");
+      }
+    }
+  };
+
+  const resetZones = (keyToIdentify: string) => {
     // l'objet JS,  URL sert à crée des liens pour la preview d'image, à démonter quand il devient obsolète
-    setZones([]);
+    if (keyToIdentify === "templateToModify") {
+      if (templateToModify) {
+        setTemplateToModify({ ...templateToModify, zones: [] });
+      }
+    } else {
+      setZones([]);
+    }
+
     if (imgPreview) {
       URL.revokeObjectURL(imgPreview);
       setImgPreview(undefined);
@@ -177,15 +295,30 @@ export const useTemplateUtils = () => {
     }
   };
 
-  const handleTemplateChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTemplate((prevTemplate) => ({
-      ...prevTemplate,
-      title: e.target.value,
-    }));
+  const handleTemplateChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+    keyToIdentify: string
+  ) => {
+    if (keyToIdentify === "templateToModify") {
+      setTemplateToModify((prevTemplate) => ({
+        ...prevTemplate,
+        title: e.target.value,
+      }));
+    } else {
+      setTemplate((prevTemplate) => ({
+        ...prevTemplate,
+        title: e.target.value,
+      }));
+    }
   };
 
   const createHandleFileChange =
-    (zoneId: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    (zoneId: string) =>
+    (
+      event: React.ChangeEvent<HTMLInputElement>,
+      zones: IZone[],
+      keyToIdentify: string
+    ) => {
       const files = event.target.files;
 
       // La fonction sert à crée des preview d'images associés à la zone target puis à mettre à jour la zone avec le file image en content, elle vide également imgPreview provenant d'URL si besoin
@@ -226,20 +359,49 @@ export const useTemplateUtils = () => {
         }
         return zone;
       });
-      setZones(updatedZones);
+
+      if (keyToIdentify === "templateToModify") {
+        if (templateToModify !== null) {
+          // vérification si non null
+          setTemplateToModify({
+            ...templateToModify,
+            zones: updatedZones,
+          });
+        } else {
+          console.error("templateToModify is null, cannot update zones");
+        }
+      } else {
+        setZones(updatedZones);
+      }
     };
 
   const handleTextChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
-    zoneId: string
+    zones: IZone[],
+    zoneId: string,
+    keyToIdentify: string
   ) => {
+    const value = event.target.value;
     const updatedZones = zones.map((zone) => {
       if (zone.id === zoneId) {
-        return { ...zone, content: event.target.value };
+        return { ...zone, content: value };
       }
       return zone;
     });
-    setZones(updatedZones);
+
+    if (keyToIdentify === "templateToModify") {
+      if (templateToModify !== null) {
+        // vérification si non null
+        setTemplateToModify({
+          ...templateToModify,
+          zones: updatedZones,
+        });
+      } else {
+        console.error("templateToModify is null, cannot update zones");
+      }
+    } else {
+      setZones(updatedZones);
+    }
   };
 
   const getImgPreviewByZoneId = (zoneId: string, moduleType: string) => {
@@ -257,14 +419,47 @@ export const useTemplateUtils = () => {
     }
     return iconSrc;
   };
+  function getImageSrc(zone: IZone, type: string) {
+    console.log(zone);
 
-  const removeZone = (zoneId: string) => {
-    const newZones = zones.filter((zone) => zone.id !== zoneId);
-    setZones(newZones);
+    if (zone.content instanceof FileList && zone.content.length > 0) {
+      const file = zone.content[0];
+      return URL.createObjectURL(file);
+    }
+
+    return zone.content || getImgPreviewByZoneId(zone.id, type);
+  }
+  const removeZone = (
+    zones: IZone[],
+    zoneId: string,
+    keyToIdentify: string
+  ) => {
+    const newZones = zones.filter((zone: IZone) => zone.id !== zoneId);
+
+    if (keyToIdentify === "templateToModify") {
+      if (templateToModify) {
+        setTemplateToModify((prevTemplate) => {
+          if (!prevTemplate) {
+            return null;
+          }
+          return {
+            ...prevTemplate,
+            zones: newZones,
+          };
+        });
+      } else {
+        console.error("templateToModify is null, cannot update zones");
+      }
+    } else {
+      setZones(newZones);
+      console.log("Updated zones:", newZones);
+    }
+
     if (imgPreview) {
       URL.revokeObjectURL(imgPreview);
       setImgPreview(undefined);
     }
+
     if (imgPreviews) {
       const existingPreview = imgPreviews.find((obj) => obj.zoneId === zoneId);
       if (existingPreview) {
@@ -275,6 +470,7 @@ export const useTemplateUtils = () => {
         setImgPreviews(
           updatedPreviews.length > 0 ? updatedPreviews : undefined
         );
+        console.log("Updated imgPreviews:", updatedPreviews);
       }
     }
   };
@@ -283,24 +479,8 @@ export const useTemplateUtils = () => {
     setIsModalOpen(false);
   };
 
-  const onDragEnd = (result: any, listElements: IListElement[]) => {
-    const { destination, draggableId } = result;
-    if (!destination) return;
-
-    // sert à mettre à jour le type de la zone après le drag N drop, "destination" contient de la donnée sur la zone où l'élément est drop, s'il ya une correspondance avec une zone déjà crée on l'a met à jour.
-
-    const newZones = zones.map((zone) => {
-      if (zone.id === destination.droppableId) {
-        const droppedElement = listElements.find((el) => el.id === draggableId);
-        return {
-          ...zone,
-          moduleType: droppedElement ? droppedElement.title.toLowerCase() : "",
-        };
-      }
-      return zone;
-    });
-
-    setZones(newZones);
+  const closeModifyModal = () => {
+    setIsModalModifyOpen(false);
   };
 
   return {
@@ -314,8 +494,13 @@ export const useTemplateUtils = () => {
     removeZone,
     isModalOpen,
     setIsModalOpen,
+    isModalModifyOpen,
+    setIsModalModifyOpen,
     closeModal,
-    onDragEnd,
+    closeModifyModal,
+    // onDragEnd,
     listElements,
+    getImageSrc,
+    saveTemplateToModify,
   };
 };

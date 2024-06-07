@@ -16,6 +16,7 @@ import { User } from "./user";
 @ObjectType()
 @Entity()
 export class Template extends BaseEntity {
+  [key: string]: any;
   @Field()
   @PrimaryGeneratedColumn()
   id: number;

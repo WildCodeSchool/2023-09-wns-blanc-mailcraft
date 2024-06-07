@@ -25,7 +25,7 @@ const MyTemplates = () => {
   const { data, loading, error } = useQuery(GET_USER_DRAFT_TEMPLATES, {
     variables: { userId },
   });
-
+  console.log(data);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -39,6 +39,7 @@ const MyTemplates = () => {
           data.getAllUserDraftTemplates.map((template: any) => (
             <TemplateCard
               key={template.id}
+              templateId={template.id}
               title={template.title}
               zones={template.zones}
               isCreated={false}

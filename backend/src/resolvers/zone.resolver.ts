@@ -13,4 +13,23 @@ export class ZoneResolver {
       throw new Error("Error creating zone" + e); // à typer et renvoyer error
     }
   }
+
+  @Mutation(() => String)
+  async updateZonesForTemplate(
+    @Arg("templateId") templateId: number,
+    @Arg("newZonesData", () => [ZoneInput]) newZonesData: ZoneInput[],
+    @Arg("oldZonesId", () => [Number]) oldZonesId: number[]
+  ): Promise<string> {
+    try {
+      const result = await zoneService.updateTemplateZones(
+        templateId,
+        newZonesData,
+        oldZonesId
+      );
+      return result;
+    } catch (error) {
+      console.error("Failed to update zones for template:", error);
+      throw new Error("Failed to update zones for the template");
+    }
+  }
 }

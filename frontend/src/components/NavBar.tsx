@@ -114,7 +114,7 @@ export default function NavBar({ issignUpPage }: NavBarProps) {
                 </Link>
               ) : (
                 <Link
-                  href="/template"
+                  href="/template/creation"
                   className={
                     !issignUpPage
                       ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"

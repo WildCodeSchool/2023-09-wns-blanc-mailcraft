@@ -7,7 +7,6 @@ export interface IListElement {
 export interface IZone {
   id: string;
   moduleType: string;
-  size: string;
   content: any;
   size?: string;
 }
@@ -23,9 +22,16 @@ export interface ImgPreviews {
 }
 
 export type Template = {
+  id?: number;
   title?: string;
   description?: string;
   templateNature?: string;
   status?: string;
   userId: number;
+  zones?: IZone[];
+};
+
+export type ArrayToIterate = {
+  zones: IZone[];
+  key: string;
 };
