@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateUtils } from "@/utils/templateUtils";
 import { GET_TEMPLATE_BY_ITS_ID } from "@/client/queries/template/template-queries";
-import ZoneCreation from "@/components/dragNdrop/ZoneCreation";
-import DroppableArea from "@/components/dragNdrop/DroppableArea";
-import TemplateCreationZone from "@/components/dragNdrop/TemplateCreationZone";
-import DesignCard from "@/components/dragNdrop/DesignCard";
+import DroppableArea from "@/components/DragNDrop/DroppableArea";
+import TemplateCreationZone from "@/components/DragNDrop/TemplateCreationZone";
 import {
   Template,
   ArrayToIterate,
@@ -17,6 +14,8 @@ import {
   ImgPreviews,
   IListElement,
 } from "@/types/interfaces/template/template-interfaces";
+import DataTemplate from "@/components/DragNDrop/DataTemplate";
+import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
 
 const TemplateModificationPage: React.FC = () => {
   const router = useRouter();
@@ -117,30 +116,16 @@ const TemplateModificationPage: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-between mt-5">
-        <ZoneCreation arrayToSet={"templateToModify"} />
-        <section>
-          <Link
-            href="/user/myTemplates"
-            className="p-2 border-red-950 border-solid border-4 text-black bg-white my-5"
-          >
-            Mes Templates
-          </Link>
-          <Link
-            href="/user/myTemplatesDrafts"
-            className="p-2 border-red-950 border-solid border-4 text-black bg-white my-5"
-          >
-            Mes Brouillons
-          </Link>
-        </section>
-        <section className="invisible"></section>
-      </div>
-      <section className="w-full flex justify-between">
+      <TemplateNavBar 
+      saveButtonColor="[#766060]"
+      saveButtonHoverColor="[#5F4D4D]"
+      />
+      <section className="w-full h-[90dvh] flex justify-between bg-[#766060] gap-24">
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-          <DroppableArea />
+          <DataTemplate />
           <TemplateCreationZone arrayToIterate={arrayToIterate} />
+          <DroppableArea />
         </DragDropContext>
-        <DesignCard />
       </section>
     </>
   );

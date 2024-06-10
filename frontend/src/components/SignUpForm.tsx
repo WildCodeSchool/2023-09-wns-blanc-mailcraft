@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { FormEvent, useState, useEffect } from "react";
 import { gql, useMutation } from "@apollo/client";
-import RedButton from "./buttons/Redbutton";
+import RedButton from "./Buttons/Redbutton";
 import Image from "next/image";
 import emailSender from "@/assets/homepage/send.jpg";
 import importImage from "@/assets/homepage/import.jpg";
@@ -151,7 +151,9 @@ export default function SignupForm() {
         <div className="mb-6">
           <RedButton
             text="Je m'inscris !"
+            color="red-500"
             padding={"p-3"}
+            shadow="0"
             isBold={false}
             size={"lg"}
             link={"/"}

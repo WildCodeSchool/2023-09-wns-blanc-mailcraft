@@ -4,11 +4,11 @@ import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 
-interface NavBarProps {
+interface HomeNavBarProps {
   issignUpPage: boolean;
 }
 
-export default function NavBar({ issignUpPage }: NavBarProps) {
+export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
   const router = useRouter();
   const { isAuthentificated, setIsAuthenticated } = useAuth();
   const logOut = () => {

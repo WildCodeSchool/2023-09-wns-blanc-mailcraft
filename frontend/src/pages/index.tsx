@@ -1,11 +1,11 @@
 import Image from "next/image";
-import Redbutton from "@/components/buttons/Redbutton";
+import Redbutton from "@/components/Buttons/Redbutton";
 import HomeCard from "@/components/Cards/HomeCard";
 import preview from "@/assets/homepage/home_preview.png";
 import mediaLibrary from "@/assets/homepage/import.jpg";
 import builder from "@/assets/homepage/builder.jpg";
 import emailSender from "@/assets/homepage/send.jpg";
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/NavBars/HomeNavBar";
 
 export default function Home() {
   return (
@@ -29,7 +29,9 @@ export default function Home() {
             <div className="mx-auto xl:mx-0 w-1/2">
               <Redbutton
                 text="Je m'inscris !"
+                color="red-500"
                 padding={"p-3"}
+                shadow="0"
                 isBold={false}
                 size={"lg"}
                 link={"/"}

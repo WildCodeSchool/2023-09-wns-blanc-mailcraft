@@ -9,15 +9,15 @@ type ModuleProps = {
 // Définir le composant d'image
 const Module = ({ picture, title }: ModuleProps) => {
   return (
-    <div className="border-black h-24 w-24 m-5 border-2 pb-2">
+    <div className="h-14 w-14 m-5 pb-2">
       <Image
-        className="mt-5 mb-1 w-[20%] h-[20%]  m-auto"
+        className="w-[60%] h-[70%] m-auto"
         src={picture}
         alt="Illustration feature"
       />
 
       <div className="text-center">
-        <p className="font-bold">{title}</p>
+        <p className="mt-1 font-medium">{title}</p>
       </div>
     </div>
   );

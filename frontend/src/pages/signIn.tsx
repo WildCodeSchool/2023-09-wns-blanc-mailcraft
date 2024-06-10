@@ -1,4 +1,4 @@
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/NavBars/HomeNavBar";
 import SignInForm from "@/components/SignInForm";
 
 export default function signInPage() {
