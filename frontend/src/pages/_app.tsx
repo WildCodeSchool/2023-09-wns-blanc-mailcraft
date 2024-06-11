@@ -12,6 +12,7 @@ import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 import { AuthContextProvider } from "@/contexts/AuthContext";
 import { TemplateProvider } from "@/contexts/TemplateContext";
+import { MailingProvider } from "@/contexts/MailContext";
 import Modal from "react-modal";
 
 Modal.setAppElement("#__next");
@@ -54,9 +55,11 @@ function App({ Component, pageProps }: AppProps) {
     <ApolloProvider client={client}>
       <AuthContextProvider>
         <TemplateProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <MailingProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </MailingProvider>
         </TemplateProvider>
       </AuthContextProvider>
     </ApolloProvider>

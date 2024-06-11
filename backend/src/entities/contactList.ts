@@ -32,11 +32,15 @@ export class Contact extends BaseEntity {
   @IsEmail({}, { message: "Invalid email" })
   email: string;
 
+  @Field()
+  @Column()
+  profilepic?: string;
+
   @Field(() => Int)
   @Column()
   userId: number;
 
-  @ManyToOne(() => User, (user) => user.contacts)
+  @ManyToOne(() => User, (user: User) => user.contacts)
   @JoinColumn({ name: "userId" })
   user: User;
 }
