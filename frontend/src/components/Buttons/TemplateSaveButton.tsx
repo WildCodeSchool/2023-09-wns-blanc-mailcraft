@@ -1,21 +1,31 @@
-import React from "react";
-
-type TemplateSaveButtonProps = {
-    color: string;
-    hoverColor: string;
-};
+import { useTemplate } from "@/contexts/TemplateContext";
+import { TemplateNavBarProps } from "@/types/interfaces/props/template-navbar-props";
+import { useTemplateUtils } from "@/utils/templateUtils";
 
 const TemplateSaveButton = ({
-    color,
-    hoverColor
-}: TemplateSaveButtonProps) => {
-    const buttonClasses = `px-6 py-2 text-white bg-${color} hover:bg-${hoverColor} rounded-xl text-md w-full xl:w-[9dvw] shadow-lg`;
+  saveButtonColor,
+  saveButtonHoverColor,
+  arrayToSave,
+}: TemplateNavBarProps) => {
+  const { saveTemplate } = useTemplateUtils();
+  const { setIsModalModifyOpen } = useTemplate();
+  const buttonClasses = `px-6 py-2 text-white bg-${saveButtonColor} hover:bg-${saveButtonHoverColor} rounded-xl text-md w-full xl:w-[9vw] shadow-lg`;
 
-    return (
-        <button type="button" className={buttonClasses}>
-            Terminer
-        </button>
-    );
+  return (
+    <button
+      type="button"
+      className={buttonClasses}
+      onClick={() => {
+        if (arrayToSave === "templateToModify") {
+          setIsModalModifyOpen(true);
+        } else {
+          saveTemplate("created");
+        }
+      }}
+    >
+      Terminer
+    </button>
+  );
 };
 
 export default TemplateSaveButton;

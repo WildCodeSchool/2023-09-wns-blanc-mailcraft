@@ -24,6 +24,8 @@ interface TemplateContextType {
   setTemplateToModify: React.Dispatch<React.SetStateAction<Template | null>>;
   oldZonesId: any;
   setOldZonesId: React.Dispatch<React.SetStateAction<any>>;
+  isModalModifyOpen: boolean;
+  setIsModalModifyOpen: React.Dispatch<React.SetStateAction<boolean>>;
   // listElements: IListElement[];
 }
 
@@ -54,6 +56,7 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
     null
   );
   const [oldZonesId, setOldZonesId] = useState<any>(null);
+  const [isModalModifyOpen, setIsModalModifyOpen] = useState(false);
 
   // const listElements: IListElement[] = [
   //   {
@@ -89,6 +92,8 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
         setTemplateToModify,
         oldZonesId,
         setOldZonesId,
+        isModalModifyOpen,
+        setIsModalModifyOpen,
       }}
     >
       {children}

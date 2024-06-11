@@ -48,14 +48,15 @@ const TemplatePage: React.FC = () => {
   return (
     <>
       <TemplateNavBar
-      saveButtonColor="[#E83B4E]"
-      saveButtonHoverColor="[#BB3241]"
+        saveButtonColor="[#E83B4E]"
+        saveButtonHoverColor="[#BB3241]"
+        arrayToSave={arrayToIterate?.key}
       />
       <section className="w-full h-[90dvh] flex justify-between bg-[#FFEDED] bg-opacity-100 gap-24">
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-          <DataTemplate />
+          <DataTemplate arrayToIterate={arrayToIterate} />
           <TemplateCreationZone arrayToIterate={arrayToIterate} />
-          <DroppableArea />
+          <DroppableArea arrayToSet={arrayToIterate?.key} />
         </DragDropContext>
       </section>
     </>

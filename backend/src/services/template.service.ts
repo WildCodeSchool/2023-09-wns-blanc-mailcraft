@@ -7,10 +7,9 @@ export const createTemplate = async (
 ): Promise<Template> => {
   try {
     const newTemplate = new Template();
-    newTemplate.title = templateData.title || "Title Test";
-    newTemplate.description = templateData.description || "Description test";
-    newTemplate.templateNature =
-      templateData.templateNature || "Nature du template inconnue";
+    newTemplate.title = templateData.title;
+    newTemplate.description = templateData.description || "";
+    newTemplate.templateNature = templateData.templateNature || "Autre";
     newTemplate.status = templateData.status;
     newTemplate.userId = 1;
     await newTemplate.save();

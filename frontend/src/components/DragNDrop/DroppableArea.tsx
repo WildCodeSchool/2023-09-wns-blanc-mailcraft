@@ -2,8 +2,8 @@ import { Droppable, Draggable } from "react-beautiful-dnd";
 import Module from "./Module";
 import { useTemplateUtils } from "@/utils/templateUtils";
 import ZoneCreation from "./ZoneCreation";
-
-const DroppableArea = () => {
+import { DroppableAreaProps } from "@/types/interfaces/props/droppableArea-props-types";
+const DroppableArea: React.FC<DroppableAreaProps> = ({ arrayToSet }) => {
   const { listElements } = useTemplateUtils();
   return (
     <Droppable droppableId="elements" direction="horizontal">
@@ -15,7 +15,7 @@ const DroppableArea = () => {
           style={{ minHeight: "100px" }}
         >
           <h1 className="font-medium text-lg ms-1">Structures</h1>
-            <ZoneCreation />
+          <ZoneCreation arrayToSet={arrayToSet} />
           <h1 className="font-medium text-lg ms-1 mt-7">Modules</h1>
           <div className="grid grid-cols-2 gap-6">
             {listElements.map((el, index) => (
@@ -32,7 +32,8 @@ const DroppableArea = () => {
                 )}
               </Draggable>
             ))}
-            {provided.placeholder}</div>
+            {provided.placeholder}
+          </div>
         </div>
       )}
     </Droppable>

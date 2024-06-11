@@ -1,12 +1,9 @@
 import { useTemplate } from "@/contexts/TemplateContext";
 import React from "react";
 import dragAndDropIcon from "@/assets/template-page/dragNdrop.png";
+import { DroppableAreaProps } from "@/types/interfaces/props/droppableArea-props-types";
 
-interface ZoneCreationProps {
-  arrayToSet?: string;
-}
-
-const ZoneCreation: React.FC<ZoneCreationProps> = ({ arrayToSet }) => {
+const ZoneCreation: React.FC<DroppableAreaProps> = ({ arrayToSet }) => {
   const { setZones, setTemplateToModify, templateToModify } = useTemplate();
 
   const createZones = (number: number) => {
