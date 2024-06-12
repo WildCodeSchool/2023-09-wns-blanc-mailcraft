@@ -2,7 +2,6 @@ import React from "react";
 
 type RedButtonProps = {
   text: string;
-  color: string;
   padding: string;
   isBold: boolean;
   shadow: string;
@@ -14,7 +13,6 @@ type RedButtonProps = {
 
 const RedButton = ({
   text,
-  color,
   padding,
   isBold,
   shadow,
@@ -25,7 +23,7 @@ const RedButton = ({
 }: RedButtonProps) => {
   const buttonClasses = `${padding} ${
     isBold ? "font-bold" : "font-normal"
-  } text-white bg-${color} rounded-xl text-${size} w-full xl:w-[9dvw] shadow-${shadow} hover:bg-red-600`;
+  } text-white bg-red-500 rounded-xl text-${size} w-full xl:w-[10dvw] shadow-${shadow} hover:bg-red-600`;
 
   return (
     <button type={type} className={buttonClasses} onClick={onClick}>

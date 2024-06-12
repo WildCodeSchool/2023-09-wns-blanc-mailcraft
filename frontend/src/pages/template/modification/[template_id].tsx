@@ -132,3 +132,26 @@ const TemplateModificationPage: React.FC = () => {
 };
 
 export default TemplateModificationPage;
+
+// zones = [
+//   [{content: "Test", id: 37, moduleType: "texte", size:"114", __typename: "Zone"}
+// : 
+// 37
+// moduleType
+// : 
+// "texte"
+// size
+// : 
+// "114"
+// __typename
+// : 
+// "Zone"}, {zone2}]
+// [{zone3}, {zone4}, {zone5}]
+// ]
+
+
+// newZones = {
+//   [{zone1}, {zone2}]
+//   [{zone1}, {zone2}, {zone3}]
+//   [{zone1}]
+// }
