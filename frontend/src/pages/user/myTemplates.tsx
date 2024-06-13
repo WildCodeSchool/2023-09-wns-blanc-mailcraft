@@ -43,10 +43,10 @@ const MyTemplates = () => {
     setSearchTerm(event.target.value);
     if (event.target.value) {
       setFilteredTemplates(data.getAllUserCreatedTemplates.filter(template =>
-        template.title.includes(event.target.value)
+        template.title.toLowerCase().includes(event.target.value)
       ));
     } else {
-      setFilteredTemplates(data.getAllUserCreatedTemplates)
+      setFilteredTemplates(JSON.parse(JSON.stringify(data.getAllUserCreatedTemplates)));
     }
   };
 
