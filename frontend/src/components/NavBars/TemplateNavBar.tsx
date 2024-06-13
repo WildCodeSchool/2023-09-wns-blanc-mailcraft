@@ -15,7 +15,7 @@ export default function TemplateNavBar({ saveButtonColor, saveButtonHoverColor }
             <Image
                 src={logo}
                 className="h-[dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7"
-                alt="Flowbite Logo"
+                alt="Mailcraft Logo"
             />
             <TemplateHeaderButton
                 link="/user/myTemplates"

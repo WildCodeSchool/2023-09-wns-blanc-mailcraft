@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import TemplateCard from "@/components/Cards/TemplateCard";
 import UserPagesNavBar from "@/components/NavBars/UserPagesNavBar";
 import Link from "next/link";
@@ -8,6 +8,8 @@ import filterLine from '@/assets/template-page/filter-line.png'
 
 const MyTemplates = () => {
   const [userId, setUserId] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredTemplates, setFilteredTemplates] = useState<any[]>([])
 
   const GET_USER_TEMPLATES = gql`
     query GetAllUserCreatedTemplates($userId: Float!) {
@@ -33,8 +35,20 @@ const MyTemplates = () => {
   useEffect(() => {
     if (data) {
       console.log("User Templates retrieved", data.getAllUserCreatedTemplates);
+      setFilteredTemplates(data.getAllUserCreatedTemplates.map(template => ({ ...template })));
     }
   }, [data]);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    if (event.target.value) {
+      setFilteredTemplates(data.getAllUserCreatedTemplates.filter(template =>
+        template.title.includes(event.target.value)
+      ));
+    } else {
+      setFilteredTemplates(data.getAllUserCreatedTemplates)
+    }
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -42,14 +56,14 @@ const MyTemplates = () => {
   return (
     <>
       <UserPagesNavBar />
-      <section className="w-full min-h-[90dvh] flex flex-col gap-10 justify-start items-center bg-[#FFEDED] bg-opacity-100">
+      <section className="w-full min-h-[90dvh] flex flex-col gap-10 justify-start items-center bg-[#FFEDED] bg-opacity-100 z-50">
         <h1 className="text-3xl text-black text-center font-semibold mt-7 md:mt-10">
           Mes Templates
         </h1>
-        <SearchBar />
+        <SearchBar value={searchTerm} onChange={handleChange} />
         <div className="w-full flex justify-between items-center px-6 md:px-16">
           <Link href="/template/creation">
-            <button className="flex justify-center items-center gap-3 text-white bg-red-500 hover:bg-red-600 rounded-xl w-44 xl:w-[14dvw] h-12 xl:h-[7dvh] shadow-lg">
+            <button className="flex justify-center items-center gap-3 md:text-lg text-white bg-red-500 hover:bg-red-600 rounded-xl w-44 xl:w-[14dvw] h-12 xl:h-[7dvh] shadow-lg">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
@@ -62,8 +76,7 @@ const MyTemplates = () => {
         </div>
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
           {/* Je trie les templates par ordre d'id puis je map pour les afficher */}
-          {data &&
-            [...data.getAllUserCreatedTemplates]
+          {filteredTemplates
               .sort((a: any, b: any) => a.id - b.id)
               .map((template: any) => (
                 <TemplateCard
