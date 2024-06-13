@@ -17,7 +17,7 @@ export default function NavBar({ issignUpPage }: NavBarProps) {
   };
   return (
     <nav>
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-8 mb-10">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-8 mb-1">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Image
             src={logo}
