@@ -32,10 +32,11 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   };
 
   const fakeZones = [
-    [{ content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "48", moduleType: "texte" }, { content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "49", moduleType: "texte" }],
-    [{ content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "50", moduleType: "texte" }, { content: "https://res.cloudinary.com/dyhn66mah/image/upload/v1718008067/Mailcraft/a6m9jwmns4ls1ay4wjpi.jpg", id: "51", moduleType: "image" }, { content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "52", moduleType: "texte" }],
-    [{ content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "53", moduleType: "texte" }]
-  ]
+    { content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre blabla lorem ipsum bkedd ffcff", id: "48", moduleType: "texte" },
+    { content: "https://res.cloudinary.com/dyhn66mah/image/upload/v1718008067/Mailcraft/a6m9jwmns4ls1ay4wjpi.jpg", id: "49", moduleType: "image" },
+    { content: "au revoir", id: "50", moduleType: "texte" },
+
+  ];
 
   console.log("zones ici : ", zones);
 
@@ -62,10 +63,10 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           onTogglePanel={toggleDataPanel}
         />
         <div className="template-container flex flex-col justify-center border border-gray-400 shadow-lg py-5 px-3 w-[16rem] md:w-[21rem] h-[26rem] rounded-lg bg-white relative overflow-hidden group">
-          <div className="flex flex-col relative">
-            {fakeZones.map((zoneArray: any[], zoneIndex: any) => (
-              <div key={zoneIndex} className="flex flex-row justify-center gap-3 my-4 md:mx-2">
-                {zoneArray.map((fakeZone: any, index: any) => (
+          <div className="flex flex-col relative gap-6">
+            {/* {fakeZones.map((zoneArray: any[], zoneIndex: any) => (
+              <div key={zoneIndex} className="flex flex-row justify-center gap-3 my-4 md:mx-2"> */}
+            {/* {zoneArray.map((fakeZone: any, index: any) => (
                   <div
                     key={index}
                     className={`p-2 max-h-32 md:max-h-none text-sm md:text-base border-2 border-dashed border-gray-600 ${getWidthClass(zoneArray.length)}`}
@@ -82,23 +83,25 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                   </div>
                 ))}
               </div>
-            ))}
-            {/* {zones.map((zone: any, index: any) => (
+            ))} */}
+            {fakeZones.map((zone: any, index: any) => (
               <div
                 key={zone.id}
-                className="flex flex-col gap-2 mb-4 p-2 border-2 border-dashed border-gray-300 rounded"
+                className={`p-2 max-h-32 h-28 text-sm md:text-lg border-2 border-dashed border-gray-600`}
               >
                 {zone.moduleType === "texte" ? (
-                  <p className="text-gray-700">{zone.content}</p>
+                  <p className="text-gray-800">{truncateText(zone.content, 15)}</p>
                 ) : (
-                  <img
-                    src={zone.content}
-                    alt="logo or image"
-                    className="w-full h-32 object-cover rounded"
-                  />
+                  <div className="flex items-center justify-center w-full h-full">
+                    <img
+                      src={zone.content}
+                      alt="logo or image"
+                      className="w-full h-full object-contain rounded"
+                    />
+                  </div>
                 )}
               </div>
-            ))} */}
+            ))}
           </div>
           <div className={`template-panel absolute top-0 left-0 w-full h-full bg-[#9F3D3D] z-10 flex flex-col justify-between items-center transition-opacity ${showDataPanel ? 'opacity-100' : 'opacity-0'}`}>
             <h1 className="text-white text-2xl mt-3 font-medium">{title}</h1>

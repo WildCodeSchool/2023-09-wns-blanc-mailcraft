@@ -39,11 +39,12 @@ const MyTemplates = () => {
     }
   }, [data]);
 
+  // Fonction de recherche 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
     if (event.target.value) {
       setFilteredTemplates(data.getAllUserCreatedTemplates.filter(template =>
-        template.title.toLowerCase().includes(event.target.value)
+        template.title.includes(event.target.value)
       ));
     } else {
       setFilteredTemplates(JSON.parse(JSON.stringify(data.getAllUserCreatedTemplates)));
