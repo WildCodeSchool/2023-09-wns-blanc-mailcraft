@@ -14,7 +14,7 @@ export default function TemplateNavBar({ saveButtonColor, saveButtonHoverColor }
         <div className="h-[10dvh] bg-white flex justify-between items-center border-b border-gray-400">
             <Image
                 src={logo}
-                className="h-[dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7"
+                className="h-[5dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7"
                 alt="Mailcraft Logo"
             />
             <TemplateHeaderButton
