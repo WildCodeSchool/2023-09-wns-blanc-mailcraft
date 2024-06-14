@@ -1,49 +1,90 @@
-import { Droppable, Draggable } from "react-beautiful-dnd";
-import Module from "./Module";
 import { useTemplateUtils } from "@/utils/templateUtils";
-
-const DataTemplate = () => {
-
+import { ArrayToIterate } from "@/types/interfaces/template/template-interfaces";
+import { useTemplate } from "@/contexts/TemplateContext";
+import { useEffect } from "react";
+interface DataTemplateProps {
+  arrayToIterate: string;
+}
+const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
+  const { handleTemplateChange } = useTemplateUtils();
+  const { template, templateToModify } = useTemplate();
+  const templateNatures = [
+    "Marketing",
+    "Communication",
+    "Service Client",
+    "Ressources Humaines",
+    "Réseaux Sociaux",
+    "Correspondance",
+    "Propositions",
+    "Juridique",
+    "Autre",
+  ];
   return (
-    <div className="flex flex-col items-center gap-3 p-4 bg-white w-[20%] my-6 ms-5 border border-gray-300 rounded-lg shadow-xl"
+    <div
+      className="flex flex-col items-center gap-3 p-4 bg-white w-[20%] my-6 ms-5 border border-gray-300 rounded-lg shadow-xl"
       style={{ minHeight: "100px" }}
     >
-      <h1 className="font-medium text-xl text-center mb-5 text-gray-800">Informations</h1>
+      <h1 className="font-medium text-xl text-center mb-5 text-gray-800">
+        Informations
+      </h1>
       <div className="flex flex-col gap-8">
         <div className="input flex flex-col gap-2">
-          <label htmlFor="title" className="font-medium ms-1 text-[#5C5A5A]">Titre du template</label>
+          <label htmlFor="title" className="font-medium ms-1 text-[#5C5A5A]">
+            Titre du template
+          </label>
           <div className="form-control w-full">
             <input
-              type="text"
-              name="title"
-              id="title"
+              value={
+                arrayToIterate === "templateToModify"
+                  ? templateToModify?.title
+                  : template?.title
+              }
+              onChange={(e) => {
+                handleTemplateChange(e, "title", arrayToIterate);
+              }}
               required
               className="input input-bordered border-red-100 w-11/12 h-5/6 rounded-md bg-[#FFEDED]"
             />
           </div>
         </div>
         <div className="input flex flex-col gap-2">
-          <label htmlFor="nature" className="font-medium ms-1 text-[#5C5A5A]">Nature du template</label>
+          <label htmlFor="nature" className="font-medium ms-1 text-[#5C5A5A]">
+            Nature du template
+          </label>
           <div className="form-control w-full">
             <select
-              name="nature"
-              id="nature"
+              onChange={(e) => {
+                handleTemplateChange(e, "templateNature", arrayToIterate);
+              }}
               required
               className="select select-bordered border-red-100 w-11/12 h-8 rounded-md bg-[#FFEDED] text-gray-400"
             >
-              <option value="option1" selected>Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+              {templateNatures.map((templateNature, index) => (
+                <option value={templateNature} selected>
+                  {templateNature}
+                </option>
+              ))}
             </select>
           </div>
         </div>
         <div className="input flex flex-col gap-3">
-          <label htmlFor="description" className="font-medium ms-1 text-[#5C5A5A]">Description du template</label>
+          <label
+            htmlFor="description"
+            className="font-medium ms-1 text-[#5C5A5A]"
+          >
+            Description du template
+          </label>
           <div className="form-control w-full">
             <textarea
-              name="description"
-              id="description"
               required
+              value={
+                arrayToIterate === "templateToModify"
+                  ? templateToModify?.description
+                  : template?.description
+              }
+              onChange={(e) => {
+                handleTemplateChange(e, "description", arrayToIterate);
+              }}
               className="textarea textarea-bordered border-red-100 w-11/12 h-56 rounded-md bg-[#FFEDED]"
             ></textarea>
           </div>

@@ -26,17 +26,17 @@ export const useTemplateUtils = () => {
   const router = useRouter();
   const listElements: IListElement[] = [
     {
-      id: "1",
+      id: "module-Texte",
       title: "Texte",
       picture: texteIconSrc,
     },
     {
-      id: "2",
+      id: "module-Image",
       title: "Image",
       picture: imageIconSrc,
     },
     {
-      id: "3",
+      id: "module-Logo", // en cas de bug remettre 1,2,3
       title: "Logo",
       picture: logoIconSrc,
     },
@@ -56,10 +56,11 @@ export const useTemplateUtils = () => {
     setTemplateToModify,
     oldZonesId,
     setOldZonesId,
+    isModalModifyOpen,
+    setIsModalModifyOpen,
   } = useTemplate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalModifyOpen, setIsModalModifyOpen] = useState(false);
   const [templateId, setTemplateId] = useState<number | null>(null);
 
   const [createTemplate] = useMutation(CREATE_TEMPLATE, {
@@ -296,18 +297,22 @@ export const useTemplateUtils = () => {
   };
 
   const handleTemplateChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+    label: string,
     keyToIdentify: string
   ) => {
+    const newValue = e.target.value;
     if (keyToIdentify === "templateToModify") {
       setTemplateToModify((prevTemplate) => ({
         ...prevTemplate,
-        title: e.target.value,
+        [label]: newValue,
       }));
     } else {
       setTemplate((prevTemplate) => ({
         ...prevTemplate,
-        title: e.target.value,
+        [label]: newValue,
       }));
     }
   };

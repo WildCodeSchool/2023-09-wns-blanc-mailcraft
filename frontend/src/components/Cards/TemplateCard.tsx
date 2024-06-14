@@ -23,7 +23,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   templateId,
   title,
   zones,
-  description
+  description,
 }) => {
   const [showDataPanel, setShowDataPanel] = useState(false);
 
@@ -32,10 +32,19 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   };
 
   const fakeZones = [
-    { content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre blabla lorem ipsum bkedd ffcff", id: "48", moduleType: "texte" },
-    { content: "https://res.cloudinary.com/dyhn66mah/image/upload/v1718008067/Mailcraft/a6m9jwmns4ls1ay4wjpi.jpg", id: "49", moduleType: "image" },
+    {
+      content:
+        "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre blabla lorem ipsum bkedd ffcff",
+      id: "48",
+      moduleType: "texte",
+    },
+    {
+      content:
+        "https://res.cloudinary.com/dyhn66mah/image/upload/v1718008067/Mailcraft/a6m9jwmns4ls1ay4wjpi.jpg",
+      id: "49",
+      moduleType: "image",
+    },
     { content: "au revoir", id: "50", moduleType: "texte" },
-
   ];
 
   console.log("zones ici : ", zones);
@@ -55,7 +64,9 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
 
   return (
     <div className="flex flex-col items-end gap-3 relative">
-      <div className="flex justify-center items-center w-4/5 h-10 bg-white border border-gray-400 rounded-lg text-xl me-2">{title}</div>
+      <div className="flex justify-center items-center w-4/5 h-10 bg-white border border-gray-400 rounded-lg text-xl me-2">
+        {title}
+      </div>
       <div className="template-wrapper flex items-center relative">
         <ActionPanelTemplateCard
           templateId={templateId}
@@ -84,13 +95,15 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                 ))}
               </div>
             ))} */}
-            {fakeZones.map((zone: any, index: any) => (
+            {zones.map((zone: any, index: any) => (
               <div
                 key={zone.id}
                 className={`p-2 max-h-32 h-28 text-sm md:text-lg border-2 border-dashed border-gray-600`}
               >
                 {zone.moduleType === "texte" ? (
-                  <p className="text-gray-800">{truncateText(zone.content, 15)}</p>
+                  <p className="text-gray-800">
+                    {truncateText(zone.content, 15)}
+                  </p>
                 ) : (
                   <div className="flex items-center justify-center w-full h-full">
                     <img
@@ -103,12 +116,14 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
               </div>
             ))}
           </div>
-          <div className={`template-panel absolute top-0 left-0 w-full h-full bg-[#9F3D3D] z-10 flex flex-col justify-between items-center transition-opacity ${showDataPanel ? 'opacity-100' : 'opacity-0'}`}>
+          <div
+            className={`template-panel absolute top-0 left-0 w-full h-full bg-[#9F3D3D] z-10 flex flex-col justify-between items-center transition-opacity ${
+              showDataPanel ? "opacity-100" : "opacity-0"
+            }`}
+          >
             <h1 className="text-white text-2xl mt-3 font-medium">{title}</h1>
             <p className="text-white text-xl italic">{description}</p>
-            <div>
-              {/* Div vide pour le placement flexbox */}
-            </div>
+            <div>{/* Div vide pour le placement flexbox */}</div>
           </div>
         </div>
       </div>
