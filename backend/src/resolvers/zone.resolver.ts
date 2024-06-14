@@ -5,31 +5,26 @@ import { ZoneInput } from "../types/createZoneInput";
 
 @Resolver(Zone)
 export class ZoneResolver {
-  @Mutation(() => String)
-  async createZone(@Arg("zoneData") zoneData: ZoneInput) {
+  @Mutation(() => Zone)
+  async createZone(@Arg("templateId") templateId: number) {
     try {
-      return await zoneService.createZone(zoneData);
+      return await zoneService.createZone(templateId);
     } catch (e) {
       throw new Error("Error creating zone" + e); // à typer et renvoyer error
     }
   }
-
   @Mutation(() => String)
-  async updateZonesForTemplate(
+  async deleteTemplateZones(
     @Arg("templateId") templateId: number,
-    @Arg("newZonesData", () => [ZoneInput]) newZonesData: ZoneInput[],
-    @Arg("oldZonesId", () => [Number]) oldZonesId: number[]
+    @Arg("zonesId", () => [Number]) zonesId: number[]
   ): Promise<string> {
     try {
-      const result = await zoneService.updateTemplateZones(
-        templateId,
-        newZonesData,
-        oldZonesId
-      );
-      return result;
+      return await zoneService.deleteTemplateZones(templateId, zonesId);
     } catch (error) {
-      console.error("Failed to update zones for template:", error);
-      throw new Error("Failed to update zones for the template");
+      console.error(
+        `Error while deleting zones for template ${templateId}: ${error}`
+      );
+      throw new Error("Failed to delete zones");
     }
   }
 }

@@ -1,4 +1,5 @@
 import { Field, ObjectType } from "type-graphql";
+import { Zone } from "./zone";
 import {
   BaseEntity,
   Column,
@@ -8,26 +9,33 @@ import {
   JoinColumn,
 } from "typeorm";
 import { Template } from "./template";
-import { SubZone } from "./subZone";
 
 @ObjectType()
 @Entity()
-export class Zone extends BaseEntity {
+export class SubZone extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
   @Field()
   @Column()
-  subZones: SubZone[];
+  moduleType: string; // texte / logo / image
 
   @Field()
   @Column()
-  templateId: number;
+  content: string;
 
-  @ManyToOne(() => Template, (template: Template) => template.zones, {
+  @Field()
+  @Column()
+  size: string;
+
+  @Field()
+  @Column()
+  zoneId: number;
+
+  @ManyToOne(() => Zone, (zone: Zone) => zone.subZones, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "templateId" })
-  template: Template;
+  @JoinColumn({ name: "zoneId" })
+  zone: Zone;
 }

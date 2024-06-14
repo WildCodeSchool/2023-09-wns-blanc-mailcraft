@@ -4,7 +4,7 @@ import { ArrayToIterate } from "@/types/interfaces/template/template-interfaces"
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useEffect } from "react";
 interface DataTemplateProps {
-  arrayToIterate: ArrayToIterate | null;
+  arrayToIterate: string;
 }
 const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
   const { handleTemplateChange } = useTemplateUtils();
@@ -26,12 +26,12 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
           <div className="form-control w-full">
             <input
               value={
-                arrayToIterate?.key === "templateToModify"
+                arrayToIterate === "templateToModify"
                   ? templateToModify?.title
                   : template?.title
               }
               onChange={(e) => {
-                handleTemplateChange(e, "title", arrayToIterate?.key);
+                handleTemplateChange(e, "title", arrayToIterate);
               }}
               required
               className="input input-bordered border-red-100 w-11/12 h-5/6 rounded-md bg-[#FFEDED]"
@@ -45,7 +45,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
           <div className="form-control w-full">
             <select
               onChange={(e) => {
-                handleTemplateChange(e, "templateNature", arrayToIterate?.key);
+                handleTemplateChange(e, "templateNature", arrayToIterate);
               }}
               required
               className="select select-bordered border-red-100 w-11/12 h-8 rounded-md bg-[#FFEDED] text-gray-400"
@@ -69,12 +69,12 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
             <textarea
               required
               value={
-                arrayToIterate?.key === "templateToModify"
+                arrayToIterate === "templateToModify"
                   ? templateToModify?.description
                   : template?.description
               }
               onChange={(e) => {
-                handleTemplateChange(e, "description", arrayToIterate?.key);
+                handleTemplateChange(e, "description", arrayToIterate);
               }}
               className="textarea textarea-bordered border-red-100 w-11/12 h-56 rounded-md bg-[#FFEDED]"
             ></textarea>

@@ -45,14 +45,14 @@ export class Template extends BaseEntity {
   @Column()
   userId: number;
 
-  @OneToMany(() => Zone, (zone) => zone.template)
+  @OneToMany(() => Zone, (zone: Zone) => zone.template)
   @Field(() => [Zone])
   zones: Zone[];
 
   @ManyToMany(() => Folder, (folder) => folder.templates)
   folders: Folder[];
 
-  @ManyToOne(() => User, (user) => user.templates)
+  @ManyToOne(() => User, (user: User) => user.templates)
   @JoinColumn({ name: "userId" })
   user: User;
 }

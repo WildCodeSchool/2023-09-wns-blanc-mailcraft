@@ -4,6 +4,7 @@ import { buildSchema } from "type-graphql";
 import { UserResolver } from "../resolvers/user.resolver";
 import { TemplateResolver } from "../resolvers/template.resolver";
 import { ZoneResolver } from "../resolvers/zone.resolver";
+import { SubZoneResolver } from "../resolvers/subZone.resolver";
 import { verifyToken } from "../services/auth.service";
 import { getByEmail } from "../services/user.service";
 import { GraphQLError } from "graphql";
@@ -14,7 +15,7 @@ async function createServer(): Promise<ApolloServer> {
   await dataSource.initialize();
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, TemplateResolver, ZoneResolver],
+    resolvers: [UserResolver, TemplateResolver, ZoneResolver, SubZoneResolver],
     validate: { forbidUnknownValues: false },
     authChecker: async ({ context }, roles) => {
       try {

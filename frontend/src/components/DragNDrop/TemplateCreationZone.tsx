@@ -1,323 +1,297 @@
-import React, { useRef, useCallback, useEffect, useState } from "react";
-import Modal from "react-modal";
-import Image from "next/image";
+// import React, { useRef, useCallback, useEffect } from "react";
+// import Modal from "react-modal";
+// import Image from "next/image";
+// import { Droppable } from "react-beautiful-dnd";
+// import dynamic from "next/dynamic";
+// import { useTemplate } from "@/contexts/TemplateContext";
+// import { useTemplateUtils } from "@/utils/templateUtils";
+// import { IZone } from "@/types/interfaces/template/template-interfaces";
+
+// // Dynamic import for components that interact with the DOM (SSR disabled)
+// const ResizePanel = dynamic(() => import("react-resize-panel"), { ssr: false });
+
+// // Custom hook for merging refs
+// const useMergedRef = (...refs) =>
+//   useCallback((node) => {
+//     refs.forEach((ref) => {
+//       if (!ref) return;
+//       if (typeof ref === "function") {
+//         ref(node);
+//       } else {
+//         ref.current = node;
+//       }
+//     });
+//   }, []);
+
+// const TemplateCreationZone: React.FC = () => {
+//   const { zones, setZones } = useTemplate();
+//   const {
+//     handleResetZones,
+//     createHandleFileChange,
+//     handleTextChange,
+//     removeZone,
+//     getImageSrc,
+//   } = useTemplateUtils();
+
+//   const fileInputRefs = useRef({});
+//   const resizeObservers = useRef(new Map());
+
+//   const handleResize = useCallback(
+//     (zoneId) => (entries) => {
+//       const entry = entries[0];
+//       const newWidth = Math.ceil(entry.contentRect.width).toString();
+//       console.log(`Resizing zone with ID: ${zoneId}, new width: ${newWidth}px`);
+
+//       setZones((prevZones) =>
+//         prevZones.map((zone) =>
+//           zone.id === zoneId && zone.size !== newWidth
+//             ? { ...zone, size: newWidth }
+//             : zone
+//         )
+//       );
+//     },
+//     [setZones]
+//   );
+
+//   useEffect(() => {
+//     return () => {
+//       resizeObservers.current.forEach((observer) => observer.disconnect());
+//     };
+//   }, []);
+
+//   return (
+//     <section className="bg-white flex flex-col justify-center items-end w-[40%] h-[85dvh] border border-gray-300 p-2 my-4 shadow-lg">
+//       <button onClick={() => handleResetZones("zones")}>
+//         {/* Reset Icon SVG */}
+//         <svg
+//           xmlns="http://www.w3.org/2000/svg"
+//           fill="none"
+//           viewBox="0 0 24 24"
+//           strokeWidth={1.5}
+//           stroke="currentColor"
+//           className="w-6 h-6"
+//         >
+//           <path
+//             strokeLinecap="round"
+//             strokeLinejoin="round"
+//             d="M15.75 9v6m-7.5-6v6m3-9V4.5m0 15V15m0 0a6 6 0 110-12V3m0 12a6 6 0 100 12v-3m0-12V3m0 12v3"
+//           />
+//         </svg>
+//       </button>
+
+//       <div className="w-full h-full flex flex-col justify-center items-center p-4 gap-5 overflow-auto">
+//         {zones.map((zone: IZone) => (
+//           <Droppable key={zone.id} droppableId={zone.id}>
+//             {(provided, snapshot) => (
+//               <ResizePanel direction="e">
+//                 <div
+//                   ref={useMergedRef(provided.innerRef, (node) => {
+//                     if (node) {
+//                       if (!resizeObservers.current.has(zone.id)) {
+//                         const resizeHandler = handleResize(zone.id);
+//                         const observer = new ResizeObserver(resizeHandler);
+//                         observer.observe(node);
+//                         resizeObservers.current.set(zone.id, observer);
+//                       }
+//                     } else {
+//                       resizeObservers.current.get(zone.id)?.disconnect();
+//                       resizeObservers.current.delete(zone.id);
+//                     }
+//                   })}
+//                   {...provided.droppableProps}
+//                   className={`flex flex-col justify-center items-center min-h-[100px] w-full border-2 ${
+//                     snapshot.isDraggingOver
+//                       ? "bg-green-100"
+//                       : "border-dashed border-gray-500"
+//                   } p-4 relative m-2`}
+//                 >
+//                   {/* Zone content rendering based on moduleType */}
+//                   {zone.moduleType === "text" && (
+//                     <textarea
+//                       className="w-full h-40 p-4 border-2 border-gray-300"
+//                       value={zone.content || ""}
+//                       placeholder="YOUR TEXT HERE"
+//                       onChange={(e) =>
+//                         handleTextChange(e, zones, zone.id, "template")
+//                       }
+//                     ></textarea>
+//                   )}
+//                   {zone.moduleType === "image" && (
+//                     <button
+//                       onClick={() => fileInputRefs.current[zone.id]?.click()}
+//                     >
+//                       <Image
+//                         src={getImageSrc(zone, "image")}
+//                         alt="Template Image"
+//                         width={150}
+//                         height={150}
+//                       />
+//                       <input
+//                         type="file"
+//                         hidden
+//                         ref={(el) => (fileInputRefs.current[zone.id] = el)}
+//                         onChange={(event) =>
+//                           createHandleFileChange(zone.id)(
+//                             event,
+//                             zones,
+//                             "template"
+//                           )
+//                         }
+//                       />
+//                     </button>
+//                   )}
+//                   {/* Additional module types can be added here */}
+//                   <button
+//                     className="absolute top-0 right-0 p-2 text-lg"
+//                     onClick={() => removeZone(zones, zone.id, "template")}
+//                   >
+//                     &times;
+//                   </button>
+//                   {provided.placeholder}
+//                 </div>
+//               </ResizePanel>
+//             )}
+//           </Droppable>
+//         ))}
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default TemplateCreationZone;
+
+///////////////////////// VERSION 1 /////////////////////////////////
+
+import React, { useEffect } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import dynamic from "next/dynamic";
 import { useTemplate } from "@/contexts/TemplateContext";
-import { useTemplateUtils } from "@/utils/templateUtils";
-import {
-  IZone,
-  Template,
-  ArrayToIterate,
-} from "@/types/interfaces/template/template-interfaces";
-// import avec ssr désactivé car le composant essaie d'accéder au dom depuis le back , composant pour resize
+
 const ResizePanel = dynamic(() => import("react-resize-panel"), { ssr: false });
 
-// custom hook pour placer plusieurs ref, utile pour obtenir la largeur dynamiquement (à ne pas toucher)
-
-const useMergedRef = (...refs) =>
-  useCallback((node) => {
-    refs.forEach((ref) => {
-      if (!ref) return;
-      if (typeof ref === "function") {
-        ref(node);
-      } else {
-        ref.current = node;
-      }
-    });
-  }, []);
-
 interface TemplateCreationZoneProps {
-  arrayToIterate: ArrayToIterate | null;
+  draggingItemType: string | null;
 }
 
 const TemplateCreationZone: React.FC<TemplateCreationZoneProps> = ({
-  arrayToIterate,
+  draggingItemType,
 }) => {
-  const {
-    zones,
-    setZones,
-    templateToModify,
-    setTemplateToModify,
-    template,
-    isModalModifyOpen,
-  } = useTemplate();
-  const {
-    saveTemplate,
-    handleResetZones,
-    handleTemplateChange,
-    createHandleFileChange,
-    handleTextChange,
-    getImgPreviewByZoneId,
-    removeZone,
-    isModalOpen,
-    closeModifyModal,
-    closeModal,
-    resetZones,
-    getImageSrc,
-    saveTemplateToModify,
-  } = useTemplateUtils();
-
-  const fileInputRefs = useRef({});
-  const resizeObservers = useRef(new Map());
-
-  const handleResize = useCallback(
-    // callback appelé lors du resize d'une zone, sert à obtenir la width dynamiquement et à la set à la bonne zone
-    (zoneId) => (entries) => {
-      const entry = entries[0];
-      const newWidth = Math.ceil(entry.contentRect.width).toString();
-      console.log(`Resizing zone with ID: ${zoneId}, new width: ${newWidth}px`);
-
-      if (arrayToIterate?.key === "templateToModify" && templateToModify) {
-        setTemplateToModify((prevTemplate) => {
-          const updatedZones = prevTemplate?.zones?.map((zone) =>
-            zone.id === zoneId && zone.size !== newWidth
-              ? { ...zone, size: newWidth }
-              : zone
-          );
-          return { ...prevTemplate, zones: updatedZones };
-        });
-      } else if (arrayToIterate?.key === "zones") {
-        setZones((prevZones) =>
-          prevZones.map((zone) =>
-            zone.id === zoneId && zone.size !== newWidth
-              ? { ...zone, size: newWidth }
-              : zone
-          )
-        );
-      }
-    },
-
-    [setZones, setTemplateToModify, arrayToIterate?.key] // à changer plus tard pour mieux gérer le re render
-  );
+  const { zones, setZones } = useTemplate();
 
   useEffect(() => {
-    return () => {
-      resizeObservers.current.forEach((observer) => observer.disconnect());
-    };
-  }, []);
+    if (!zones.length) {
+      setZones([
+        { id: "zone-1", subZones: [] },
+        { id: "zone-2", subZones: [] },
+        { id: "zone-3", subZones: [] },
+      ]);
+    }
+  }, [zones, setZones]);
 
   return (
-    <section
-      className={`bg-white flex flex-col justify-center items-end w-[40%] h-[85dvh] border border-gray-300 p-2 my-4 shadow-lg ${
-        arrayToIterate?.key === "templateToModify"
-      }`}
-    >
-      <button onClick={() => handleResetZones(arrayToIterate?.key || "")}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-6"
+    <section className="flex flex-col w-[65%] p-4 bg-white justify-center mt-10">
+      {zones.map((zone, index) => (
+        <Droppable
+          key={zone.id}
+          droppableId={zone.id}
+          isDropDisabled={draggingItemType === "module"}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-          />
-        </svg>
-      </button>
-      {/* <button
-        className="mx-auto w-auto p-2 border-red-950 border-solid border-4 text-white bg-slate-600"
-        onClick={() =>
-          arrayToIterate?.key === "templateToModify"
-            ? // ? saveTemplateToModify(templateToModify)
-            setIsModalModifyOpen(true)
-            : saveTemplate("created")
-        }
-      >
-        Enregistrer
-      </button> */}
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="Enregistrer comme brouillon"
-        className="bg-white w-2/5 h-1/4 m-auto fixed inset-0 border border-gray-400 rounded-lg flex flex-col justify-between"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
-      >
-        <div className="relative w-full h-full flex flex-col justify-between">
-          <button
-            onClick={closeModal}
-            className="absolute top-2 right-1 p-2 text-gray-700 hover:text-gray-900"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-7 h-7"
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className={`zone ${
+                snapshot.isDraggingOver ? "bg-light-pink" : "bg-white"
+              }`}
+              style={{
+                padding: "20px",
+                border: "2px dashed gray",
+                marginBottom: "20px",
+                display: "flex",
+                flexDirection: "row",
+                gap: "10px",
+              }}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-          <div className="w-full h-3 rounded-t-lg bg-red-500"></div>
-          <h2 className="text-lg font-medium text-center mt-3">
-            Sauvegarder le template comme brouillon ?
-          </h2>
-          <div className="flex justify-around mt-4">
-            <button
-              onClick={() => saveTemplate("draft")}
-              className="px-7 py-2 text-black hover:bg-gray-100 rounded border border-gray-300 shadow-md"
-            >
-              Oui
-            </button>
-            <button
-              onClick={() => resetZones("zones")}
-              className="px-7 py-2 bg-red-700 hover:bg-red-800 text-white rounded border border-gray-300 shadow-md"
-            >
-              Non, supprimer le template
-            </button>
-          </div>
-          <div className="flex justify-around mt-4"></div>
-        </div>
-      </Modal>
-
-      <Modal
-        isOpen={isModalModifyOpen}
-        onRequestClose={closeModifyModal}
-        contentLabel="Enregistrement du template"
-      >
-        <button
-          onClick={closeModifyModal}
-          className="absolute top-0 right-0 p-2 text-lg text-gray-600 hover:text-gray-800"
-        >
-          &times;
-        </button>
-        <h2 className="text-lg font-semibold text-center">
-          Êtes-vous satisfait de ce template ?
-        </h2>
-        <div className="flex justify-around mt-4">
-          <button
-            onClick={() => saveTemplateToModify(templateToModify, "created")}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-          >
-            Oui, enregistrer
-          </button>
-          <button
-            onClick={() => saveTemplateToModify(templateToModify, "draft")}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-          >
-            Non, enregistrer en brouillon
-          </button>
-        </div>
-      </Modal>
-
-      <div className="w-full h-full flex flex-col justify-center items-center p-4 gap-5 overflow-auto">
-        {arrayToIterate?.zones?.map((zone: IZone) => (
-          <Droppable key={zone.id} droppableId={zone.id}>
-            {(provided, snapshot) => (
-              <ResizePanel direction="e">
-                <div
-                  // node est l'élément DOM que l'on veut observer, à savoir la zone que l'on resize, voir la doc de ResizeObserver
-                  ref={useMergedRef(provided.innerRef, (node) => {
-                    if (node) {
-                      if (!resizeObservers.current.has(zone.id)) {
-                        const resizeHandler = handleResize(zone.id);
-                        const observer = new ResizeObserver(resizeHandler);
-                        observer.observe(node);
-                        resizeObservers.current.set(zone.id, observer);
-                      }
-                    } else {
-                      resizeObservers.current.get(zone.id)?.disconnect();
-                      resizeObservers.current.delete(zone.id);
-                    }
-                  })}
-                  {...provided.droppableProps}
-                  className={`flex flex-col justify-center items-center min-h-[100px] w-[400px] border-2 ${
-                    snapshot.isDraggingOver
-                      ? "bg-green-100"
-                      : "border-dashed border-gray-500"
-                  } p-4 relative m-2 min-w-[150px] max-w-[430px]`}
-                >
-                  {zone.moduleType === "texte" && (
-                    <textarea
-                      className="w-full h-40 p-4 border-2 border-gray-300"
-                      value={zone.content ? zone.content : ""}
-                      placeholder="YOUR TEXT HERE"
-                      onChange={(e) =>
-                        handleTextChange(
-                          e,
-                          arrayToIterate.zones,
-                          zone.id,
-                          arrayToIterate.key
-                        )
-                      }
-                    ></textarea>
-                  )}
-                  {zone.moduleType === "image" && (
-                    <button
-                      onClick={() => fileInputRefs.current[zone.id]?.click()}
-                    >
-                      <Image
-                        src={getImageSrc(zone, "image")}
-                        alt="app preview"
-                        width={40}
-                        height={40}
-                      />
-                      <input
-                        type="file"
-                        hidden
-                        ref={(el) => (fileInputRefs.current[zone.id] = el)}
-                        onChange={(event) =>
-                          createHandleFileChange(zone.id)(
-                            event,
-                            arrayToIterate.zones,
-                            arrayToIterate.key
-                          )
-                        }
-                      />
-                    </button>
-                  )}
-                  {zone.moduleType === "logo" && (
-                    <button
-                      onClick={() => fileInputRefs.current[zone.id]?.click()}
-                    >
-                      <Image
-                        src={getImageSrc(zone, "logo")}
-                        alt="app preview"
-                        width={40}
-                        height={40}
-                      />
-                      <input
-                        type="file"
-                        hidden
-                        ref={(el) => (fileInputRefs.current[zone.id] = el)}
-                        onChange={(event) =>
-                          createHandleFileChange(zone.id)(
-                            event,
-                            arrayToIterate.zones,
-                            arrayToIterate.key
-                          )
-                        }
-                      />
-                    </button>
-                  )}
-                  <button
-                    className="absolute top-0 right-0 p-2"
-                    onClick={() =>
-                      removeZone(
-                        arrayToIterate.zones,
-                        zone.id,
-                        arrayToIterate.key
-                      )
-                    }
-                  >
-                    ✕
-                  </button>
-                  {provided.placeholder}
-                </div>
-              </ResizePanel>
-            )}
-          </Droppable>
-        ))}
-      </div>
+              {zone.subZones.length > 0 ? (
+                zone.subZones.map((subZone, subIndex) => (
+                  <Droppable key={subZone.id} droppableId={subZone.id}>
+                    {(providedSub, snapshotSub) => (
+                      <ResizePanel
+                        direction="e"
+                        style={{
+                          flex: `1 1 ${100 / zone.subZones.length}%`,
+                          minWidth: "50px",
+                          minHeight: "100px",
+                          border: "1px dashed blue",
+                          padding: "10px",
+                          position: "relative",
+                        }}
+                        handleClasses={{ right: "resize-handle" }}
+                      >
+                        <div
+                          ref={providedSub.innerRef}
+                          {...providedSub.droppableProps}
+                          className="subzone"
+                          style={{ width: "100%" }}
+                        >
+                          {!subZone.content && (
+                            <i
+                              className="fa fa-plus-circle text-gray-500 cursor-pointer"
+                              style={{
+                                position: "absolute",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                              }}
+                            />
+                          )}
+                          {subZone.moduleType === "texte" && (
+                            <textarea
+                              value={subZone.content || ""}
+                              onChange={(e) => {}}
+                              placeholder="Enter text here"
+                              className="textarea"
+                              style={{ width: "100%", height: "80px" }}
+                            />
+                          )}
+                          {subZone.moduleType === "image" && (
+                            <img
+                              src={subZone.content || "placeholder-image-url"}
+                              alt="Placeholder"
+                              style={{ width: "100%", height: "auto" }}
+                            />
+                          )}
+                          {subZone.moduleType === "logo" && (
+                            <img
+                              src={subZone.content || "placeholder-logo-url"}
+                              alt="Placeholder"
+                              style={{ width: "100px", height: "100px" }}
+                            />
+                          )}
+                          <button
+                            className="absolute top-0 right-0 p-1 text-lg"
+                            onClick={() => {
+                              // Remove subzone logic
+                            }}
+                          >
+                            ×
+                          </button>
+                          {providedSub.placeholder}
+                        </div>
+                      </ResizePanel>
+                    )}
+                  </Droppable>
+                ))
+              ) : (
+                <p className="text-gray-500 text-center flex-grow">
+                  Drop columns here
+                </p>
+              )}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      ))}
     </section>
   );
 };

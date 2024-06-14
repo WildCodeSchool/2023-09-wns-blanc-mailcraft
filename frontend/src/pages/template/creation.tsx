@@ -1,62 +1,89 @@
+import React, { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { useTemplate } from "@/contexts/TemplateContext";
-import DroppableArea from "@/components/DragNDrop/DroppableArea";
-import TemplateCreationZone from "@/components/DragNDrop/TemplateCreationZone";
-import { useTemplateUtils } from "@/utils/templateUtils";
-import { useEffect, useState } from "react";
-import { ArrayToIterate } from "@/types/interfaces/template/template-interfaces";
 import DataTemplate from "@/components/DragNDrop/DataTemplate";
+import TemplateCreationZone from "@/components/DragNDrop/TemplateCreationZone";
+import DroppableArea from "@/components/DragNDrop/DroppableArea";
 import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
+import { useTemplate } from "@/contexts/TemplateContext";
+import { useTemplateUtils } from "@/utils/templateUtils";
 
-// La vue principale regroupant toute la logique de création d'un template
-
-const TemplatePage: React.FC = () => {
+const TemplatePage = () => {
   const { listElements } = useTemplateUtils();
-  const { zones, setZones, imgPreviews, setImgPreviews } = useTemplate();
-  const [arrayToIterate, setArrayToIterate] = useState<ArrayToIterate | null>(
-    null
-  );
-  useEffect(() => {
-    if (zones) {
-      setArrayToIterate({
-        zones: zones || [],
-        key: "zones",
-      });
+  const { zones, setZones } = useTemplate();
+  const [arrayToIterate, setArrayToIterate] = useState(null);
+  const [draggingType, setDraggingType] = useState("");
+
+  const onDragStart = (start) => {
+    const { draggableId } = start;
+    if (draggableId.startsWith("module-")) {
+      setDraggingType("module");
+    } else if (draggableId.startsWith("column-")) {
+      setDraggingType("column");
     }
-  }, [zones]);
+  };
 
-  const onDragEnd = (result: any) => {
-    console.log("Result is", result);
+  const onDragEnd = (result) => {
+    const { destination, source, draggableId } = result;
+    console.log(result);
 
-    const { destination, draggableId } = result;
-    if (!destination) return;
+    if (!destination) {
+      console.warn("Drag ended outside of any droppable area.");
+      return;
+    }
 
-    const newZones = zones.map((zone) => {
-      if (zone.id === destination.droppableId) {
-        const droppedElement = listElements.find((el) => el.id === draggableId);
-        return {
+    // Handle dropping columns into zones which creates subzones
+    if (
+      draggableId.startsWith("column-") &&
+      destination.droppableId.startsWith("zone-")
+    ) {
+      const numColumns = parseInt(draggableId.split("-")[1], 10);
+      const newSubZones = Array.from({ length: numColumns }, (_, index) => ({
+        id: `${destination.droppableId}-subzone-${index}`,
+        moduleType: "",
+        content: "",
+        size: "default-size",
+      }));
+
+      setZones((zones) =>
+        zones.map((zone) =>
+          zone.id === destination.droppableId
+            ? { ...zone, subZones: newSubZones }
+            : zone
+        )
+      );
+    }
+    // Handle modules being dropped into subzones
+    else if (
+      destination.droppableId.includes("-subzone-") &&
+      draggableId.startsWith("module-")
+    ) {
+      // alert("SubZone");
+      const moduleType = draggableId.split("-")[1].toLowerCase();
+      setZones((zones) =>
+        zones.map((zone) => ({
           ...zone,
-          moduleType: droppedElement ? droppedElement.title.toLowerCase() : "",
-        };
-      }
-      return zone;
-    });
-
-    setZones(newZones);
+          subZones: zone.subZones.map((subZone) =>
+            subZone.id === destination.droppableId
+              ? { ...subZone, moduleType: moduleType, content: "" }
+              : subZone
+          ),
+        }))
+      );
+    }
   };
 
   return (
     <>
       <TemplateNavBar
-        saveButtonColor="[#E83B4E]"
-        saveButtonHoverColor="[#BB3241]"
-        arrayToSave={arrayToIterate?.key}
+        saveButtonColor="#E83B4E"
+        saveButtonHoverColor="#BB3241"
+        arrayToSave={"template"}
       />
       <section className="w-full h-[90dvh] flex justify-between bg-[#FFEDED] bg-opacity-100 gap-24">
-        <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-          <DataTemplate arrayToIterate={arrayToIterate} />
-          <TemplateCreationZone arrayToIterate={arrayToIterate} />
-          <DroppableArea arrayToSet={arrayToIterate?.key} />
+        <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+          <DataTemplate arrayToIterate={"template"} />
+          <TemplateCreationZone draggingItemType={draggingType} />
+          <DroppableArea />
         </DragDropContext>
       </section>
     </>
