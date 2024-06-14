@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { gql, useQuery, useMutation } from "@apollo/client";
 
-
 const InformationsPersonnelles = () => {
   const [prenom, setPrenom] = useState('');
   const [nom, setNom] = useState('');
@@ -9,6 +8,7 @@ const InformationsPersonnelles = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const GET_ME = gql`
     query GetMe {
@@ -20,13 +20,21 @@ const InformationsPersonnelles = () => {
     }
   `;
 
- 
+  const UPDATE_USER = gql`
+    mutation UpdateUser($email: String!, $firstname: String!, $lastname: String!) {
+      updateUserName(email: $email, firstname: $firstname, lastname: $lastname)
+    }
+  `;
 
-  
+  const VERIFY_PASSWORD = gql`
+    mutation VerifyPassword($email: String!, $password: String!) {
+      verifyPassword(email: $email, password: $password)
+    }
+  `;
 
   const { loading, error, data } = useQuery(GET_ME);
-  
-  
+  const [updateUser, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_USER);
+  const [verifyPassword] = useMutation(VERIFY_PASSWORD);
 
   if (loading) return <p>Chargement en cours...</p>;
   if (error) return <p>Erreur : {error.message}</p>;
@@ -38,13 +46,40 @@ const InformationsPersonnelles = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
+    setSuccessMessage('');
 
     if (password !== confirmPassword) {
-      setErrorMessage("Mot de passe incorrect. Veuillez réessayer.");
+      setErrorMessage("Les mots de passe ne correspondent pas. Veuillez réessayer.");
       return;
     }
 
-   
+    try {
+      const { data: verifyData } = await verifyPassword({
+        variables: {
+          email: emailData,
+          password: confirmPassword
+        }
+      });
+
+      if (verifyData.verifyPassword) {
+        const { data: updateData } = await updateUser({
+          variables: {
+            email: email || emailData,
+            firstname: prenom || prenomData,
+            lastname: nom || lastNameData
+          }
+        });
+
+        if (updateData.updateUserName) {
+          setSuccessMessage("Informations personnelles mises à jour avec succès.");
+        }
+      } else {
+        setErrorMessage("Le mot de passe actuel est incorrect. Veuillez réessayer.");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des informations personnelles:", error);
+      setErrorMessage("Erreur lors de la mise à jour des informations personnelles. Veuillez réessayer.");
+    }
   };
 
   return (
@@ -54,6 +89,12 @@ const InformationsPersonnelles = () => {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
           <strong className="font-bold">Erreur!</strong>
           <span className="block sm:inline">{errorMessage}</span>
+        </div>
+      )}
+      {successMessage && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong className="font-bold">Succès! </strong>
+          <span className="block sm:inline">{successMessage}</span>
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4 max-w-full md:max-w-3xl">

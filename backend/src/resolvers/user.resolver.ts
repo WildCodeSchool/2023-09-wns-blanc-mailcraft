@@ -33,4 +33,29 @@ export class UserResolver {
       throw new Error("Invalid Auth");
     }
   }
+
+  @Authorized()
+  @Mutation(() => String)
+  async updateUserName(
+    @Arg("email") email: string,
+    @Arg("firstname") firstname: string,
+    @Arg("lastname") lastname: string
+  ): Promise<string> {
+    try {
+      const updateResult = await UserService.updateUserName(email, firstname, lastname);
+      return updateResult;
+    } catch (error) {
+      throw new Error(String(error));
+    }
+  }
+
+
+  @Mutation(() => Boolean)
+  async verifyPassword(
+    @Arg("email") email: string,
+    @Arg("password") password: string
+  ): Promise<boolean> {
+    const user = await UserService.getByEmail(email);
+    return AuthService.verifyPassword(password, user.hashedPassword);
+  }
 }
