@@ -96,7 +96,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                     <img
                       src={zone.content}
                       alt="logo or image"
-                      className="w-full h-full object-contain rounded"
+                      className="w-full h-full object-contain"
                     />
                   </div>
                 )}
