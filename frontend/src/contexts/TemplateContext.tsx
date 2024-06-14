@@ -12,8 +12,8 @@ import texteIconSrc from "@/assets/template-page/icon-texte.png";
 interface TemplateContextType {
   template: Template;
   setTemplate: React.Dispatch<React.SetStateAction<Template>>;
-  zones: IZone[];
-  setZones: React.Dispatch<React.SetStateAction<IZone[]>>;
+  zones: any;
+  setZones: React.Dispatch<React.SetStateAction<any>>;
   imgPreview: string | undefined;
   setImgPreview: React.Dispatch<React.SetStateAction<string | undefined>>;
   imgPreviews: ImgPreviews[] | undefined;
@@ -24,6 +24,8 @@ interface TemplateContextType {
   setTemplateToModify: React.Dispatch<React.SetStateAction<Template | null>>;
   oldZonesId: any;
   setOldZonesId: React.Dispatch<React.SetStateAction<any>>;
+  isModalModifyOpen: boolean;
+  setIsModalModifyOpen: React.Dispatch<React.SetStateAction<boolean>>;
   // listElements: IListElement[];
 }
 
@@ -45,7 +47,7 @@ interface TemplateProviderProps {
 
 export const TemplateProvider = ({ children }: TemplateProviderProps) => {
   const [template, setTemplate] = useState<Template>({ userId: 1 });
-  const [zones, setZones] = useState<IZone[]>([]);
+  const [zones, setZones] = useState<any>([]);
   const [imgPreview, setImgPreview] = useState<string | undefined>(undefined);
   const [imgPreviews, setImgPreviews] = useState<ImgPreviews[] | undefined>(
     undefined
@@ -54,6 +56,7 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
     null
   );
   const [oldZonesId, setOldZonesId] = useState<any>(null);
+  const [isModalModifyOpen, setIsModalModifyOpen] = useState(false);
 
   // const listElements: IListElement[] = [
   //   {
@@ -89,6 +92,8 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
         setTemplateToModify,
         oldZonesId,
         setOldZonesId,
+        isModalModifyOpen,
+        setIsModalModifyOpen,
       }}
     >
       {children}

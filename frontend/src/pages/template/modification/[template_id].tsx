@@ -116,15 +116,12 @@ const TemplateModificationPage: React.FC = () => {
 
   return (
     <>
-      <TemplateNavBar 
-      saveButtonColor="[#766060]"
-      saveButtonHoverColor="[#5F4D4D]"
-      />
+      <TemplateNavBar arrayToIterate="templateToModify" />
       <section className="w-full h-[90dvh] flex justify-between bg-[#766060] gap-24">
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-          <DataTemplate />
+          <DataTemplate arrayToIterate="templateToModify" />
           <TemplateCreationZone arrayToIterate={arrayToIterate} />
-          <DroppableArea />
+          <DroppableArea arrayToSet="templateToModify" />
         </DragDropContext>
       </section>
     </>
@@ -135,20 +132,19 @@ export default TemplateModificationPage;
 
 // zones = [
 //   [{content: "Test", id: 37, moduleType: "texte", size:"114", __typename: "Zone"}
-// : 
+// :
 // 37
 // moduleType
-// : 
+// :
 // "texte"
 // size
-// : 
+// :
 // "114"
 // __typename
-// : 
+// :
 // "Zone"}, {zone2}]
 // [{zone3}, {zone4}, {zone5}]
 // ]
-
 
 // newZones = {
 //   [{zone1}, {zone2}]
