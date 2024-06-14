@@ -1,15 +1,8 @@
 import Image from "next/image";
 import TemplateHeaderButton from "../Buttons/TemplateHeaderButton";
-import RedButton from "../Buttons/Redbutton";
 import logo from "@/assets/homepage/logo.png";
-import TemplateSaveButton from "../Buttons/TemplateSaveButton";
 
-type TemplateNavBarProps = {
-    saveButtonColor: string;
-    saveButtonHoverColor: string;
-};
-
-export default function TemplateNavBar({ saveButtonColor, saveButtonHoverColor }: TemplateNavBarProps) {
+export default function TemplateNavBar() {
     return (
         <div className="h-[10dvh] bg-white flex justify-between items-center border-b border-gray-400">
             <Image
@@ -28,16 +21,11 @@ export default function TemplateNavBar({ saveButtonColor, saveButtonHoverColor }
                 svgIcon="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
             />
             <div className="me-7">
-                <TemplateSaveButton
-                    color={saveButtonColor}
-                    hoverColor={saveButtonHoverColor}
-                />
+                <button type="button" className='px-6 py-2 text-white bg-red-500 hover:bg-red-600 rounded-xl text-md w-full xl:w-[9dvw] shadow-lg'>
+                    Terminer
+                </button>
             </div>
             {/* <section className="invisible"></section> */}
         </div>
     )
 }
-
-
-
-

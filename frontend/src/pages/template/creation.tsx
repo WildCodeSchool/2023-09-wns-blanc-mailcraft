@@ -47,10 +47,7 @@ const TemplatePage: React.FC = () => {
 
   return (
     <>
-      <TemplateNavBar
-      saveButtonColor="[#E83B4E]"
-      saveButtonHoverColor="[#BB3241]"
-      />
+      <TemplateNavBar />
       <section className="w-full h-[90dvh] flex justify-between bg-[#FFEDED] bg-opacity-100 gap-24">
         <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
           <DataTemplate />
