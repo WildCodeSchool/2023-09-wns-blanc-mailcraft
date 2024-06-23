@@ -6,7 +6,7 @@ import * as subZoneService from "../services/subZone.service";
 @Resolver(SubZone)
 export class SubZoneResolver {
   @Mutation(() => String)
-  async createZone(@Arg("subZoneData") subZoneData: SubZoneInput) {
+  async createSubZone(@Arg("subZoneData") subZoneData: SubZoneInput) {
     try {
       return await subZoneService.createSubZone(subZoneData);
     } catch (e) {

@@ -6,12 +6,32 @@ import DroppableArea from "@/components/DragNDrop/DroppableArea";
 import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateUtils } from "@/utils/templateUtils";
-
+import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
+import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
+import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 const TemplatePage = () => {
   const { listElements } = useTemplateUtils();
-  const { zones, setZones } = useTemplate();
+  const { zones, setZones, template } = useTemplate();
   const [arrayToIterate, setArrayToIterate] = useState(null);
   const [draggingType, setDraggingType] = useState("");
+
+  const socialModule = [
+    {
+      socialMedia: "Facebook",
+      src: facebookIcon,
+      link: "https://www.facebook.com/?locale=fr_FR",
+    },
+    {
+      socialMedia: "Twitter",
+      src: twitterIcon,
+      link: "https://x.com/?lang=fr&mx=2",
+    },
+    {
+      socialMedia: "Linkedin",
+      src: linkedinIcon,
+      link: "https://fr.linkedin.com/",
+    },
+  ];
 
   const onDragStart = (start) => {
     const { draggableId } = start;
@@ -41,7 +61,7 @@ const TemplatePage = () => {
         id: `${destination.droppableId}-subzone-${index}`,
         moduleType: "",
         content: "",
-        size: "default-size",
+        size: "",
       }));
 
       setZones((zones) =>
@@ -62,16 +82,28 @@ const TemplatePage = () => {
       setZones((zones) =>
         zones.map((zone) => ({
           ...zone,
-          subZones: zone.subZones.map((subZone) =>
-            subZone.id === destination.droppableId
-              ? { ...subZone, moduleType: moduleType, content: "" }
-              : subZone
-          ),
+          subZones: zone.subZones.map((subZone) => {
+            if (subZone.id === destination.droppableId) {
+              if (moduleType === "social") {
+                const content = socialModule
+                  .map((sm) => sm.socialMedia)
+                  .join(", ");
+                const links = socialModule.map((sm) => sm.link);
+                return { ...subZone, moduleType, content, links };
+              } else {
+                return { ...subZone, moduleType, content: "" };
+              }
+            } else {
+              return subZone;
+            }
+          }),
         }))
       );
     }
   };
-
+  // useEffect(() => {
+  //   console.log(`New value for template ${JSON.stringify(zones)}`);
+  // }, [zones]);
   return (
     <>
       <TemplateNavBar
@@ -82,7 +114,10 @@ const TemplatePage = () => {
       <section className="w-full h-[90dvh] flex justify-between bg-[#FFEDED] bg-opacity-100 gap-24">
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <DataTemplate arrayToIterate={"template"} />
-          <TemplateCreationZone draggingItemType={draggingType} />
+          <TemplateCreationZone
+            draggingItemType={draggingType}
+            socialModule={socialModule}
+          />
           <DroppableArea />
         </DragDropContext>
       </section>

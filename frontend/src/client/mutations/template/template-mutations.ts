@@ -11,8 +11,16 @@ export const CREATE_TEMPLATE = gql`
 `;
 
 export const CREATE_ZONE = gql`
-  mutation CreateZone($zoneData: ZoneInput!) {
-    createZone(zoneData: $zoneData)
+  mutation CreateZone($templateId: Float!) {
+    createZone(templateId: $templateId) {
+      id
+    }
+  }
+`;
+
+export const CREATE_SUBZONE = gql`
+  mutation CreateSubZone($subZoneData: SubZoneInput!) {
+    createSubZone(subZoneData: $subZoneData)
   }
 `;
 

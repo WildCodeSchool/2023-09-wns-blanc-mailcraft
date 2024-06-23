@@ -1,5 +1,4 @@
 import { Field, ObjectType } from "type-graphql";
-import { Zone } from "./zone";
 import {
   BaseEntity,
   Column,
@@ -8,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
 } from "typeorm";
-import { Template } from "./template";
+import { Zone } from "./zone";
 
 @ObjectType()
 @Entity()
@@ -19,7 +18,7 @@ export class SubZone extends BaseEntity {
 
   @Field()
   @Column()
-  moduleType: string; // texte / logo / image
+  moduleType: string;
 
   @Field()
   @Column()
@@ -29,13 +28,15 @@ export class SubZone extends BaseEntity {
   @Column()
   size: string;
 
+  @Field(() => [String], { nullable: true })
+  @Column({ type: "simple-array", nullable: true })
+  links: string[];
+
   @Field()
   @Column()
   zoneId: number;
 
-  @ManyToOne(() => Zone, (zone: Zone) => zone.subZones, {
-    onDelete: "CASCADE",
-  })
+  @ManyToOne(() => Zone, (zone: Zone) => zone.subZones, { onDelete: "CASCADE" })
   @JoinColumn({ name: "zoneId" })
   zone: Zone;
 }

@@ -4,6 +4,7 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   JoinColumn,
 } from "typeorm";
@@ -17,8 +18,8 @@ export class Zone extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field()
-  @Column()
+  @Field(() => [SubZone])
+  @OneToMany(() => SubZone, (subZone: SubZone) => subZone.zone)
   subZones: SubZone[];
 
   @Field()

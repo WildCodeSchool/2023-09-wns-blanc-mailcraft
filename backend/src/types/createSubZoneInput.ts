@@ -11,6 +11,9 @@ export class SubZoneInput {
   @Field()
   size: string;
 
+  @Field(() => [String], { nullable: true })
+  links?: string[];
+
   @Field()
   zoneId: number;
 }

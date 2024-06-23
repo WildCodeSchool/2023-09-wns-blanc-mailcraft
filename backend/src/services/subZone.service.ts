@@ -12,6 +12,13 @@ export const createSubZone = async (
     newSubZone.moduleType = subZoneData.moduleType;
     newSubZone.content = subZoneData.content;
     newSubZone.size = subZoneData.size;
+    if (
+      subZoneData.links &&
+      Array.isArray(subZoneData.links) &&
+      subZoneData.links.length > 0
+    ) {
+      newSubZone.links = subZoneData.links;
+    }
     newSubZone.zoneId = subZoneData.zoneId;
     await newSubZone.save();
     console.log(newSubZone);
@@ -26,8 +33,8 @@ export const deleteZoneSubZones = async (
   subZonesId: number[]
 ): Promise<string> => {
   try {
-    const zone = await Zone.findOneByOrFail({
-      id: zoneId,
+    const zone = await Zone.findOneOrFail({
+      where: { id: zoneId },
       relations: ["subZones"],
     });
 
@@ -41,13 +48,10 @@ export const deleteZoneSubZones = async (
 
     return `SubZones for zone ${zoneId} have been successfully deleted`;
   } catch (error) {
-    console.error(
-      `Error while deleting subZones for zone : ${zoneId}, : ${error}`
-    );
-    return `No subZones have been deleted for zone : ${zoneId}`;
+    console.error(`Error while deleting subZones for zone ${zoneId}: ${error}`);
+    return `No subZones have been deleted for zone ${zoneId}`;
   }
 };
-
 export const updateZoneSubZones = async (
   zoneId: number,
   newSubZonesData: Array<any>,

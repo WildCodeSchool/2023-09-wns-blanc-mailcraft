@@ -23,7 +23,7 @@ const TemplateSaveButton = ({
         }
       }}
     >
-      Terminer
+      <p className="text-red-500">Terminer</p>
     </button>
   );
 };
