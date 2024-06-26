@@ -1,20 +1,22 @@
 import Image from "next/image";
 import TemplateHeaderButton from "../Buttons/TemplateHeaderButton";
-import RedButton from "../Buttons/Redbutton";
 import logo from "@/assets/homepage/logo.png";
-import TemplateSaveButton from "../Buttons/TemplateSaveButton";
-import { TemplateNavBarProps } from "@/types/interfaces/props/template-navbar-props";
-export default function TemplateNavBar({
-  saveButtonColor,
-  saveButtonHoverColor,
-  arrayToSave,
-}: TemplateNavBarProps) {
+import { useTemplate } from "@/contexts/TemplateContext";
+interface TemplateNavBarProps {
+  arrayToIterate: string;
+}
+
+const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
+  const isTemplateToModify = arrayToIterate === "templateToModify";
+  const saveButtonColor = isTemplateToModify ? "#766060" : undefined;
+  const saveButtonHoverColor = isTemplateToModify ? "#5F4D4D" : undefined;
+  const { setIsModalModifyOpen } = useTemplate();
   return (
-    <div className="h-[10dvh] bg-white flex justify-between items-center border-b border-gray-400">
+    <div className="h-[10vh] bg-white flex justify-between items-center border-b border-gray-400">
       <Image
         src={logo}
-        className="h-[dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7"
-        alt="Flowbite Logo"
+        className="h-[5vh] w-[30vw] md:h-[7vh] md:w-[10vw] ms-7"
+        alt="Mailcraft Logo"
       />
       <TemplateHeaderButton
         link="/user/myTemplates"
@@ -27,13 +29,24 @@ export default function TemplateNavBar({
         svgIcon="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
       />
       <div className="me-7">
-        <TemplateSaveButton
-          saveButtonColor={saveButtonColor}
-          saveButtonHoverColor={saveButtonHoverColor}
-          arrayToSave={arrayToSave}
-        />
+        <button
+          type="button"
+          className={`px-6 py-2 text-white rounded-xl text-md w-full xl:w-[9vw] shadow-lg ${
+            isTemplateToModify
+              ? "bg-[#766060] hover:bg-[#5F4D4D]"
+              : "bg-red-500 hover:bg-red-600"
+          }`}
+          onClick={
+            isTemplateToModify
+              ? () => setIsModalModifyOpen(true)
+              : () => alert("creation")
+          }
+        >
+          Terminer
+        </button>
       </div>
-      {/* <section className="invisible"></section> */}
     </div>
   );
-}
+};
+
+export default TemplateNavBar;
