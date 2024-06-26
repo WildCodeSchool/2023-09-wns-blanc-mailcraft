@@ -69,7 +69,7 @@ export const getAllUserCreatedTemplates = async (
 ): Promise<Template[]> => {
   return await Template.find({
     where: { userId, status: "created" },
-    relations: ["zones"],
+    relations: ["zones", "zones.subZones"],
   });
 };
 
@@ -78,12 +78,12 @@ export const getAllUserDraftTemplates = async (
 ): Promise<Template[]> => {
   return await Template.find({
     where: { userId, status: "draft" },
-    relations: ["zones"],
+    relations: ["zones", "zones.subZones"],
   });
 };
 
 export const getAllTemplates = async (): Promise<Template[]> => {
-  return await Template.find({ relations: ["zones"] });
+  return await Template.find({ relations: ["zones", "zones.subZones"] });
 };
 
 export const getTemplateByItsId = async (
@@ -92,7 +92,7 @@ export const getTemplateByItsId = async (
   try {
     const template = await Template.findOneOrFail({
       where: { id: templateId },
-      relations: ["zones"],
+      relations: ["zones", "zones.subZones"],
     });
     return template;
   } catch (error) {

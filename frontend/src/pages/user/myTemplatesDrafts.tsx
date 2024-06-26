@@ -1,5 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import TemplateCard from "@/components/Cards/TemplateCard";
 import UserPagesNavBar from "@/components/NavBars/UserPagesNavBar";
 import SearchBar from "@/components/SearchBar";
@@ -8,27 +8,54 @@ import filterLine from '@/assets/template-page/filter-line.png'
 
 const MyTemplates = () => {
   const [userId, setUserId] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredDraftTemplates, setFilteredDraftTemplates] = useState<any[]>([])
 
   const GET_USER_DRAFT_TEMPLATES = gql`
-    query GetAllUserDraftTemplates($userId: Float!) {
-      getAllUserDraftTemplates(userId: $userId) {
+  query GetAllUserDraftTemplates($userId: Float!) {
+    getAllUserDraftTemplates(userId: $userId) {
+      id
+      title
+      description
+      templateNature
+      zones {
         id
-        title
-        description
-        zones {
+        templateId
+        subZones {
           id
-          moduleType
           content
+          links
+          moduleType
           size
+          zoneId
         }
-        templateNature
       }
     }
+  }
   `;
 
   const { data, loading, error } = useQuery(GET_USER_DRAFT_TEMPLATES, {
     variables: { userId },
   });
+
+  useEffect(() => {
+    if (data) {
+      console.log("User Draft Templates retrieved", data.getAllUserDraftTemplates);
+      setFilteredDraftTemplates(data.getAllUserDraftTemplates.map(template => ({ ...template })));
+    }
+  }, [data]);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    if (event.target.value) {
+      setFilteredDraftTemplates(data.getAllUserDraftTemplates.filter(template =>
+        template.title.includes(event.target.value)
+      ));
+    } else {
+      setFilteredDraftTemplates(JSON.parse(JSON.stringify(data.getAllUserDraftTemplates)));
+    }
+  };
+
   console.log(data);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -40,7 +67,7 @@ const MyTemplates = () => {
         <h1 className="text-3xl text-black text-center font-semibold mt-7 md:mt-10">
           Mes Brouillons
         </h1>
-        <SearchBar />
+        <SearchBar value={searchTerm} onChange={handleChange} />
         <div className="w-full flex justify-between items-center px-6 md:px-16">
           <Link href="/template/creation">
             <button className="flex justify-center items-center gap-3 text-white bg-red-500 hover:bg-red-600 rounded-xl w-44 xl:w-[14dvw] h-12 xl:h-[7dvh] shadow-lg">
