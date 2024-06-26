@@ -14,9 +14,15 @@ const MyTemplates = () => {
         templateNature
         zones {
           id
-          moduleType
-          content
-          size
+          templateId
+          subZones {
+            id
+            content
+            links
+            moduleType
+            size
+            zoneId
+          }
         }
       }
     }
