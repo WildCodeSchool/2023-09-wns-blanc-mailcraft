@@ -39,22 +39,66 @@ const TemplatePage = () => {
       setDraggingType("module");
     } else if (draggableId.startsWith("column-")) {
       setDraggingType("column");
+    } else if (
+      draggableId.startsWith("zone-") &&
+      !draggableId.includes("-subzone-")
+    ) {
+      setDraggingType("zone");
+    } else if (draggableId.includes("-subzone-")) {
+      setDraggingType("subZone");
+    } else {
+      setDraggingType("");
     }
   };
 
+  const isMainZone = (id) =>
+    id.startsWith("zone-") && !id.includes("-subzone-");
+  const isSubZone = (id) => id.includes("-subzone-");
+
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
-    console.log(result);
+    console.log("Drag End Result:", result); // Debugging log
 
     if (!destination) {
       console.warn("Drag ended outside of any droppable area.");
       return;
     }
 
-    // Handle dropping columns into zones which creates subzones
+    // Handle swapping the main zones
     if (
+      source.droppableId === "all-zones" &&
+      destination.droppableId === "all-zones"
+    ) {
+      const newZones = Array.from(zones);
+      const [removed] = newZones.splice(source.index, 1);
+      newZones.splice(destination.index, 0, removed);
+      setZones(newZones);
+    }
+
+    // Handle swapping subzones within the same main zone
+    else if (
+      isMainZone(source.droppableId) &&
+      isMainZone(destination.droppableId) &&
+      isSubZone(draggableId)
+    ) {
+      const zoneIndex = zones.findIndex(
+        (zone) => zone.id === source.droppableId
+      );
+      const newSubZones = Array.from(zones[zoneIndex].subZones);
+      const [removedSubZone] = newSubZones.splice(source.index, 1);
+      newSubZones.splice(destination.index, 0, removedSubZone);
+
+      setZones((prevZones) =>
+        prevZones.map((zone, idx) =>
+          idx === zoneIndex ? { ...zone, subZones: newSubZones } : zone
+        )
+      );
+    }
+
+    // Handle dropping columns into zones which creates subzones
+    else if (
       draggableId.startsWith("column-") &&
-      destination.droppableId.startsWith("zone-")
+      isMainZone(destination.droppableId)
     ) {
       const numColumns = parseInt(draggableId.split("-")[1], 10);
       const newSubZones = Array.from({ length: numColumns }, (_, index) => ({
@@ -64,23 +108,23 @@ const TemplatePage = () => {
         size: "",
       }));
 
-      setZones((zones) =>
-        zones.map((zone) =>
+      setZones((prevZones) =>
+        prevZones.map((zone) =>
           zone.id === destination.droppableId
             ? { ...zone, subZones: newSubZones }
             : zone
         )
       );
     }
+
     // Handle modules being dropped into subzones
     else if (
-      destination.droppableId.includes("-subzone-") &&
+      isSubZone(destination.droppableId) &&
       draggableId.startsWith("module-")
     ) {
-      // alert("SubZone");
       const moduleType = draggableId.split("-")[1].toLowerCase();
-      setZones((zones) =>
-        zones.map((zone) => ({
+      setZones((prevZones) =>
+        prevZones.map((zone) => ({
           ...zone,
           subZones: zone.subZones.map((subZone) => {
             if (subZone.id === destination.droppableId) {
@@ -100,10 +144,13 @@ const TemplatePage = () => {
         }))
       );
     }
+
+    // setDraggingType("");
   };
+
   // useEffect(() => {
-  //   console.log(`New value for template ${JSON.stringify(zones)}`);
-  // }, [zones]);
+  //   console.log(`New value for ${draggingType}`);
+  // }, [draggingType]);
   return (
     <>
       <TemplateNavBar
