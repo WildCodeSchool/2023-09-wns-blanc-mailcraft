@@ -203,7 +203,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
         <section
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className="zones-container flex flex-col w-[65%] p-4 bg-white justify-center mt-10"
+          className="zones-container flex flex-col w-[60%] p-4 bg-white justify-center mt-7"
         >
           {zones.map((zone, index) => (
             <Draggable key={zone.id} draggableId={zone.id} index={index}>
@@ -212,11 +212,9 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                   ref={providedZone.innerRef}
                   {...providedZone.draggableProps}
                   {...providedZone.dragHandleProps}
-                  className={`zone ${
-                    snapshotZone.isDragging ? "opacity-50" : ""
-                  } flex flex-col gap-2.5 p-5 border-2 border-dashed border-gray-400 mb-5 ${
-                    snapshotZone.isDraggingOver ? "bg-pink-100" : "bg-white"
-                  }`}
+                  className={`zone ${snapshotZone.isDragging ? "opacity-50" : ""
+                    } flex flex-col gap-2.5 p-5 border-2 border-dashed border-gray-400 mb-5 ${snapshotZone.isDraggingOver ? "bg-pink-100" : "bg-white"
+                    }`}
                 >
                   <Droppable
                     droppableId={zone.id}
@@ -244,16 +242,15 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                   ref={providedSubZone.innerRef}
                                   {...providedSubZone.draggableProps}
                                   {...providedSubZone.dragHandleProps}
-                                  className={`subzone flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative flex ${
-                                    snapshotSubZone.isDragging
-                                      ? "opacity-50"
-                                      : ""
-                                  }`}
-                                  // style={{
-                                  //   flexBasis: `calc(${
-                                  //     100 / zone.subZones.length
-                                  //   }% - 10px)`,
-                                  // }}
+                                  className={`subzone flex justify-around items-center flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${snapshotSubZone.isDragging
+                                    ? "opacity-50"
+                                    : ""
+                                    }`}
+                                // style={{
+                                //   flexBasis: `calc(${
+                                //     100 / zone.subZones.length
+                                //   }% - 10px)`,
+                                // }}
                                 >
                                   <Droppable
                                     droppableId={subZone.id}
@@ -281,42 +278,44 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                                 "template"
                                               )
                                             }
-                                            placeholder="Enter text here"
-                                            className="textarea w-full h-20"
-                                          />
+                                            placeholder="Entrez votre texte ici..."
+                                            className="w-full h-20 border-0 focus:ring-0 resize-none bg-transparent p-0 m-0 shadow-none text-inherit"
+                                            />
                                         )}
                                         {subZone.moduleType === "image" && (
-                                          <button
-                                            onClick={() =>
-                                              fileInputRefs.current[
-                                                subZone.id
-                                              ]?.click()
-                                            }
-                                          >
-                                            <Image
-                                              src={getImageSrc(
-                                                subZone,
-                                                "image"
-                                              )}
-                                              alt="Template Image"
-                                              width={150}
-                                              height={150}
-                                            />
-                                            <input
-                                              type="file"
-                                              hidden
-                                              ref={(el) =>
+                                          <div className="flex justify-center ms-5 mt-2">
+                                            <button
+                                              onClick={() =>
+                                                fileInputRefs.current[
+                                                  subZone.id
+                                                ]?.click()
+                                              }
+                                            >
+                                              <Image
+                                                src={getImageSrc(
+                                                  subZone,
+                                                  "image"
+                                                )}
+                                                alt="Template Image"
+                                                width={150}
+                                                height={150}
+                                              />
+                                              <input
+                                                type="file"
+                                                hidden
+                                                ref={(el) =>
                                                 (fileInputRefs.current[
                                                   subZone.id
                                                 ] = el)
-                                              }
-                                              onChange={(event) =>
-                                                createHandleFileChange(
-                                                  subZone.id
-                                                )(event, zones, "template")
-                                              }
-                                            />
-                                          </button>
+                                                }
+                                                onChange={(event) =>
+                                                  createHandleFileChange(
+                                                    subZone.id
+                                                  )(event, zones, "template")
+                                                }
+                                              />
+                                            </button>
+                                          </div>
                                         )}
                                         {subZone.moduleType === "social" && (
                                           <div className="flex justify-around w-full">
@@ -364,11 +363,12 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                 </div>
               )}
             </Draggable>
-          ))}
+          ))
+          }
           {provided.placeholder}
-        </section>
+        </section >
       )}
-    </Droppable>
+    </Droppable >
   );
 };
 export default TemplateCreationZone;

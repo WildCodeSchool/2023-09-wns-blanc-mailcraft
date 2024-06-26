@@ -12,7 +12,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
 
   return (
     <div
-      className="flex flex-col items-center gap-3 p-4 bg-white w-[20%] my-6 ms-5 border border-gray-300 rounded-lg shadow-xl"
+      className="flex flex-col items-center gap-3 p-4 bg-white w-[20%] h-[90%] my-6 ms-5 border border-gray-300 rounded-lg shadow-xl"
       style={{ minHeight: "100px" }}
     >
       <h1 className="font-medium text-xl text-center mb-5 text-gray-800">

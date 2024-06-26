@@ -8,13 +8,13 @@ const DroppableArea = () => {
   const { listElements } = useTemplateUtils();
 
   return (
-    <section>
+    <section className="w-[20%] h-[90%] me-5 my-6">
       <Droppable droppableId="droppable-area" direction="horizontal">
         {(provided) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex flex-col items-start gap-3 p-4 bg-white w-full my-6 me-5 border border-gray-300 rounded-lg shadow-xl"
+            className="flex flex-col items-start gap-3 p-4 bg-white h-full border border-gray-300 rounded-lg shadow-xl"
           >
             <h1 className="font-medium text-lg ms-1">Structures</h1>
             <ZoneCreation />
