@@ -14,32 +14,36 @@ const DroppableArea = () => {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex flex-col items-start gap-3 p-4 bg-white h-full border border-gray-300 rounded-lg shadow-xl"
+            className="flex flex-col justify-around items-start gap-10 p-4 bg-white h-full border border-gray-300 rounded-lg shadow-xl"
           >
-            <h1 className="font-medium text-lg ms-1">Structures</h1>
-            <ZoneCreation />
-            <h1 className="font-medium text-lg ms-1 mt-7">Modules</h1>
-            <div className="grid grid-cols-2 gap-6">
-              {listElements.map((el, index) => (
-                <Draggable
-                  key={el.id}
-                  draggableId={`module-${el.title}`}
-                  index={index}
-                >
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="rounded-lg bg-gray-100 flex justify-center shadow-md"
-                    >
-                      <Module title={el.title} picture={el.picture} />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+            <div className="flex flex-col w-full gap-3">
+              <h1 className="font-medium text-xl ms-1">Structures</h1>
+              <ZoneCreation />
             </div>
-            {provided.placeholder}{" "}
+            <div className="flex flex-col w-full gap-3">
+              <h1 className="font-medium text-xl ms-1 mt-7">Modules</h1>
+              <div className="grid grid-cols-2 gap-6">
+                {listElements.map((el, index) => (
+                  <Draggable
+                    key={el.id}
+                    draggableId={`module-${el.title}`}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className="rounded-lg bg-gray-100 flex justify-center shadow-md"
+                      >
+                        <Module title={el.title} picture={el.picture} />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+              </div>
+              {provided.placeholder}{" "}
+            </div>
           </div>
         )}
       </Droppable>

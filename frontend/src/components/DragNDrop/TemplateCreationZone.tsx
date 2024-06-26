@@ -279,7 +279,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                               )
                                             }
                                             placeholder="Entrez votre texte ici..."
-                                            className="w-full h-20 border-0 focus:ring-0 resize-none bg-transparent p-0 m-0 shadow-none text-inherit"
+                                            className="w-full h-20 border-0 focus:ring-0 resize-none bg-transparent p-0 m-0"
                                             />
                                         )}
                                         {subZone.moduleType === "image" && (
