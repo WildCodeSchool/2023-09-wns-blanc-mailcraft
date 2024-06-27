@@ -1,6 +1,10 @@
+import Image from 'next/image';
 import React, { useState } from "react";
 import { IZone } from "@/types/interfaces/template/template-interfaces";
 import ActionPanelTemplateCard from "./ActionPanelTemplateCard";
+import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
+import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
+import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 
 interface TemplateCardProps {
   templateId: number;
@@ -26,28 +30,17 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   description,
 }) => {
   const [showDataPanel, setShowDataPanel] = useState(false);
+  console.log("zones ici : ", zones);
 
   const toggleDataPanel = () => {
     setShowDataPanel(!showDataPanel);
   };
 
   const fakeZones = [
-    {
-      content:
-        "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre blabla lorem ipsum bkedd ffcff",
-      id: "48",
-      moduleType: "texte",
-    },
-    {
-      content:
-        "https://res.cloudinary.com/dyhn66mah/image/upload/v1718008067/Mailcraft/a6m9jwmns4ls1ay4wjpi.jpg",
-      id: "49",
-      moduleType: "image",
-    },
-    { content: "au revoir", id: "50", moduleType: "texte" },
-  ];
-
-  console.log("zones ici : ", zones);
+    [{ content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "48", moduleType: "texte" }, { content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "49", moduleType: "texte" }],
+    [{ content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "50", moduleType: "texte" }, { content: "https://res.cloudinary.com/dyhn66mah/image/upload/v1718008067/Mailcraft/a6m9jwmns4ls1ay4wjpi.jpg", id: "51", moduleType: "image" }, { content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "52", moduleType: "texte" }],
+    [{ content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "53", moduleType: "texte" }]
+  ]
 
   //Fonction pour déterminer la taille des zones selon leur nombre dans leur row
   const getWidthClass = (length: number) => {
@@ -75,51 +68,48 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
         />
         <div className="template-container flex flex-col justify-center border border-gray-400 shadow-lg py-5 px-3 w-[16rem] md:w-[21rem] h-[26rem] rounded-lg bg-white relative overflow-hidden group">
           <div className="flex flex-col relative gap-6">
-            {/* {fakeZones.map((zoneArray: any[], zoneIndex: any) => (
-              <div key={zoneIndex} className="flex flex-row justify-center gap-3 my-4 md:mx-2"> */}
-            {/* {zoneArray.map((fakeZone: any, index: any) => (
+            {zones.map((zone, zoneIndex) => (
+              <div key={zone.id} className="flex flex-row justify-center gap-3 my-4 md:mx-2">
+                {zone.subZones?.map((subZone, subZoneIndex) => (
                   <div
-                    key={index}
-                    className={`p-2 max-h-32 md:max-h-none text-sm md:text-base border-2 border-dashed border-gray-600 ${getWidthClass(zoneArray.length)}`}
+                    key={subZone.id}
+                    className={`p-2 max-h-32 md:max-h-none text-sm md:text-base border-2 border-dashed border-gray-600 ${getWidthClass(zone.subZones.length)}`}
                   >
-                    {fakeZone.moduleType === "texte" ? (
-                      <p className="text-gray-800">{truncateText(fakeZone.content, 7)}</p>
-                    ) : (
+                    {subZone.moduleType === 'texte' ? (
+                      <p className="text-gray-800">{truncateText(subZone.content, 7)}</p>
+                    ) : subZone.moduleType === 'image' ? (
                       <img
-                        src={fakeZone.content}
+                        src={subZone.content}
                         alt="logo or image"
                         className="w-full h-32 object-contain rounded"
                       />
-                    )}
+                    ) : subZone.moduleType === 'social' ? (
+                      <div className="flex">
+                      <Image
+                        src={facebookIcon}
+                        alt="facebook"
+                        className="w-full h-8 object-contain rounded"
+                      />
+                      <Image
+                        src={twitterIcon}
+                        alt="twitter"
+                        className="w-full h-8 object-contain rounded"
+                      />
+                      <Image
+                        src={linkedinIcon}
+                        alt="linkedIn"
+                        className="w-full h-8 object-contain rounded"
+                      />
+                      </div>
+                    ) : null}
                   </div>
                 ))}
-              </div>
-            ))} */}
-            {zones.map((zone: any, index: any) => (
-              <div
-                key={zone.id}
-                className={`p-2 max-h-32 h-28 text-sm md:text-lg border-2 border-dashed border-gray-600`}
-              >
-                {zone.moduleType === "texte" ? (
-                  <p className="text-gray-800">
-                    {truncateText(zone.content, 15)}
-                  </p>
-                ) : (
-                  <div className="flex items-center justify-center w-full h-full">
-                    <img
-                      src={zone.content}
-                      alt="logo or image"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                )}
               </div>
             ))}
           </div>
           <div
-            className={`template-panel absolute top-0 left-0 w-full h-full bg-[#9F3D3D] z-10 flex flex-col justify-between items-center transition-opacity ${
-              showDataPanel ? "opacity-100" : "opacity-0"
-            }`}
+            className={`template-panel absolute top-0 left-0 w-full h-full bg-[#9F3D3D] z-10 flex flex-col justify-between items-center transition-opacity ${showDataPanel ? "opacity-100" : "opacity-0"
+              }`}
           >
             <h1 className="text-white text-2xl mt-3 font-medium">{title}</h1>
             <p className="text-white text-xl italic">{description}</p>

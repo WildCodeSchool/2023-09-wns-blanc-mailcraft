@@ -11,6 +11,15 @@ export interface IZone {
   size?: string;
 }
 
+export interface ISubZone {
+  id: string;
+  content: any;
+  links: string;
+  moduleType: string;
+  size?: string;
+  zoneId: IZone;
+}
+
 export interface ModuleProps {
   title: string;
   picture: any;
