@@ -14,15 +14,15 @@ const DroppableArea = () => {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex flex-col justify-around items-start gap-10 p-4 bg-white h-full border border-gray-300 rounded-lg shadow-xl"
+            className="flex flex-col justify-center items-start gap-6 2xl:gap-28 p-2 bg-white h-full border border-gray-300 rounded-lg shadow-xl"
           >
-            <div className="flex flex-col w-full gap-3">
-              <h1 className="font-medium text-xl ms-1">Structures</h1>
+            <div className="flex flex-col w-full gap-3 ms-2">
+              <h1 className="font-medium text-xl">Structures</h1>
               <ZoneCreation />
             </div>
-            <div className="flex flex-col w-full gap-3">
-              <h1 className="font-medium text-xl ms-1 mt-7">Modules</h1>
-              <div className="grid grid-cols-2 gap-6">
+            <div className="flex flex-col items-start w-full gap-3 ms-2">
+              <h1 className="font-medium text-xl">Modules</h1>
+              <div className="grid grid-cols-2 gap-5">
                 {listElements.map((el, index) => (
                   <Draggable
                     key={el.id}
@@ -34,7 +34,7 @@ const DroppableArea = () => {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className="rounded-lg bg-gray-100 flex justify-center shadow-md"
+                        className="rounded-md w-20 h-auto bg-gray-100 flex justify-center shadow-md"
                       >
                         <Module title={el.title} picture={el.picture} />
                       </div>

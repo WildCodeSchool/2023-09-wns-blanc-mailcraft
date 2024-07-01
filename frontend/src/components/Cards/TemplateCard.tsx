@@ -36,12 +36,6 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
     setShowDataPanel(!showDataPanel);
   };
 
-  const fakeZones = [
-    [{ content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "48", moduleType: "texte" }, { content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "49", moduleType: "texte" }],
-    [{ content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "50", moduleType: "texte" }, { content: "https://res.cloudinary.com/dyhn66mah/image/upload/v1718008067/Mailcraft/a6m9jwmns4ls1ay4wjpi.jpg", id: "51", moduleType: "image" }, { content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "52", moduleType: "texte" }],
-    [{ content: "je vous envoie un mail pour vous contacter à propos des services que l'on veut vous vendre", id: "53", moduleType: "texte" }]
-  ]
-
   //Fonction pour déterminer la taille des zones selon leur nombre dans leur row
   const getWidthClass = (length: number) => {
     switch (length) {
@@ -67,39 +61,41 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           onTogglePanel={toggleDataPanel}
         />
         <div className="template-container flex flex-col justify-center border border-gray-400 shadow-lg py-5 px-3 w-[16rem] md:w-[21rem] h-[26rem] rounded-lg bg-white relative overflow-hidden group">
-          <div className="flex flex-col relative gap-6">
+          <div className="flex flex-col relative">
             {zones.map((zone, zoneIndex) => (
-              <div key={zone.id} className="flex flex-row justify-center gap-3 my-4 md:mx-2">
+              <div key={zone.id} className="flex justify-center gap-3 my-4 md:mx-2">
                 {zone.subZones?.map((subZone, subZoneIndex) => (
                   <div
                     key={subZone.id}
-                    className={`p-2 max-h-32 md:max-h-none text-sm md:text-base border-2 border-dashed border-gray-600 ${getWidthClass(zone.subZones.length)}`}
+                    className={`flex p-2 h-24 md:max-h-none text-sm md:text-base border-2 border-dashed border-gray-600 ${getWidthClass(zone.subZones.length)}`}
                   >
                     {subZone.moduleType === 'texte' ? (
                       <p className="text-gray-800">{truncateText(subZone.content, 7)}</p>
                     ) : subZone.moduleType === 'image' ? (
-                      <img
+                      <Image
                         src={subZone.content}
                         alt="logo or image"
-                        className="w-full h-32 object-contain rounded"
+                        width={facebookIcon.width}
+                        height={facebookIcon.height}
+                        className="object-contain"
                       />
                     ) : subZone.moduleType === 'social' ? (
-                      <div className="flex">
-                      <Image
-                        src={facebookIcon}
-                        alt="facebook"
-                        className="w-full h-8 object-contain rounded"
-                      />
-                      <Image
-                        src={twitterIcon}
-                        alt="twitter"
-                        className="w-full h-8 object-contain rounded"
-                      />
-                      <Image
-                        src={linkedinIcon}
-                        alt="linkedIn"
-                        className="w-full h-8 object-contain rounded"
-                      />
+                      <div className="flex justify-around items-center w-full">
+                        <Image
+                          src={facebookIcon}
+                          alt="facebook"
+                          className="w-full h-8 object-contain rounded"
+                        />
+                        <Image
+                          src={twitterIcon}
+                          alt="twitter"
+                          className="w-full h-8 object-contain rounded"
+                        />
+                        <Image
+                          src={linkedinIcon}
+                          alt="linkedIn"
+                          className="w-full h-8 object-contain rounded"
+                        />
                       </div>
                     ) : null}
                   </div>

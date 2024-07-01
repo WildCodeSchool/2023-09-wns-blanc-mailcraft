@@ -7,12 +7,17 @@ export const GET_TEMPLATE_BY_ITS_ID = gql`
       title
       description
       templateNature
-      status
       zones {
         id
-        moduleType
-        content
-        size
+        templateId
+        subZones {
+          id
+          content
+          links
+          moduleType
+          size
+          zoneId
+        }
       }
     }
   }
