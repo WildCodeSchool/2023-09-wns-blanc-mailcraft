@@ -168,14 +168,16 @@ import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateUtils } from "@/utils/templateUtils";
 import Image from "next/image";
 import Link from "next/link";
+import Modal from "react-modal";
 
 const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
-  const { zones, setZones } = useTemplate();
+  const { zones, setZones, isModalErrorOpen, errorMessage } = useTemplate();
   const {
     handleTextChange,
     removeSubZone,
     getImageSrc,
     createHandleFileChange,
+    closeErrorModal
   } = useTemplateUtils();
 
   const fileInputRefs = useRef({});
@@ -205,6 +207,21 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
           {...provided.droppableProps}
           className="zones-container flex flex-col w-[60%] p-4 bg-white justify-center mt-7"
         >
+          <Modal
+            isOpen={isModalErrorOpen}
+            onRequestClose={closeErrorModal}
+            contentLabel="Erreur"
+          >
+            <button
+              onClick={closeErrorModal}
+              className="absolute top-0 right-0 p-2 text-lg text-gray-600 hover:text-gray-800"
+            >
+              &times;
+            </button>
+            <h2 className="text-lg font-semibold text-center">
+              {errorMessage}
+            </h2>
+          </Modal>
           {zones.map((zone, index) => (
             <Draggable key={zone.id} draggableId={zone.id} index={index}>
               {(providedZone, snapshotZone) => (
@@ -280,7 +297,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                             }
                                             placeholder="Entrez votre texte ici..."
                                             className="w-full h-20 border-0 focus:ring-0 resize-none bg-transparent p-0 m-0"
-                                            />
+                                          />
                                         )}
                                         {subZone.moduleType === "image" && (
                                           <div className="flex justify-center ms-5 mt-2">

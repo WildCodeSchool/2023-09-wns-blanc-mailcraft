@@ -26,6 +26,10 @@ interface TemplateContextType {
   setOldZonesId: React.Dispatch<React.SetStateAction<any>>;
   isModalModifyOpen: boolean;
   setIsModalModifyOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isModalErrorOpen: boolean;
+  setIsModalErrorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  errorMessage: string;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   // listElements: IListElement[];
 }
 
@@ -57,6 +61,8 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
   );
   const [oldZonesId, setOldZonesId] = useState<any>(null);
   const [isModalModifyOpen, setIsModalModifyOpen] = useState(false);
+  const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   // const listElements: IListElement[] = [
   //   {
@@ -94,6 +100,10 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
         setOldZonesId,
         isModalModifyOpen,
         setIsModalModifyOpen,
+        isModalErrorOpen,
+        setIsModalErrorOpen,
+        errorMessage,
+        setErrorMessage
       }}
     >
       {children}

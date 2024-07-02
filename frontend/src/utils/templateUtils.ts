@@ -59,6 +59,10 @@ export const useTemplateUtils = () => {
     setOldZonesId,
     isModalModifyOpen,
     setIsModalModifyOpen,
+    isModalErrorOpen,
+    setIsModalErrorOpen,
+    errorMessage,
+    setErrorMessage
   } = useTemplate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -126,6 +130,15 @@ export const useTemplateUtils = () => {
   const saveTemplate = async (templateStatus) => {
     let newTemplateId;
     try {
+      // Vérification des champs obligatoires
+      if (
+        !template.title ||
+        !template.description ||
+        !template.templateNature
+      ) {
+        setErrorMessage("Tous les champs obligatoires doivent être remplis");
+        setIsModalErrorOpen(true);
+      }
       // Création du template
       const templateResponse = await createTemplate({
         variables: {
@@ -170,7 +183,7 @@ export const useTemplateUtils = () => {
           });
         }
       }
-      alert("succes");
+      alert("succès");
       console.log(
         "Tous les templates, zones et subzones ont été créés avec succès."
       );
@@ -210,6 +223,15 @@ export const useTemplateUtils = () => {
       status: status,
     };
     try {
+      // Vérification des champs obligatoires
+      if (
+        !template.title ||
+        !template.description ||
+        !template.templateNature
+      ) {
+        throw new Error("Tous les champs obligatoires doivent être remplis");
+      }
+
       const response = await modifyTemplate({
         variables: {
           templateId: template.id,
@@ -535,6 +557,10 @@ export const useTemplateUtils = () => {
     setIsModalModifyOpen(false);
   };
 
+  const closeErrorModal = () => {
+    setIsModalErrorOpen(false);
+  };
+
   return {
     saveTemplate,
     handleResetZones,
@@ -548,8 +574,11 @@ export const useTemplateUtils = () => {
     setIsModalOpen,
     isModalModifyOpen,
     setIsModalModifyOpen,
+    isModalErrorOpen,
+    setIsModalErrorOpen,
     closeModal,
     closeModifyModal,
+    closeErrorModal,
     // onDragEnd,
     listElements,
     getImageSrc,

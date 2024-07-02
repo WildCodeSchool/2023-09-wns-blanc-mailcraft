@@ -33,6 +33,7 @@ const TemplateModificationZone = () => {
     templateToModify,
     setTemplateToModify,
     isModalModifyOpen,
+    isModalErrorOpen
   } = useTemplate();
   const {
     handleResetZones,
@@ -41,6 +42,7 @@ const TemplateModificationZone = () => {
     removeZone,
     isModalOpen,
     closeModifyModal,
+    closeErrorModal,
     resetZones,
     getImageSrc,
     saveTemplateToModify,
@@ -126,6 +128,22 @@ const TemplateModificationZone = () => {
             Non, enregistrer en brouillon
           </button>
         </div>
+      </Modal>
+
+      <Modal
+        isOpen={isModalErrorOpen}
+        onRequestClose={closeErrorModal}
+        contentLabel="Erreur"
+      >
+        <button
+          onClick={closeErrorModal}
+          className="absolute top-0 right-0 p-2 text-lg text-gray-600 hover:text-gray-800"
+        >
+          &times;
+        </button>
+        <h2 className="text-lg font-semibold text-center">
+          Attention : tous les champs obligatoires n'ont pas été remplis.
+        </h2>
       </Modal>
 
       <div className="w-full h-full flex flex-col justify-center items-center p-4 gap-5 overflow-auto">
