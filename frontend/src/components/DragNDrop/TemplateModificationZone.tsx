@@ -33,7 +33,8 @@ const TemplateModificationZone = () => {
     templateToModify,
     setTemplateToModify,
     isModalModifyOpen,
-    isModalErrorOpen
+    isModalErrorOpen,
+    errorMessage
   } = useTemplate();
   const {
     handleResetZones,
@@ -134,16 +135,26 @@ const TemplateModificationZone = () => {
         isOpen={isModalErrorOpen}
         onRequestClose={closeErrorModal}
         contentLabel="Erreur"
+        className="bg-white w-2/5 h-1/4 m-auto fixed inset-0 border border-gray-400 rounded-lg flex flex-col justify-start"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
       >
         <button
           onClick={closeErrorModal}
-          className="absolute top-0 right-0 p-2 text-lg text-gray-600 hover:text-gray-800"
+          className="absolute top-2 right-1 p-2 text-gray-700 hover:text-gray-900"
         >
-          &times;
         </button>
-        <h2 className="text-lg font-semibold text-center">
-          Attention : tous les champs obligatoires n'ont pas été remplis.
-        </h2>
+        <div className="w-full h-3 rounded-t-lg bg-red-500"></div>
+        <div className="flex flex-col justify-center items-center gap-10">
+          <h2 className="text-lg font-semibold text-center mt-3">
+            {errorMessage}
+          </h2>
+          <button
+            onClick={closeErrorModal}
+            className="px-7 py-2 bg-gray-100 text-black hover:bg-gray-200 rounded border border-gray-300 shadow-md"
+          >
+            J'ai compris
+          </button>
+        </div>
       </Modal>
 
       <div className="w-full h-full flex flex-col justify-center items-center p-4 gap-5 overflow-auto">
@@ -167,11 +178,10 @@ const TemplateModificationZone = () => {
                     }
                   })}
                   {...provided.droppableProps}
-                  className={`flex flex-col justify-center items-center min-h-[100px] w-[400px] border-2 ${
-                    snapshot.isDraggingOver
+                  className={`flex flex-col justify-center items-center min-h-[100px] w-[400px] border-2 ${snapshot.isDraggingOver
                       ? "bg-green-100"
                       : "border-dashed border-gray-500"
-                  } p-4 relative m-2 min-w-[150px] max-w-[430px]`}
+                    } p-4 relative m-2 min-w-[150px] max-w-[430px]`}
                 >
                   {zone.moduleType === "texte" && (
                     <textarea
