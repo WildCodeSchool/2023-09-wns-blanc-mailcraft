@@ -211,17 +211,66 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
             isOpen={isModalErrorOpen}
             onRequestClose={closeErrorModal}
             contentLabel="Erreur"
+            className="bg-white w-2/5 h-1/4 m-auto fixed inset-0 border border-gray-400 rounded-lg flex flex-col justify-start"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
           >
             <button
               onClick={closeErrorModal}
-              className="absolute top-0 right-0 p-2 text-lg text-gray-600 hover:text-gray-800"
+              className="absolute top-2 right-1 p-2 text-gray-700 hover:text-gray-900"
             >
-              &times;
             </button>
-            <h2 className="text-lg font-semibold text-center">
-              {errorMessage}
-            </h2>
+            <div className="w-full h-3 rounded-t-lg bg-red-500"></div>
+            <div className="flex flex-col justify-center items-center gap-10">
+              <h2 className="text-lg font-semibold text-center mt-3">
+                {errorMessage}
+              </h2>
+              <button
+                onClick={closeErrorModal}
+                className="px-7 py-2 bg-gray-100 text-black hover:bg-gray-200 rounded border border-gray-300 shadow-md"
+              >
+                J'ai compris
+              </button>
+            </div>
           </Modal>
+
+          {/* <Modal
+      isOpen={isModalOpen}
+      onRequestClose={closeModal}
+      contentLabel="Enregistrer comme brouillon"
+      className="bg-white w-2/5 h-1/4 m-auto fixed inset-0 border border-gray-400 rounded-lg flex flex-col justify-between"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
+    >
+      <div className="relative w-full h-full flex flex-col justify-between">
+        <button
+          onClick={closeModal}
+          className="absolute top-2 right-1 p-2 text-gray-700 hover:text-gray-900"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <div className="w-full h-3 rounded-t-lg bg-red-500"></div>
+        <h2 className="text-lg font-medium text-center mt-3">
+          Sauvegarder le template comme brouillon ?
+        </h2>
+        <div className="flex justify-around mt-4">
+          <button
+            onClick={() => saveTemplate("draft")}
+            className="px-7 py-2 text-black hover:bg-gray-100 rounded border border-gray-300 shadow-md"
+          >
+            Oui
+          </button>
+          <button
+            onClick={() => resetZones("zones")}
+            className="px-7 py-2 bg-red-700 hover:bg-red-800 text-white rounded border border-gray-300 shadow-md"
+          >
+            Non, supprimer le template
+          </button>
+        </div>
+        <div className="flex justify-around mt-4"></div>
+      </div>
+    </Modal> */}
+
           {zones.map((zone, index) => (
             <Draggable key={zone.id} draggableId={zone.id} index={index}>
               {(providedZone, snapshotZone) => (
