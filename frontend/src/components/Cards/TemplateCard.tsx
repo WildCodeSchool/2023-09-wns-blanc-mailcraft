@@ -36,6 +36,13 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
     setShowDataPanel(!showDataPanel);
   };
 
+  const truncateText = (text: string, charLimit: number) => {
+    if (text.length > charLimit) {
+      return text.slice(0, charLimit) + "..";
+    }
+    return text;
+  };
+
   //Fonction pour déterminer la taille des zones selon leur nombre dans leur row
   const getWidthClass = (length: number) => {
     switch (length) {
@@ -70,7 +77,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                     className={`flex p-2 h-24 md:max-h-none text-sm md:text-base border-2 border-dashed border-gray-600 ${getWidthClass(zone.subZones.length)}`}
                   >
                     {subZone.moduleType === 'texte' ? (
-                      <p className="text-gray-800">{truncateText(subZone.content, 7)}</p>
+                      <p className="text-gray-800">{truncateText(subZone.content, 10)}</p>
                     ) : subZone.moduleType === 'image' ? (
                       <Image
                         src={subZone.content}
@@ -80,23 +87,33 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                         className="object-contain"
                       />
                     ) : subZone.moduleType === 'social' ? (
-                      <div className="flex justify-around items-center w-full">
-                        <Image
-                          src={facebookIcon}
-                          alt="facebook"
-                          className="w-full h-8 object-contain rounded"
-                        />
-                        <Image
-                          src={twitterIcon}
-                          alt="twitter"
-                          className="w-full h-8 object-contain rounded"
-                        />
-                        <Image
-                          src={linkedinIcon}
-                          alt="linkedIn"
-                          className="w-full h-8 object-contain rounded"
-                        />
-                      </div>
+                      zone.subZones.length !== 3 ? (
+                        <div className="flex justify-around items-center w-full">
+                          < Image
+                            src={facebookIcon}
+                            alt="facebook"
+                            className="w-full h-8 object-contain rounded"
+                          />
+                          <Image
+                            src={twitterIcon}
+                            alt="twitter"
+                            className="w-full h-8 object-contain rounded"
+                          />
+                          <Image
+                            src={linkedinIcon}
+                            alt="linkedIn"
+                            className="w-full h-8 object-contain rounded"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex justify-around items-center w-full">
+                          < Image
+                            src={facebookIcon}
+                            alt="facebook"
+                            className="w-full h-8 object-contain rounded"
+                          />
+                        </div>
+                      )
                     ) : null}
                   </div>
                 ))}
