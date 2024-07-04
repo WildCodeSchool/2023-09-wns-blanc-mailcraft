@@ -418,7 +418,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                           ))
                         ) : (
                           <p className="text-gray-500 text-center flex-grow">
-                            Drop columns here
+                            Glissez une structure ici
                           </p>
                         )}
                         {providedSub.placeholder}
