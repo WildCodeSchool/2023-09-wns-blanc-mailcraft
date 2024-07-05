@@ -62,7 +62,7 @@ export const useTemplateUtils = () => {
     isModalErrorOpen,
     setIsModalErrorOpen,
     errorMessage,
-    setErrorMessage
+    setErrorMessage,
   } = useTemplate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -138,7 +138,16 @@ export const useTemplateUtils = () => {
       ) {
         setErrorMessage("Tous les champs obligatoires doivent être remplis");
         setIsModalErrorOpen(true);
+        return;
       }
+
+      // Vérification si les zones sont vides
+      if (!zones.subZones || zones.subZones.length === 0) {
+        setErrorMessage("Les zones ne doivent pas être vides");
+        setIsModalErrorOpen(true);
+        return; 
+      }
+
       // Création du template
       const templateResponse = await createTemplate({
         variables: {
