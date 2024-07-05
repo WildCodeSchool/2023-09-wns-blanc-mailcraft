@@ -118,7 +118,7 @@ export const useTemplateUtils = () => {
     },
   });
 
-  const [deleteTemplate] = useMutation(DELETE_TEMPLATE, {
+  const [deleteTemplateMutation] = useMutation(DELETE_TEMPLATE, {
     onCompleted: () => {
       console.log("Template deleted successfully");
     },
@@ -127,25 +127,48 @@ export const useTemplateUtils = () => {
     },
   });
 
+  const deleteTemplate = async (templateId: number) => {
+    try {
+      const { data } = await deleteTemplateMutation({
+        variables: { templateId },
+      });
+      console.log("Template deleted:", data);
+    } catch (error) {
+      console.error("Error deleting template:", error);
+      throw new Error("Failed to delete template.");
+    }
+  };
+
   const saveTemplate = async (templateStatus) => {
     let newTemplateId;
     try {
       // Vérification des champs obligatoires
-      if (
-        !template.title ||
-        !template.description ||
-        !template.templateNature
-      ) {
+      if (!template.title || !template.description) {
         setErrorMessage("Tous les champs obligatoires doivent être remplis");
         setIsModalErrorOpen(true);
         return;
       }
 
-      // Vérification si les zones sont vides
-      if (!zones.subZones || zones.subZones.length === 0) {
+      // Vérification si les zones ou leurs subzones sont vides
+      const areAllZonesEmpty = zones.every(
+        (zone) => !zone.subZones || zone.subZones.length === 0
+      );
+
+      if (areAllZonesEmpty) {
         setErrorMessage("Les zones ne doivent pas être vides");
         setIsModalErrorOpen(true);
-        return; 
+        return;
+      }
+
+      for (const zone of zones) {
+        console.log("subzones : ", zones);
+        for (const subZone of zone.subZones) {
+          if (!subZone.content || subZone.content.length === 0) {
+            setErrorMessage("Le template n'a pas de contenu");
+            setIsModalErrorOpen(true);
+            return;
+          }
+        }
       }
 
       // Création du template
@@ -192,10 +215,12 @@ export const useTemplateUtils = () => {
           });
         }
       }
-      alert("succès");
+
+      alert("Votre template a été créé avec succès");
       console.log(
-        "Tous les templates, zones et subzones ont été créés avec succès."
+        "Succès"
       );
+      return true;
       // resetStateAfterSuccess(); à implémenter pour reset les states
     } catch (error) {
       console.error(
@@ -203,6 +228,7 @@ export const useTemplateUtils = () => {
         error
       );
       handleCreationError(newTemplateId);
+      return false;
     }
   };
 
@@ -572,6 +598,7 @@ export const useTemplateUtils = () => {
 
   return {
     saveTemplate,
+    deleteTemplate,
     handleResetZones,
     resetZones,
     handleTemplateChange,

@@ -3,17 +3,31 @@ import TemplateHeaderButton from "../Buttons/TemplateHeaderButton";
 import logo from "@/assets/homepage/logo.png";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateUtils } from "@/utils/templateUtils"
+import { useRouter } from "next/router";
 
 interface TemplateNavBarProps {
   arrayToIterate: string;
 }
 
 const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
+  const router = useRouter();
   const isTemplateToModify = arrayToIterate === "templateToModify";
   const saveButtonColor = isTemplateToModify ? "#766060" : undefined;
   const saveButtonHoverColor = isTemplateToModify ? "#5F4D4D" : undefined;
   const { setIsModalModifyOpen } = useTemplate();
   const { saveTemplate } = useTemplateUtils();
+
+  const handleClick = async () => {
+    if (isTemplateToModify) {
+      setIsModalModifyOpen(true);
+    } else {
+      const success = await saveTemplate("created");
+      if (success) {
+        router.push("/user/myTemplates");
+      }
+    }
+  };
+
   return (
     <div className="h-[10vh] bg-white flex justify-between items-center border-b border-gray-400">
       <Image
@@ -34,16 +48,12 @@ const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
       <div className="me-7">
         <button
           type="button"
-          className={`px-6 py-2 text-white rounded-xl text-md w-full xl:w-[9vw] shadow-lg ${
-            isTemplateToModify
+          className={`px-6 py-2 text-white rounded-xl text-md w-full xl:w-[9vw] shadow-lg ${isTemplateToModify
               ? "bg-[#766060] hover:bg-[#5F4D4D]"
               : "bg-red-500 hover:bg-red-600"
-          }`}
-          onClick={
-            isTemplateToModify
-              ? () => setIsModalModifyOpen(true)
-              : () => saveTemplate("created")
-          }
+            }`}
+          onClick={handleClick}
+
         >
           Terminer
         </button>
