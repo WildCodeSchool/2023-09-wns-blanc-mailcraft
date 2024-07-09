@@ -11,10 +11,16 @@ export const CREATE_TEMPLATE = gql`
 `;
 
 export const CREATE_ZONE = gql`
-  mutation CreateZone($templateId: Float!) {
-    createZone(templateId: $templateId) {
+  mutation CreateZone($zoneOrder: Float!, $templateId: Float!) {
+    createZone(zoneOrder: $zoneOrder, templateId: $templateId) {
       id
     }
+  }
+`;
+
+export const UPDATE_ZONE = gql`
+  mutation UpdateZone($zoneOrder: Float!, $zoneId: Float!) {
+    updateZone(zoneOrder: $zoneOrder, zoneId: $zoneId)
   }
 `;
 
@@ -38,16 +44,29 @@ export const MODIFY_TEMPLATE = gql`
   }
 `;
 
-export const MODIFY_TEMPLATE_ZONES = gql`
-  mutation updateZonesForTemplate(
-    $oldZonesId: [Float!]!
-    $newZonesData: [ZoneInput!]!
-    $templateId: Float!
+export const MODIFY_ZONE_SUBZONES = gql`
+  mutation UpdateZoneSubZones(
+    $newSubZonesData: [SubZoneInput!]!
+    $zoneId: Float!
   ) {
-    updateZonesForTemplate(
-      oldZonesId: $oldZonesId
-      newZonesData: $newZonesData
-      templateId: $templateId
-    )
+    updateZoneSubZones(newSubZonesData: $newSubZonesData, zoneId: $zoneId)
+  }
+`;
+
+export const DELETE_TEMPLATE_ZONES = gql`
+  mutation DeleteTemplateZones($zonesId: [Float!]!, $templateId: Float!) {
+    deleteTemplateZones(zonesId: $zonesId, templateId: $templateId)
+  }
+`;
+
+export const DELETE_OLD_SUBZONES = gql`
+  mutation Mutation($oldSubZonesId: [Float!]!) {
+    deleteOldSubZones(oldSubZonesId: $oldSubZonesId)
+  }
+`;
+
+export const MODIFY_SUBZONE = gql`
+  mutation ModifySubZone($subZoneData: SubZoneInput!, $subZoneId: Float!) {
+    modifySubZone(subZoneData: $subZoneData, subZoneId: $subZoneId)
   }
 `;

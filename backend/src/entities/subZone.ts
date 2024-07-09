@@ -18,6 +18,10 @@ export class SubZone extends BaseEntity {
 
   @Field()
   @Column()
+  order: number;
+
+  @Field()
+  @Column()
   moduleType: string;
 
   @Field()

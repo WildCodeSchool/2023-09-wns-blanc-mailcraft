@@ -176,6 +176,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
     removeSubZone,
     getImageSrc,
     createHandleFileChange,
+    handleResetZones,
   } = useTemplateUtils();
 
   const fileInputRefs = useRef({});
@@ -184,9 +185,9 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
     // Initialize zones if they are empty
     if (zones.length === 0) {
       setZones([
-        { id: "zone-1", subZones: [] },
-        { id: "zone-2", subZones: [] },
-        { id: "zone-3", subZones: [] },
+        { id: "zone-1", order: 1, subZones: [] },
+        { id: "zone-2", order: 2, subZones: [] },
+        { id: "zone-3", order: 3, subZones: [] },
       ]);
     }
   }, [zones, setZones]);
@@ -194,181 +195,194 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
     console.log(`New Zones are ${JSON.stringify(zones)}`);
   }, [zones]);
   return (
-    <Droppable
-      droppableId="all-zones"
-      direction="vertical"
-      isDropDisabled={draggingItemType !== "zone"}
-    >
-      {(provided) => (
-        <section
-          ref={provided.innerRef}
-          {...provided.droppableProps}
-          className="zones-container flex flex-col w-[65%] p-4 bg-white justify-center mt-10"
-        >
-          {zones.map((zone, index) => (
-            <Draggable key={zone.id} draggableId={zone.id} index={index}>
-              {(providedZone, snapshotZone) => (
-                <div
-                  ref={providedZone.innerRef}
-                  {...providedZone.draggableProps}
-                  {...providedZone.dragHandleProps}
-                  className={`zone ${
-                    snapshotZone.isDragging ? "opacity-50" : ""
-                  } flex flex-col gap-2.5 p-5 border-2 border-dashed border-gray-400 mb-5 ${
-                    snapshotZone.isDraggingOver ? "bg-pink-100" : "bg-white"
-                  }`}
-                >
-                  <Droppable
-                    droppableId={zone.id}
-                    direction="horizontal"
-                    isDropDisabled={
-                      draggingItemType !== "column" &&
-                      draggingItemType !== "subZone"
-                    }
+    <>
+      <button
+        onClick={() => {
+          handleResetZones("template");
+        }}
+      >
+        clean zones
+      </button>
+      <Droppable
+        droppableId="all-zones"
+        direction="vertical"
+        isDropDisabled={draggingItemType !== "zone"}
+      >
+        {(provided) => (
+          <section
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className="zones-container flex flex-col w-[65%] p-4 bg-white justify-center mt-10"
+          >
+            {zones.map((zone, index) => (
+              <Draggable key={zone.id} draggableId={zone.id} index={index}>
+                {(providedZone, snapshotZone) => (
+                  <div
+                    ref={providedZone.innerRef}
+                    {...providedZone.draggableProps}
+                    {...providedZone.dragHandleProps}
+                    className={`zone ${
+                      snapshotZone.isDragging ? "opacity-50" : ""
+                    } flex flex-col gap-2.5 p-5 border-2 border-dashed border-gray-400 mb-5 ${
+                      snapshotZone.isDraggingOver ? "bg-pink-100" : "bg-white"
+                    }`}
                   >
-                    {(providedSub, snapshotSub) => (
-                      <div
-                        ref={providedSub.innerRef}
-                        {...providedSub.droppableProps}
-                        className="subzone-container flex gap-2"
-                      >
-                        {zone.subZones.length > 0 ? (
-                          zone.subZones.map((subZone, subIndex) => (
-                            <Draggable
-                              key={subZone.id}
-                              draggableId={subZone.id}
-                              index={subIndex}
-                            >
-                              {(providedSubZone, snapshotSubZone) => (
-                                <div
-                                  ref={providedSubZone.innerRef}
-                                  {...providedSubZone.draggableProps}
-                                  {...providedSubZone.dragHandleProps}
-                                  className={`subzone flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative flex ${
-                                    snapshotSubZone.isDragging
-                                      ? "opacity-50"
-                                      : ""
-                                  }`}
-                                  // style={{
-                                  //   flexBasis: `calc(${
-                                  //     100 / zone.subZones.length
-                                  //   }% - 10px)`,
-                                  // }}
-                                >
-                                  <Droppable
-                                    droppableId={subZone.id}
-                                    isDropDisabled={
-                                      draggingItemType !== "module"
-                                    }
+                    <Droppable
+                      droppableId={zone.id}
+                      direction="horizontal"
+                      isDropDisabled={
+                        draggingItemType !== "column" &&
+                        draggingItemType !== "subZone"
+                      }
+                    >
+                      {(providedSub, snapshotSub) => (
+                        <div
+                          ref={providedSub.innerRef}
+                          {...providedSub.droppableProps}
+                          className="subzone-container flex gap-2"
+                        >
+                          {zone.subZones.length > 0 ? (
+                            zone.subZones.map((subZone, subIndex) => (
+                              <Draggable
+                                key={subZone.id}
+                                draggableId={subZone.id}
+                                index={subIndex}
+                              >
+                                {(providedSubZone, snapshotSubZone) => (
+                                  <div
+                                    ref={providedSubZone.innerRef}
+                                    {...providedSubZone.draggableProps}
+                                    {...providedSubZone.dragHandleProps}
+                                    className={`subzone flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative flex ${
+                                      snapshotSubZone.isDragging
+                                        ? "opacity-50"
+                                        : ""
+                                    }`}
+                                    // style={{
+                                    //   flexBasis: `calc(${
+                                    //     100 / zone.subZones.length
+                                    //   }% - 10px)`,
+                                    // }}
                                   >
-                                    {(providedModule) => (
-                                      <div
-                                        ref={providedModule.innerRef}
-                                        {...providedModule.droppableProps}
-                                        className="module-container flex-1"
-                                      >
-                                        {!subZone.moduleType && (
-                                          <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                                        )}
-                                        {subZone.moduleType === "texte" && (
-                                          <textarea
-                                            value={subZone.content || ""}
-                                            onChange={(e) =>
-                                              handleTextChange(
-                                                e,
-                                                zone.subZones,
-                                                subZone.id,
-                                                "template"
-                                              )
-                                            }
-                                            placeholder="Enter text here"
-                                            className="textarea w-full h-20"
-                                          />
-                                        )}
-                                        {subZone.moduleType === "image" && (
-                                          <button
-                                            onClick={() =>
-                                              fileInputRefs.current[
-                                                subZone.id
-                                              ]?.click()
-                                            }
-                                          >
-                                            <Image
-                                              src={getImageSrc(
-                                                subZone,
-                                                "image"
-                                              )}
-                                              alt="Template Image"
-                                              width={150}
-                                              height={150}
-                                            />
-                                            <input
-                                              type="file"
-                                              hidden
-                                              ref={(el) =>
-                                                (fileInputRefs.current[
-                                                  subZone.id
-                                                ] = el)
+                                    <Droppable
+                                      droppableId={subZone.id}
+                                      isDropDisabled={
+                                        draggingItemType !== "module"
+                                      }
+                                    >
+                                      {(providedModule) => (
+                                        <div
+                                          ref={providedModule.innerRef}
+                                          {...providedModule.droppableProps}
+                                          className="module-container flex-1"
+                                        >
+                                          {!subZone.moduleType && (
+                                            <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                                          )}
+                                          {subZone.moduleType === "texte" && (
+                                            <textarea
+                                              value={subZone.content || ""}
+                                              onChange={(e) =>
+                                                handleTextChange(
+                                                  e,
+                                                  zone.subZones,
+                                                  subZone.id,
+                                                  "template"
+                                                )
                                               }
-                                              onChange={(event) =>
-                                                createHandleFileChange(
-                                                  subZone.id
-                                                )(event, zones, "template")
-                                              }
+                                              placeholder="Enter text here"
+                                              className="textarea w-full h-20"
                                             />
-                                          </button>
-                                        )}
-                                        {subZone.moduleType === "social" && (
-                                          <div className="flex justify-around w-full">
-                                            {socialModule.map((social) => (
-                                              <Link
-                                                key={social.link}
-                                                href={social.link}
-                                              >
-                                                <Image
-                                                  src={social.src}
-                                                  alt="Social Media Icon"
-                                                  width={50}
-                                                  height={50}
-                                                />
-                                              </Link>
-                                            ))}
-                                          </div>
-                                        )}
-                                        {providedModule.placeholder}
-                                      </div>
-                                    )}
-                                  </Droppable>
-                                  <button
-                                    className="absolute top-0 right-0 p-1 text-lg"
-                                    onClick={() =>
-                                      removeSubZone(subZone.id, "template")
-                                    }
-                                  >
-                                    ×
-                                  </button>
-                                </div>
-                              )}
-                            </Draggable>
-                          ))
-                        ) : (
-                          <p className="text-gray-500 text-center flex-grow">
-                            Drop columns here
-                          </p>
-                        )}
-                        {providedSub.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                  {providedZone.placeholder}
-                </div>
-              )}
-            </Draggable>
-          ))}
-          {provided.placeholder}
-        </section>
-      )}
-    </Droppable>
+                                          )}
+                                          {subZone.moduleType === "image" && (
+                                            <button
+                                              onClick={() =>
+                                                fileInputRefs.current[
+                                                  subZone.id
+                                                ]?.click()
+                                              }
+                                            >
+                                              <Image
+                                                src={getImageSrc(
+                                                  subZone,
+                                                  "image"
+                                                )}
+                                                alt="Template Image"
+                                                width={150}
+                                                height={150}
+                                              />
+                                              <input
+                                                type="file"
+                                                hidden
+                                                ref={(el) =>
+                                                  (fileInputRefs.current[
+                                                    subZone.id
+                                                  ] = el)
+                                                }
+                                                onChange={(event) =>
+                                                  createHandleFileChange(
+                                                    subZone.id
+                                                  )(event, zones, "template")
+                                                }
+                                              />
+                                            </button>
+                                          )}
+                                          {subZone.moduleType === "social" && (
+                                            <div className="flex justify-around w-full">
+                                              {socialModule.map((social) => (
+                                                <Link
+                                                  key={social.link}
+                                                  href={social.link}
+                                                >
+                                                  <Image
+                                                    src={social.src}
+                                                    alt="Social Media Icon"
+                                                    width={50}
+                                                    height={50}
+                                                  />
+                                                </Link>
+                                              ))}
+                                            </div>
+                                          )}
+                                          {providedModule.placeholder}
+                                        </div>
+                                      )}
+                                    </Droppable>
+                                    <button
+                                      className="absolute top-0 right-0 p-1 text-lg"
+                                      onClick={() =>
+                                        removeSubZone(
+                                          subZone,
+                                          subZone.id,
+                                          "template"
+                                        )
+                                      }
+                                    >
+                                      ×
+                                    </button>
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))
+                          ) : (
+                            <p className="text-gray-500 text-center flex-grow">
+                              Drop columns here
+                            </p>
+                          )}
+                          {providedSub.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                    {providedZone.placeholder}
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </section>
+        )}
+      </Droppable>
+    </>
   );
 };
 export default TemplateCreationZone;

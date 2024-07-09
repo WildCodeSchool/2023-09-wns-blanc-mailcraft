@@ -16,8 +16,12 @@ import {
   CREATE_ZONE,
   CREATE_SUBZONE,
   DELETE_TEMPLATE,
+  DELETE_OLD_SUBZONES,
   MODIFY_TEMPLATE,
-  MODIFY_TEMPLATE_ZONES,
+  MODIFY_ZONE_SUBZONES,
+  DELETE_TEMPLATE_ZONES,
+  MODIFY_SUBZONE,
+  UPDATE_ZONE,
 } from "@/client/mutations/template/template-mutations";
 import { useRouter } from "next/router";
 
@@ -55,8 +59,11 @@ export const useTemplateUtils = () => {
     setImgPreviews,
     templateToModify,
     setTemplateToModify,
-    oldZonesId,
+    oldTemplateToModify,
+    setOldSubZonesId,
+    oldSubZonesId,
     setOldZonesId,
+    oldZonesId,
     isModalModifyOpen,
     setIsModalModifyOpen,
   } = useTemplate();
@@ -84,11 +91,39 @@ export const useTemplateUtils = () => {
     },
   });
 
-  const [modifyTemplateZones] = useMutation(MODIFY_TEMPLATE_ZONES, {
-    onCompleted: () => {
-      console.log("Zone created");
+  const [modifySubZone] = useMutation(MODIFY_SUBZONE, {
+    onCompleted: (data) => {
+      console.log("SubZone modified with ID:", data.modifySubZone.id);
+    },
+    onError: (error) => {
+      console.error(
+        "Error modifying subZone with ID:",
+        data.modifySubZone.id,
+        error
+      );
     },
   });
+
+  const [updateZone] = useMutation(UPDATE_ZONE, {
+    onCompleted: (data) => {
+      console.log("Zone modified");
+    },
+    onError: (error) => {
+      console.error("Error modifying zone", error);
+    },
+  });
+
+  const [modifyZoneSubZones, { data, loading, error }] = useMutation(
+    MODIFY_ZONE_SUBZONES,
+    {
+      onCompleted: () => {
+        console.log("New subZones created successfully");
+      },
+      onError: (error) => {
+        console.error("Error updating subZones:", error);
+      },
+    }
+  );
 
   const [
     createZone,
@@ -122,11 +157,26 @@ export const useTemplateUtils = () => {
       console.error("Error deleting template:", error);
     },
   });
-
+  const [deleteTemplateZones] = useMutation(DELETE_TEMPLATE_ZONES, {
+    onCompleted: () => {
+      console.log("Template zones have been successfully deleted ");
+    },
+    onError: (error) => {
+      console.error("Error deleting template zone:", error);
+    },
+  });
+  const [deleteOldSubZones] = useMutation(DELETE_OLD_SUBZONES, {
+    onCompleted: () => {
+      console.log("Old sub zones have been successfully deleted ");
+    },
+    onError: (error) => {
+      console.error("Error deleting old sub zones:", error);
+    },
+  });
   const saveTemplate = async (templateStatus) => {
     let newTemplateId;
     try {
-      // Création du template
+      // Création du template pour récupérer l'id
       const templateResponse = await createTemplate({
         variables: {
           templateData: { ...template, status: templateStatus },
@@ -136,8 +186,11 @@ export const useTemplateUtils = () => {
 
       // Création des zones et subzones en série pour chaque zone
       for (const zone of zones) {
+        if (zoneHasNoValue(zone)) {
+          continue; // Si la zone est vide on ne l'a crée pas
+        }
         const { data: zoneResponse } = await createZone({
-          variables: { templateId: newTemplateId },
+          variables: { templateId: newTemplateId, zoneOrder: zone.order },
         });
         const newZoneId = zoneResponse.createZone.id;
 
@@ -145,7 +198,7 @@ export const useTemplateUtils = () => {
         for (const subZone of zone.subZones) {
           let subZoneContent = subZone.content;
           // Gestion de l'upload d'images si nécessaire
-          if (subZone.moduleType === "image") {
+          if (subZone.moduleType === "image" && subZone.content.length > 0) {
             const formData = new FormData();
             formData.append("file", subZone.content[0]);
             const uploadResponse = await axios.post(
@@ -153,13 +206,13 @@ export const useTemplateUtils = () => {
               formData,
               { headers: { "Content-Type": "multipart/form-data" } }
             );
-            subZoneContent = uploadResponse.data.url;
+            subZoneContent = uploadResponse.data.url; // maj du contenu avec l'url cloudinary
           }
 
-          // Création de la subzone avec le contenu possiblement mis à jour
           await createSubZone({
             variables: {
               subZoneData: {
+                order: subZone.order,
                 moduleType: subZone.moduleType,
                 content: subZoneContent,
                 size: subZone.size,
@@ -170,17 +223,17 @@ export const useTemplateUtils = () => {
           });
         }
       }
-      alert("succes");
+      alert("Succès");
       console.log(
         "Tous les templates, zones et subzones ont été créés avec succès."
       );
-      // resetStateAfterSuccess(); à implémenter pour reset les states
+      // resetStateAfterSuccess(); à implémenter pour reset les states après un succes
     } catch (error) {
       console.error(
         "Erreur lors de la création du template ou des zones:",
         error
       );
-      handleCreationError(newTemplateId);
+      handleCreationError(newTemplateId); // Gestion des erreurs avec passage de l'ID du template pour des actions spécifiques
     }
   };
 
@@ -202,83 +255,116 @@ export const useTemplateUtils = () => {
     }
   };
 
-  const saveTemplateToModify = async (template, status: string) => {
+  const saveTemplateToModify = async (template, status) => {
     const templateData = {
       title: template.title,
       description: template.description,
       templateNature: template.templateNature,
       status: status,
     };
+
     try {
-      const response = await modifyTemplate({
+      await modifyTemplate({
         variables: {
           templateId: template.id,
           templateData: templateData,
         },
       });
 
-      const newZonesData = await Promise.all(
-        template?.zones?.map(async (zone: IZone) => {
-          let zoneCloudinaryUrl = zone.content;
+      // Traiter chaque zone et ses sous-zones
+      let zonesToDelete = [];
 
-          if (
-            (zone.moduleType === "logo" || zone.moduleType === "image") &&
-            zone.content instanceof FileList &&
-            zone.content.length > 0
-          ) {
-            const formData = new FormData();
-            formData.append("file", zone.content[0]);
-            console.log(`Zone DATA IS === ${JSON.stringify(zone)}`);
+      for (const [index, zone] of template.zones.entries()) {
+        let newZoneId = zone.id;
 
-            const uploadResponse = await axios.post(
-              "http://localhost:5000/template-images-upload",
-              formData,
-              {
-                headers: { "Content-Type": "multipart/form-data" },
-              }
-            );
-            zoneCloudinaryUrl = uploadResponse.data.url;
-            console.log("Uploaded Image URL:", zoneCloudinaryUrl);
+        if (zoneHasNoValue(zone)) {
+          if (!isTemporaryZone(zone)) {
+            zonesToDelete.push(zone.id);
           }
+          continue;
+        }
 
-          return {
-            moduleType: zone.moduleType,
-            content: zoneCloudinaryUrl,
-            size: zone.size,
+        if (!isTemporaryZone(zone)) {
+          await updateZone({
+            variables: {
+              zoneId: newZoneId,
+              zoneOrder: zone.order,
+            },
+          });
+        }
+        // Création de zone si nécessaire
+        if (
+          zone.id &&
+          typeof zone.id === "string" &&
+          zone.id.startsWith("temp-zone")
+        ) {
+          const zoneResponse = await createZone({
+            variables: { templateId: template.id, zoneOrder: zone.order },
+          });
+          newZoneId = zoneResponse.data.createZone.id;
+        }
+
+        handleSubZones(zone, newZoneId);
+      }
+
+      // case si zone a été vidée de ses subZones
+      if (zonesToDelete.length > 0) {
+        await deleteTemplateZones({
+          variables: {
+            zonesId: zonesToDelete,
             templateId: template.id,
-          };
-        })
-      );
+          },
+        });
+      }
 
-      await modifyTemplateZones({
-        variables: {
-          templateId: template.id,
-          newZonesData: newZonesData,
-          oldZonesId: oldZonesId,
-        },
-      });
-      resetZones("templateToModify");
-      if (isModalOpen) {
-        closeModal();
-      }
-      if (status === "created") {
-        router.push("/user/myTemplates").then(() => {
-          window.location.reload();
-        });
-      } else {
-        router.push("/user/myTemplatesDrafts").then(() => {
-          window.location.reload();
+      // case si clear Zones a été utilisé
+      if (oldZonesId && oldZonesId.length > 0) {
+        await deleteTemplateZones({
+          variables: {
+            zonesId: oldZonesId.flat(),
+            templateId: template.id,
+          },
         });
       }
+
+      // case si des subZones ont été supprimé par le bouton ou un dragNdrop
+      if (oldSubZonesId && oldSubZonesId.length > 0) {
+        await deleteOldSubZones({
+          variables: {
+            oldSubZonesId: oldSubZonesId,
+          },
+        });
+      }
+
+      console.log(JSON.stringify(templateToModify.zones));
+
+      if (isModalModifyOpen) {
+        closeModifyModal();
+      }
+      // if (status === "created") {
+      //   router.push("/user/myTemplates").then(() => {
+      //     window.location.reload();
+      //   });
+      // } else if (status === "draft") {
+      //   router.push("/user/myTemplatesDrafts").then(() => {
+      //     window.location.reload();
+      //   });
+      // }
 
       console.log("Zones have been successfully updated.");
     } catch (error) {
       console.error("Error while updating the template or zones:", error);
+      console.log(error.stack);
+      // Potentiel gestion des erreurs ou rollback ici
     }
   };
-
   const handleResetZones = (keyToIdentify: string) => {
     if (keyToIdentify === "templateToModify") {
+      const oldZonesId = templateToModify?.zones
+        ?.filter((zone) => typeof zone.id === "number")
+        .map((zone) => zone.id);
+
+      setOldZonesId(oldZonesId);
       resetZones(keyToIdentify);
     } else {
       if (zones.some((zone) => zone.content)) {
@@ -293,10 +379,24 @@ export const useTemplateUtils = () => {
     // l'objet JS,  URL sert à crée des liens pour la preview d'image, à démonter quand il devient obsolète
     if (keyToIdentify === "templateToModify") {
       if (templateToModify) {
-        setTemplateToModify({ ...templateToModify, zones: [] });
+        setTemplateToModify({
+          ...templateToModify,
+          zones: [1, 2, 3].map((number, index) => {
+            return {
+              id: `temp-zone-${number}`,
+              order: index + 1,
+              dndId: `zone-${number}`,
+              subZones: [],
+            };
+          }),
+        });
       }
     } else {
-      setZones([]);
+      setZones([
+        { id: "zone-1", order: 1, subZones: [] },
+        { id: "zone-2", order: 2, subZones: [] },
+        { id: "zone-3", order: 3, subZones: [] },
+      ]);
     }
 
     if (imgPreview) {
@@ -464,11 +564,11 @@ export const useTemplateUtils = () => {
   };
 
   function getImageSrc(subZone: IZone, type: string) {
-    console.log(
-      `subZone is ########################## ${JSON.stringify(
-        subZone
-      )} #####################`
-    );
+    // console.log(
+    //   `subZone is ########################## ${JSON.stringify(
+    //     subZone
+    //   )} #####################`
+    // );
 
     if (subZone.content instanceof FileList && subZone.content.length > 0) {
       const file = subZone.content[0];
@@ -478,31 +578,34 @@ export const useTemplateUtils = () => {
     return subZone.content || getImgPreviewBySubZoneId(subZone.id, type);
   }
 
-  const removeSubZone = (subZoneId: string, keyToIdentify: string) => {
-    const updateZones = (zones, subZoneId) => {
-      return zones.map((zone) => ({
-        ...zone,
-        subZones: zone.subZones.filter((subZone) => subZone.id !== subZoneId),
-      }));
+  const removeSubZone = (subZone, subZoneId: string, keyToIdentify: string) => {
+    let idToCompare = keyToIdentify === "templateToModify" ? "dndId" : "id";
+
+    const updateZones = (zones) => {
+      return zones.map((zone) => {
+        const filteredSubZones = zone.subZones.filter(
+          (subZone) => subZone[idToCompare] !== subZoneId
+        );
+
+        const reorderedSubZones = filteredSubZones.map((subZone, index) => ({
+          ...subZone,
+          order: index + 1,
+        }));
+
+        return { ...zone, subZones: reorderedSubZones };
+      });
     };
 
-    if (keyToIdentify === "templateToModify") {
-      if (templateToModify) {
-        setTemplateToModify((prevTemplate) => {
-          if (!prevTemplate) {
-            return null;
-          }
-          return {
-            ...prevTemplate,
-            zones: updateZones(prevTemplate.zones, subZoneId),
-          };
-        });
-      } else {
-        console.error("templateToModify is null, cannot update zones");
+    if (keyToIdentify === "templateToModify" && templateToModify) {
+      setTemplateToModify((prevTemplate) => ({
+        ...prevTemplate,
+        zones: updateZones(prevTemplate.zones),
+      }));
+      if (!isTemporarySubZone(subZone)) {
+        setOldSubZonesId((prev) => [...prev, subZone.id]);
       }
     } else {
-      setZones((prevZones) => updateZones(prevZones, subZoneId));
-      console.log("Updated zones:", zones);
+      setZones((prevZones) => updateZones(prevZones));
     }
 
     if (imgPreview) {
@@ -516,23 +619,120 @@ export const useTemplateUtils = () => {
       );
       if (existingPreview) {
         URL.revokeObjectURL(existingPreview.imgPreview);
-        const updatedPreviews = imgPreviews.filter(
-          (obj) => obj.subZoneId !== subZoneId
-        );
-        setImgPreviews(
-          updatedPreviews.length > 0 ? updatedPreviews : undefined
-        );
-        // console.log("Updated imgPreviews:", updatedPreviews);
       }
+      const updatedPreviews = imgPreviews.filter(
+        (obj) => obj.subZoneId !== subZoneId
+      );
+      setImgPreviews(updatedPreviews.length > 0 ? updatedPreviews : undefined);
     }
   };
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
   const closeModifyModal = () => {
     setIsModalModifyOpen(false);
+  };
+
+  const isTemporaryZone = (zone): boolean => {
+    if (typeof zone.id !== "number" && zone.id.startsWith("temp-zone")) {
+      return true;
+    }
+    return false;
+  };
+
+  const zoneHasNoValue = (zone): boolean => {
+    return zone.subZones.length === 0;
+  };
+
+  const addZoneSubZonesToDelete = (zone): number[] => {
+    return zone.subZones
+      ? zone.subZones
+          .filter((subZone) => !isTemporarySubZone(subZone))
+          .map((subZone) => subZone.id)
+      : [];
+  };
+
+  const isTemporarySubZone = (subZone): boolean => {
+    return typeof subZone.id === "string";
+  };
+
+  const isCreatedSubZone = (subZone): boolean => {
+    return typeof subZone.id === "number";
+  };
+
+  const zoneHasChanged = (zoneToCompare, oldZone): boolean => {
+    // Early return si les length sont différentes
+    if (zoneToCompare.subZones.length !== oldZone.subZones.length) {
+      return true;
+    }
+
+    // Si la longueur est la même on compare chaque subZone
+    for (let i = 0; i < zoneToCompare.subZones.length; i++) {
+      const newSubZone = zoneToCompare.subZones[i];
+      const oldSubZone = oldZone.subZones[i];
+
+      const newSubZoneKeys = Object.keys(newSubZone).filter(
+        (key) => key !== "dndId"
+      );
+      const oldSubZoneKeys = Object.keys(oldSubZone).filter(
+        (key) => key !== "dndId"
+      );
+
+      if (
+        newSubZoneKeys.length !== oldSubZoneKeys.length ||
+        !newSubZoneKeys.every((key) => oldSubZoneKeys.includes(key))
+      ) {
+        return true;
+      }
+
+      // Compare chaque clé des deux subZones
+      for (const key of newSubZoneKeys) {
+        if (newSubZone[key] !== oldSubZone[key]) {
+          return true;
+        }
+      }
+    }
+
+    // Si aucune dif false
+    return false;
+  };
+
+  const handleSubZones = async (zone, newZoneId) => {
+    for (const subZone of zone.subZones) {
+      let subZoneContent = subZone.content;
+      if (
+        subZone.moduleType === "image" &&
+        subZone.content instanceof FileList &&
+        subZone.content.length > 0
+      ) {
+        const formData = new FormData();
+        formData.append("file", subZone.content[0]);
+        const uploadResponse = await axios.post(
+          "http://localhost:5000/template-images-upload",
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        subZoneContent = uploadResponse.data.url;
+      }
+
+      const subZoneData = {
+        zoneId: newZoneId,
+        order: subZone.order,
+        moduleType: subZone.moduleType,
+        content: subZoneContent,
+        size: subZone.size || "138",
+        links: subZone.links,
+      };
+
+      if (isTemporarySubZone(subZone)) {
+        await createSubZone({ variables: { subZoneData } });
+      } else {
+        await modifySubZone({
+          variables: { subZoneId: subZone.id, subZoneData },
+        });
+      }
+    }
   };
 
   return {
@@ -554,5 +754,6 @@ export const useTemplateUtils = () => {
     listElements,
     getImageSrc,
     saveTemplateToModify,
+    addZoneSubZonesToDelete,
   };
 };

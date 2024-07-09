@@ -22,8 +22,12 @@ interface TemplateContextType {
   >;
   templateToModify: Template | null;
   setTemplateToModify: React.Dispatch<React.SetStateAction<Template | null>>;
-  oldZonesId: any;
-  setOldZonesId: React.Dispatch<React.SetStateAction<any>>;
+  oldTemplateToModify: Template | null;
+  setOldTemplateToModify: React.Dispatch<React.SetStateAction<Template | null>>;
+  oldSubZonesId: any;
+  setOldSubZonesId: React.Dispatch<React.SetStateAction<Number[] | []>>;
+  oldZonesId: Number[] | null;
+  setOldZonesId: React.Dispatch<React.SetStateAction<Number[] | null>>;
   isModalModifyOpen: boolean;
   setIsModalModifyOpen: React.Dispatch<React.SetStateAction<boolean>>;
   // listElements: IListElement[];
@@ -55,7 +59,10 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
   const [templateToModify, setTemplateToModify] = useState<Template | null>(
     null
   );
-  const [oldZonesId, setOldZonesId] = useState<any>(null);
+  const [oldTemplateToModify, setOldTemplateToModify] =
+    useState<Template | null>(null);
+  const [oldSubZonesId, setOldSubZonesId] = useState<Number[] | []>([]);
+  const [oldZonesId, setOldZonesId] = useState<Number[] | null>(null);
   const [isModalModifyOpen, setIsModalModifyOpen] = useState(false);
 
   // const listElements: IListElement[] = [
@@ -90,6 +97,10 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
         // listElements,
         templateToModify,
         setTemplateToModify,
+        oldTemplateToModify,
+        setOldTemplateToModify,
+        oldSubZonesId,
+        setOldSubZonesId,
         oldZonesId,
         setOldZonesId,
         isModalModifyOpen,

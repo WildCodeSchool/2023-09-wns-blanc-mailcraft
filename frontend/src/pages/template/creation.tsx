@@ -55,9 +55,10 @@ const TemplatePage = () => {
     id.startsWith("zone-") && !id.includes("-subzone-");
   const isSubZone = (id) => id.includes("-subzone-");
 
+  // a factoriser ou simplifier plus tard mais fonctionnel
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
-    console.log("Drag End Result:", result); // Debugging log
+    console.log("Drag End Result:", result);
 
     if (!destination) {
       console.warn("Drag ended outside of any droppable area.");
@@ -72,7 +73,11 @@ const TemplatePage = () => {
       const newZones = Array.from(zones);
       const [removed] = newZones.splice(source.index, 1);
       newZones.splice(destination.index, 0, removed);
-      setZones(newZones);
+      const reorderedZones = newZones.map((zone, index) => ({
+        ...zone,
+        order: index + 1,
+      }));
+      setZones(reorderedZones);
     }
 
     // Handle swapping subzones within the same main zone
@@ -87,10 +92,14 @@ const TemplatePage = () => {
       const newSubZones = Array.from(zones[zoneIndex].subZones);
       const [removedSubZone] = newSubZones.splice(source.index, 1);
       newSubZones.splice(destination.index, 0, removedSubZone);
-
+      // Maj de order
+      const reorderedSubZones = newSubZones.map((subZone, index) => ({
+        ...subZone,
+        order: index + 1,
+      }));
       setZones((prevZones) =>
         prevZones.map((zone, idx) =>
-          idx === zoneIndex ? { ...zone, subZones: newSubZones } : zone
+          idx === zoneIndex ? { ...zone, subZones: reorderedSubZones } : zone
         )
       );
     }
@@ -103,6 +112,7 @@ const TemplatePage = () => {
       const numColumns = parseInt(draggableId.split("-")[1], 10);
       const newSubZones = Array.from({ length: numColumns }, (_, index) => ({
         id: `${destination.droppableId}-subzone-${index}`,
+        order: index + 1,
         moduleType: "",
         content: "",
         size: "",

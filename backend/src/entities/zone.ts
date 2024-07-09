@@ -18,6 +18,10 @@ export class Zone extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
+  @Column()
+  order: number;
+
   @Field(() => [SubZone])
   @OneToMany(() => SubZone, (subZone: SubZone) => subZone.zone)
   subZones: SubZone[];

@@ -51,7 +51,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
               className="select select-bordered border-red-100 w-11/12 h-8 rounded-md bg-[#FFEDED] text-gray-400"
             >
               {templateNatures.map((templateNature, index) => (
-                <option value={templateNature} selected>
+                <option key={index} value={templateNature} selected>
                   {templateNature}
                 </option>
               ))}

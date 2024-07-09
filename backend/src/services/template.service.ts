@@ -92,7 +92,7 @@ export const getTemplateByItsId = async (
   try {
     const template = await Template.findOneOrFail({
       where: { id: templateId },
-      relations: ["zones"],
+      relations: ["zones", "zones.subZones"],
     });
     return template;
   } catch (error) {

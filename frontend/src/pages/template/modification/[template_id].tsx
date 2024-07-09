@@ -1,39 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { useTemplate } from "@/contexts/TemplateContext";
-import { useTemplateUtils } from "@/utils/templateUtils";
-import { GET_TEMPLATE_BY_ITS_ID } from "@/client/queries/template/template-queries";
-import DroppableArea from "@/components/DragNDrop/DroppableArea";
-import TemplateCreationZone from "@/components/DragNDrop/TemplateCreationZone";
-import {
-  Template,
-  ArrayToIterate,
-  IZone,
-  ImgPreviews,
-  IListElement,
-} from "@/types/interfaces/template/template-interfaces";
-import DataTemplate from "@/components/DragNDrop/DataTemplate";
-import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
+import { useQuery } from "@apollo/client";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
-const TemplateModificationPage: React.FC = () => {
+import TemplateModificationZone from "@/components/DragNDrop/TemplateModificationZone";
+import DataTemplate from "@/components/DragNDrop/DataTemplate";
+import DroppableArea from "@/components/DragNDrop/DroppableArea";
+import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
+import { useTemplate } from "@/contexts/TemplateContext";
+import { GET_TEMPLATE_BY_ITS_ID } from "@/client/queries/template/template-queries";
+
+// Social module icons
+import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
+import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
+import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
+import { useTemplateUtils } from "@/utils/templateUtils";
+import { log } from "console";
+
+const TemplateModificationPage = () => {
   const router = useRouter();
-  const { listElements } = useTemplateUtils();
   const { template_id } = router.query;
   const {
     templateToModify,
     setTemplateToModify,
-    zones,
-    setZones,
-    imgPreviews,
-    setImgPreviews,
-    oldZonesId,
-    setOldZonesId,
+    setOldTemplateToModify,
+    setOldSubZonesId,
   } = useTemplate();
-  const [arrayToIterate, setArrayToIterate] = useState<ArrayToIterate | null>(
-    null
-  );
+  const { addZoneSubZonesToDelete } = useTemplateUtils();
+  const [draggingType, setDraggingType] = useState("");
+
+  function removeTypenames(obj) {
+    if (Array.isArray(obj)) {
+      return obj.map(removeTypenames);
+    } else if (obj !== null && typeof obj === "object") {
+      const newObj = {};
+      for (const [key, value] of Object.entries(obj)) {
+        if (key !== "__typename") {
+          newObj[key] = removeTypenames(value);
+        }
+      }
+      return newObj;
+    }
+    return obj;
+  }
 
   const { data, loading, error } = useQuery(GET_TEMPLATE_BY_ITS_ID, {
     variables: { templateId: parseFloat(template_id as string) },
@@ -41,91 +50,184 @@ const TemplateModificationPage: React.FC = () => {
       if (data && data.getTemplateByItsId) {
         const template = data.getTemplateByItsId;
 
-        setTemplateToModify(template);
-        setArrayToIterate({
-          zones: template.zones || [],
-          key: "templateToModify",
+        const cleanedTemplate = removeTypenames(template);
+
+        // Tri des zones en fonction de la clé order
+        const sortedZones = cleanedTemplate.zones.sort(
+          (a, b) => a.order - b.order
+        );
+
+        // Tri des sous-zones pour chaque zone
+        sortedZones.forEach((zone) => {
+          if (zone.subZones && zone.subZones.length > 0) {
+            zone.subZones.sort((a, b) => a.order - b.order);
+          }
         });
 
-        // On set immédiatement les ids de zones à supprimer plus tard pour l'intégrité
-        const filteredZones = template.zones?.filter(
-          (zone: IZone) => typeof zone.id === "number"
-        );
-        if (filteredZones && filteredZones.length > 0) {
-          const zoneIds = filteredZones.map((zone: IZone) => zone.id);
-          setOldZonesId(zoneIds);
-        }
+        setOldTemplateToModify({ ...cleanedTemplate, zones: sortedZones });
+        setTemplateToModify({ ...cleanedTemplate, zones: sortedZones });
       }
     },
   });
+  const socialModule = [
+    {
+      socialMedia: "Facebook",
+      src: facebookIcon,
+      link: "https://www.facebook.com/?locale=fr_FR",
+    },
+    {
+      socialMedia: "Twitter",
+      src: twitterIcon,
+      link: "https://x.com/?lang=fr&mx=2",
+    },
+    {
+      socialMedia: "Linkedin",
+      src: linkedinIcon,
+      link: "https://fr.linkedin.com/",
+    },
+  ];
 
-  useEffect(() => {
-    if (templateToModify) {
-      setArrayToIterate({
-        zones: templateToModify.zones || [],
-        key: "templateToModify",
-      });
+  const onDragStart = (start) => {
+    const { draggableId } = start;
+    if (draggableId.startsWith("module-")) {
+      setDraggingType("module");
+    } else if (draggableId.startsWith("column-")) {
+      setDraggingType("column");
+    } else if (
+      draggableId.startsWith("zone-") &&
+      !draggableId.includes("-subzone-")
+    ) {
+      setDraggingType("zone");
+    } else if (draggableId.includes("-subzone-")) {
+      setDraggingType("subZone");
+    } else {
+      setDraggingType("");
     }
-  }, [templateToModify]);
+  };
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+    if (!destination) {
+      console.warn("Drag ended outside of any droppable area.");
+      return;
+    }
+
+    const isMainZone = (dndId) =>
+      dndId.startsWith("zone-") && !dndId.includes("-subzone-");
+    const isSubZone = (dndId) => dndId.includes("-subzone-");
+
+    let newZones = [...templateToModify.zones];
+
+    // Handle swapping the main zones
+    if (
+      source.droppableId === "all-zones" &&
+      destination.droppableId === "all-zones"
+    ) {
+      const [movedZone] = newZones.splice(source.index, 1);
+      newZones.splice(destination.index, 0, movedZone);
+
+      // Maj de l'ordre des zones
+      newZones = newZones.map((zone, index) => ({
+        ...zone,
+        order: index + 1,
+      }));
+    }
+    // Handle swapping subzones within the same main zone
+    else if (
+      isMainZone(source.droppableId) &&
+      source.droppableId === destination.droppableId &&
+      isSubZone(draggableId)
+    ) {
+      const zoneIndex = newZones.findIndex(
+        (zone) => zone.dndId === source.droppableId
+      );
+
+      const zone = newZones[zoneIndex];
+      const newSubZones = Array.from(zone.subZones);
+      const [movedSubZone] = newSubZones.splice(source.index, 1);
+      newSubZones.splice(destination.index, 0, movedSubZone);
+
+      // Maj de l'ordre des subZones
+      const reorderedSubZones = newSubZones.map((subZone, index) => ({
+        ...subZone,
+        order: index + 1,
+      }));
+
+      newZones[zoneIndex] = { ...zone, subZones: reorderedSubZones };
+    }
+    // Handle dropping columns into zones which creates subzones
+    else if (
+      draggableId.startsWith("column-") &&
+      isMainZone(destination.droppableId)
+    ) {
+      const zone = templateToModify?.zones?.find(
+        (zone) => zone.dndId === destination.droppableId
+      );
+
+      if (zone?.subZones.length && zone.subZones.length > 0) {
+        const subZoneIdsToDelete = addZoneSubZonesToDelete(zone);
+        setOldSubZonesId((prev) => {
+          return [...prev, ...subZoneIdsToDelete];
+        });
+      }
+
+      const numColumns = parseInt(draggableId.split("-")[1], 10);
+      const newSubZones = Array.from({ length: numColumns }, (_, idx) => ({
+        id: `${destination.droppableId}-subzone-${idx}`,
+        dndId: `${destination.droppableId}-subzone-${idx}`,
+        order: idx + 1,
+        moduleType: "",
+        content: "",
+        size: "",
+      }));
+
+      const zoneIndex = newZones.findIndex(
+        (zone) => zone.dndId === destination.droppableId
+      );
+      newZones[zoneIndex].subZones = newSubZones;
+    }
+    // Handle modules being dropped into subzones
+    else if (
+      isSubZone(destination.droppableId) &&
+      draggableId.startsWith("module-")
+    ) {
+      const moduleType = draggableId.split("-")[1].toLowerCase();
+      const zoneIndex = newZones.findIndex((zone) =>
+        zone.subZones.some((sub) => sub.dndId === destination.droppableId)
+      );
+      const subZoneIndex = newZones[zoneIndex].subZones.findIndex(
+        (sub) => sub.dndId === destination.droppableId
+      );
+      newZones[zoneIndex].subZones[subZoneIndex] = {
+        ...newZones[zoneIndex].subZones[subZoneIndex],
+        moduleType: moduleType,
+        content:
+          moduleType === "social"
+            ? socialModule.map((sm) => sm.socialMedia).join(", ")
+            : "",
+      };
+    }
+
+    setTemplateToModify((prev) => ({ ...prev, zones: newZones }));
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  if (!arrayToIterate) return <p>No template data available.</p>;
-
-  const onDragEnd = (result: DropResult) => {
-    const { destination, draggableId } = result;
-    if (!destination || !draggableId || !arrayToIterate) return;
-
-    const newZones = arrayToIterate.zones.map((zone) => {
-      if (imgPreviews) {
-        const existingPreview = imgPreviews.find(
-          (obj) => obj.zoneId === zone.id
-        );
-        if (existingPreview) {
-          URL.revokeObjectURL(existingPreview.imgPreview);
-          const updatedPreviews = imgPreviews.filter(
-            (obj) => obj.zoneId !== zone.id
-          );
-          setImgPreviews(
-            updatedPreviews.length > 0 ? updatedPreviews : undefined
-          );
-          console.log("Updated imgPreviews:", updatedPreviews);
-        }
-      }
-      if (zone.id === destination.droppableId) {
-        const droppedElement = listElements.find((el) => el.id === draggableId);
-        return {
-          ...zone,
-          moduleType: droppedElement
-            ? droppedElement.title.toLowerCase()
-            : zone.moduleType,
-          size: "",
-          content: "",
-        };
-      }
-      return zone;
-    });
-
-    const updateFunction =
-      arrayToIterate.key === "templateToModify"
-        ? setTemplateToModify
-        : setZones;
-
-    updateFunction((prev: any) => ({ ...prev, zones: newZones }));
-  };
 
   return (
     <>
       <TemplateNavBar
-        saveButtonColor="[#766060]"
-        saveButtonHoverColor="[#5F4D4D]"
-        arrayToSave={arrayToIterate?.key}
+        saveButtonColor="#E83B4E"
+        saveButtonHoverColor="#BB3241"
+        arrayToSave={"templateToModify"}
       />
-      <section className="w-full h-[90dvh] flex justify-between bg-[#766060] gap-24">
-        <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-          <DataTemplate arrayToIterate={arrayToIterate} />
-          <TemplateCreationZone arrayToIterate={arrayToIterate} />
-          <DroppableArea arrayToSet={arrayToIterate?.key} />
+      <section className="w-full h-[90vh] flex justify-between bg-[#FFEDED] gap-24">
+        <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+          <DataTemplate arrayToIterate={"templateToModify"} />
+          <TemplateModificationZone
+            draggingItemType={draggingType}
+            socialModule={socialModule}
+          />
+          <DroppableArea />
         </DragDropContext>
       </section>
     </>
@@ -133,3 +235,11 @@ const TemplateModificationPage: React.FC = () => {
 };
 
 export default TemplateModificationPage;
+
+// const oldSubZoneIdsPerZone = cleanedTemplate.zones.map((zone) =>
+//   zone.subZones
+//     .map((subZone) => subZone.id)
+//     .filter((id) => Number.isInteger(id))
+// );
+
+// setOldSubZonesId(oldSubZoneIdsPerZone);
