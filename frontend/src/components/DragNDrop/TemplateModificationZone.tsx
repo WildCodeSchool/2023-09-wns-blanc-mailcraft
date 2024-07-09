@@ -199,7 +199,8 @@
 import React, { useEffect, useRef } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useTemplate } from "@/contexts/TemplateContext";
-import { useTemplateUtils } from "@/utils/templateUtils";
+import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
+import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
 import Image from "next/image";
 import Link from "next/link";
 import Modal from "react-modal";
@@ -211,15 +212,15 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     isModalModifyOpen,
     oldSubZonesId,
   } = useTemplate();
+  const { saveTemplateToModify, closeModifyModal } =
+    useTemplateModificationUtils();
   const {
     handleTextChange,
     removeSubZone,
     getImageSrc,
     createHandleFileChange,
-    closeModifyModal,
-    saveTemplateToModify,
     handleResetZones,
-  } = useTemplateUtils();
+  } = useTemplateCommonUtils();
 
   const fileInputRefs = useRef({});
 
@@ -280,15 +281,15 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     }
   }, [templateToModify, setTemplateToModify]);
 
-  useEffect(() => {
-    console.log(
-      `TEMPLATE TO MODIFY IS ----> ${JSON.stringify(templateToModify)}`
-    );
-  }, [templateToModify]);
+  // useEffect(() => {
+  //   console.log(
+  //     `TEMPLATE TO MODIFY IS ----> ${JSON.stringify(templateToModify)}`
+  //   );
+  // }, [templateToModify]);
 
-  useEffect(() => {
-    console.log(`OLD SUB ZONES ID ===`, oldSubZonesId);
-  }, [oldSubZonesId]);
+  // useEffect(() => {
+  //   console.log(`OLD SUB ZONES ID ===`, oldSubZonesId);
+  // }, [oldSubZonesId]);
 
   if (!templateToModify || !templateToModify.zones) {
     return <p>Loading template...</p>; // Adjust as necessary for your loading state
@@ -453,7 +454,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                                   )(
                                                     event,
                                                     templateToModify.zones,
-                                                    "template"
+                                                    "templateToModify"
                                                   )
                                                 }
                                               />

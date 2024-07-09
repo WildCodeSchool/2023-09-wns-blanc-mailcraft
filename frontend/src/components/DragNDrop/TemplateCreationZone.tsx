@@ -165,19 +165,22 @@
 import React, { useEffect, useRef } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useTemplate } from "@/contexts/TemplateContext";
-import { useTemplateUtils } from "@/utils/templateUtils";
+import { useTemplateCreationUtils } from "@/utils/templateCreationUtils";
+import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
 import Image from "next/image";
 import Link from "next/link";
 
 const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
   const { zones, setZones } = useTemplate();
+  const { saveTemplate, handleCreationError, closeModal } =
+    useTemplateCreationUtils();
   const {
     handleTextChange,
     removeSubZone,
     getImageSrc,
     createHandleFileChange,
     handleResetZones,
-  } = useTemplateUtils();
+  } = useTemplateCommonUtils();
 
   const fileInputRefs = useRef({});
 
@@ -191,9 +194,11 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
       ]);
     }
   }, [zones, setZones]);
+
   useEffect(() => {
     console.log(`New Zones are ${JSON.stringify(zones)}`);
   }, [zones]);
+
   return (
     <>
       <button
@@ -258,11 +263,6 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                         ? "opacity-50"
                                         : ""
                                     }`}
-                                    // style={{
-                                    //   flexBasis: `calc(${
-                                    //     100 / zone.subZones.length
-                                    //   }% - 10px)`,
-                                    // }}
                                   >
                                     <Droppable
                                       droppableId={subZone.id}
@@ -385,6 +385,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
     </>
   );
 };
+
 export default TemplateCreationZone;
 
 // useEffect(() => {

@@ -3,11 +3,7 @@ import {
   Template,
   IZone,
   ImgPreviews,
-  IListElement,
 } from "@/types/interfaces/template/template-interfaces";
-import imageIconSrc from "@/assets/template-page/icon-image.png";
-import logoIconSrc from "@/assets/template-page/lien-de-partage.png";
-import texteIconSrc from "@/assets/template-page/icon-texte.png";
 
 interface TemplateContextType {
   template: Template;
@@ -30,7 +26,8 @@ interface TemplateContextType {
   setOldZonesId: React.Dispatch<React.SetStateAction<Number[] | null>>;
   isModalModifyOpen: boolean;
   setIsModalModifyOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  // listElements: IListElement[];
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const TemplateContext = createContext<TemplateContextType | undefined>(
@@ -64,24 +61,7 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
   const [oldSubZonesId, setOldSubZonesId] = useState<Number[] | []>([]);
   const [oldZonesId, setOldZonesId] = useState<Number[] | null>(null);
   const [isModalModifyOpen, setIsModalModifyOpen] = useState(false);
-
-  // const listElements: IListElement[] = [
-  //   {
-  //     id: "1",
-  //     title: "Texte",
-  //     picture: texteIconSrc,
-  //   },
-  //   {
-  //     id: "2",
-  //     title: "Image",
-  //     picture: imageIconSrc,
-  //   },
-  //   {
-  //     id: "3",
-  //     title: "Logo",
-  //     picture: logoIconSrc,
-  //   },
-  // ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <TemplateContext.Provider
@@ -94,7 +74,6 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
         setImgPreview,
         imgPreviews,
         setImgPreviews,
-        // listElements,
         templateToModify,
         setTemplateToModify,
         oldTemplateToModify,
@@ -105,6 +84,8 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
         setOldZonesId,
         isModalModifyOpen,
         setIsModalModifyOpen,
+        isModalOpen,
+        setIsModalOpen,
       }}
     >
       {children}

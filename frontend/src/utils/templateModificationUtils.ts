@@ -1,31 +1,39 @@
 import axios from "axios";
-import { ApolloError, gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useTemplate } from "@/contexts/TemplateContext";
-
+import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
+import { MODIFY_TEMPLATE } from "@/client/mutations/template/template-mutations";
 import {
-  IListElement,
-  IZone,
-  Template,
-} from "@/types/interfaces/template/template-interfaces";
-import { useState, useEffect } from "react";
-import imageIconSrc from "@/assets/template-page/icon-image.png";
-import logoIconSrc from "@/assets/template-page/lien-de-partage.png";
-import texteIconSrc from "@/assets/template-page/icon-texte.png";
-import {
-  CREATE_TEMPLATE,
   CREATE_ZONE,
-  CREATE_SUBZONE,
-  DELETE_TEMPLATE,
-  DELETE_OLD_SUBZONES,
-  MODIFY_TEMPLATE,
-  MODIFY_ZONE_SUBZONES,
-  DELETE_TEMPLATE_ZONES,
-  MODIFY_SUBZONE,
   UPDATE_ZONE,
-} from "@/client/mutations/template/template-mutations";
-import { useRouter } from "next/router";
+  DELETE_TEMPLATE_ZONES,
+} from "@/client/mutations/template/zone-mutations";
+import {
+  CREATE_SUBZONE,
+  MODIFY_SUBZONE,
+  DELETE_OLD_SUBZONES,
+} from "@/client/mutations/template/subZone-mutations";
 
 export const useTemplateModificationUtils = () => {
+  const { zoneHasNoValue, isTemporarySubZone } = useTemplateCommonUtils();
+
+  const {
+    templateToModify,
+    oldZonesId,
+    oldSubZonesId,
+    isModalModifyOpen,
+    setIsModalModifyOpen,
+    setOldSubZonesId,
+  } = useTemplate();
+
+  const [modifyTemplate] = useMutation(MODIFY_TEMPLATE);
+  const [updateZone] = useMutation(UPDATE_ZONE);
+  const [createZone] = useMutation(CREATE_ZONE);
+  const [deleteTemplateZones] = useMutation(DELETE_TEMPLATE_ZONES);
+  const [createSubZone] = useMutation(CREATE_SUBZONE);
+  const [modifySubZone] = useMutation(MODIFY_SUBZONE);
+  const [deleteOldSubZones] = useMutation(DELETE_OLD_SUBZONES);
+
   const saveTemplateToModify = async (template, status) => {
     const templateData = {
       title: template.title,
@@ -42,7 +50,6 @@ export const useTemplateModificationUtils = () => {
         },
       });
 
-      // Traiter chaque zone et ses sous-zones
       let zonesToDelete = [];
 
       for (const [index, zone] of template.zones.entries()) {
@@ -63,7 +70,7 @@ export const useTemplateModificationUtils = () => {
             },
           });
         }
-        // Création de zone si nécessaire
+
         if (
           zone.id &&
           typeof zone.id === "string" &&
@@ -75,10 +82,9 @@ export const useTemplateModificationUtils = () => {
           newZoneId = zoneResponse.data.createZone.id;
         }
 
-        handleSubZones(zone, newZoneId);
+        await handleSubZones(zone, newZoneId);
       }
 
-      // case si zone a été vidée de ses subZones
       if (zonesToDelete.length > 0) {
         await deleteTemplateZones({
           variables: {
@@ -88,7 +94,6 @@ export const useTemplateModificationUtils = () => {
         });
       }
 
-      // case si clear Zones a été utilisé
       if (oldZonesId && oldZonesId.length > 0) {
         await deleteTemplateZones({
           variables: {
@@ -98,7 +103,6 @@ export const useTemplateModificationUtils = () => {
         });
       }
 
-      // case si des subZones ont été supprimé par le bouton ou un dragNdrop
       if (oldSubZonesId && oldSubZonesId.length > 0) {
         await deleteOldSubZones({
           variables: {
@@ -112,21 +116,75 @@ export const useTemplateModificationUtils = () => {
       if (isModalModifyOpen) {
         closeModifyModal();
       }
-      // if (status === "created") {
-      //   router.push("/user/myTemplates").then(() => {
-      //     window.location.reload();
-      //   });
-      // } else if (status === "draft") {
-      //   router.push("/user/myTemplatesDrafts").then(() => {
-      //     window.location.reload();
-      //   });
-      // }
 
       console.log("Zones have been successfully updated.");
     } catch (error) {
       console.error("Error while updating the template or zones:", error);
       console.log(error.stack);
-      // Potentiel gestion des erreurs ou rollback ici
     }
+  };
+
+  const handleSubZones = async (zone, newZoneId) => {
+    for (const subZone of zone.subZones) {
+      let subZoneContent = subZone.content;
+      if (
+        subZone.moduleType === "image" &&
+        subZone.content instanceof FileList &&
+        subZone.content.length > 0
+      ) {
+        const formData = new FormData();
+        formData.append("file", subZone.content[0]);
+        const uploadResponse = await axios.post(
+          "http://localhost:5000/template-images-upload",
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        subZoneContent = uploadResponse.data.url;
+      }
+
+      const subZoneData = {
+        zoneId: newZoneId,
+        order: subZone.order,
+        moduleType: subZone.moduleType,
+        content: subZoneContent,
+        size: subZone.size || "138",
+        links: subZone.links,
+      };
+
+      if (isTemporarySubZone(subZone)) {
+        await createSubZone({ variables: { subZoneData } });
+      } else {
+        await modifySubZone({
+          variables: { subZoneId: subZone.id, subZoneData },
+        });
+      }
+    }
+  };
+
+  const isTemporaryZone = (zone): boolean => {
+    if (typeof zone.id !== "number" && zone.id.startsWith("temp-zone")) {
+      return true;
+    }
+    return false;
+  };
+
+  const addZoneSubZonesToDelete = (zone): number[] => {
+    return zone.subZones
+      ? zone.subZones
+          .filter((subZone) => !isTemporarySubZone(subZone))
+          .map((subZone) => subZone.id)
+      : [];
+  };
+
+  const closeModifyModal = () => {
+    setIsModalModifyOpen(false);
+  };
+
+  return {
+    saveTemplateToModify,
+    handleSubZones,
+    closeModifyModal,
+    isTemporaryZone,
+    addZoneSubZonesToDelete,
   };
 };

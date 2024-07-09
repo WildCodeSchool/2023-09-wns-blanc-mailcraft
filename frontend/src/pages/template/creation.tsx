@@ -5,14 +5,11 @@ import TemplateCreationZone from "@/components/DragNDrop/TemplateCreationZone";
 import DroppableArea from "@/components/DragNDrop/DroppableArea";
 import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
 import { useTemplate } from "@/contexts/TemplateContext";
-import { useTemplateUtils } from "@/utils/templateUtils";
 import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 const TemplatePage = () => {
-  const { listElements } = useTemplateUtils();
   const { zones, setZones, template } = useTemplate();
-  const [arrayToIterate, setArrayToIterate] = useState(null);
   const [draggingType, setDraggingType] = useState("");
 
   const socialModule = [
@@ -158,9 +155,6 @@ const TemplatePage = () => {
     // setDraggingType("");
   };
 
-  // useEffect(() => {
-  //   console.log(`New value for ${draggingType}`);
-  // }, [draggingType]);
   return (
     <>
       <TemplateNavBar

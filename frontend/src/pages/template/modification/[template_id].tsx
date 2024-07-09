@@ -14,8 +14,7 @@ import { GET_TEMPLATE_BY_ITS_ID } from "@/client/queries/template/template-queri
 import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
-import { useTemplateUtils } from "@/utils/templateUtils";
-import { log } from "console";
+import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
 
 const TemplateModificationPage = () => {
   const router = useRouter();
@@ -26,7 +25,7 @@ const TemplateModificationPage = () => {
     setOldTemplateToModify,
     setOldSubZonesId,
   } = useTemplate();
-  const { addZoneSubZonesToDelete } = useTemplateUtils();
+  const { addZoneSubZonesToDelete } = useTemplateModificationUtils();
   const [draggingType, setDraggingType] = useState("");
 
   function removeTypenames(obj) {
@@ -235,11 +234,3 @@ const TemplateModificationPage = () => {
 };
 
 export default TemplateModificationPage;
-
-// const oldSubZoneIdsPerZone = cleanedTemplate.zones.map((zone) =>
-//   zone.subZones
-//     .map((subZone) => subZone.id)
-//     .filter((id) => Number.isInteger(id))
-// );
-
-// setOldSubZonesId(oldSubZoneIdsPerZone);
