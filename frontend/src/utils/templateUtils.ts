@@ -143,8 +143,8 @@ export const useTemplateUtils = () => {
     let newTemplateId;
     try {
       // Vérification des champs obligatoires
-      if (!template.title || !template.description) {
-        setErrorMessage("Tous les champs obligatoires doivent être remplis");
+      if (!template.title) {
+        setErrorMessage("Le template n'a pas de titre");
         setIsModalErrorOpen(true);
         return;
       }
@@ -155,7 +155,7 @@ export const useTemplateUtils = () => {
       );
 
       if (areAllZonesEmpty) {
-        setErrorMessage("Les zones ne doivent pas être vides");
+        setErrorMessage("Le template n'a pas de contenu");
         setIsModalErrorOpen(true);
         return;
       }
@@ -164,7 +164,7 @@ export const useTemplateUtils = () => {
         console.log("subzones : ", zones);
         for (const subZone of zone.subZones) {
           if (!subZone.content || subZone.content.length === 0) {
-            setErrorMessage("Le template n'a pas de contenu");
+            setErrorMessage("Les zones ne doivent pas être vides");
             setIsModalErrorOpen(true);
             return;
           }
@@ -259,12 +259,8 @@ export const useTemplateUtils = () => {
     };
     try {
       // Vérification des champs obligatoires
-      if (
-        !template.title ||
-        !template.description ||
-        !template.templateNature
-      ) {
-        throw new Error("Tous les champs obligatoires doivent être remplis");
+      if (!template.title) {
+        throw new Error("Le template n'a pas de titre");
       }
 
       const response = await modifyTemplate({

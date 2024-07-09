@@ -77,7 +77,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                     className={`flex p-2 h-24 md:max-h-none text-sm md:text-base border-2 border-dashed border-gray-600 ${getWidthClass(zone.subZones.length)}`}
                   >
                     {subZone.moduleType === 'texte' ? (
-                      <p className="text-gray-800">{truncateText(subZone.content, 10)}</p>
+                      <p className="text-gray-800 text-sm">{truncateText(subZone.content, 8)}</p>
                     ) : subZone.moduleType === 'image' ? (
                       <Image
                         src={subZone.content}
@@ -124,8 +124,8 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
             className={`template-panel absolute top-0 left-0 w-full h-full bg-[#9F3D3D] z-10 flex flex-col justify-between items-center transition-opacity ${showDataPanel ? "opacity-100" : "opacity-0"
               }`}
           >
-            <h1 className="text-white text-2xl mt-3 font-medium">{title}</h1>
-            <p className="text-white text-xl italic">{description}</p>
+            <h1 className="text-white text-2xl mt-3 font-medium px-4">{title}</h1>
+            <p className="text-white text-xl italic px-4 break-words">{description}</p>
             <div>{/* Div vide pour le placement flexbox */}</div>
           </div>
         </div>

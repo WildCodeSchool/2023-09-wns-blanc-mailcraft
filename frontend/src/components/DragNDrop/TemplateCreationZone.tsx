@@ -345,7 +345,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                               )
                                             }
                                             placeholder="Entrez votre texte ici..."
-                                            className="w-full h-20 border-0 focus:ring-0 resize-none bg-transparent p-0 m-0"
+                                            className="w-full h-20 border-0 focus:ring-0 resize-none bg-transparent p-0 m-0 overflow-hidden"
                                           />
                                         )}
                                         {subZone.moduleType === "image" && (
@@ -405,7 +405,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                     )}
                                   </Droppable>
                                   <button
-                                    className="absolute top-0 right-0 p-1 text-lg"
+                                    className="absolute top-0 right-0 pe-1 text-lg"
                                     onClick={() =>
                                       removeSubZone(subZone.id, "template")
                                     }
