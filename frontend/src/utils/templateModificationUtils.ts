@@ -13,6 +13,7 @@ import {
   MODIFY_SUBZONE,
   DELETE_OLD_SUBZONES,
 } from "@/client/mutations/template/subZone-mutations";
+import { useRouter } from 'next/router';
 
 export const useTemplateModificationUtils = () => {
   const { zoneHasNoValue, isTemporarySubZone } = useTemplateCommonUtils();
@@ -33,6 +34,8 @@ export const useTemplateModificationUtils = () => {
   const [createSubZone] = useMutation(CREATE_SUBZONE);
   const [modifySubZone] = useMutation(MODIFY_SUBZONE);
   const [deleteOldSubZones] = useMutation(DELETE_OLD_SUBZONES);
+
+  const router = useRouter();
 
   const saveTemplateToModify = async (template, status) => {
     const templateData = {
@@ -118,6 +121,11 @@ export const useTemplateModificationUtils = () => {
       }
 
       console.log("Zones have been successfully updated.");
+
+      // Redirection avec  rechargement de la page
+      router.replace(router.asPath).then(() => {
+        router.push('/user/myTemplates');
+      });
     } catch (error) {
       console.error("Error while updating the template or zones:", error);
       console.log(error.stack);

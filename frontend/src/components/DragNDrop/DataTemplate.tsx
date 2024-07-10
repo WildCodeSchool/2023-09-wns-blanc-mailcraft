@@ -9,6 +9,7 @@ interface DataTemplateProps {
 const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
   const { handleTemplateChange } = useTemplateCommonUtils();
   const { template, templateToModify } = useTemplate();
+  const isTemplateToModify = arrayToIterate === "templateToModify";
 
   return (
     <div
@@ -36,7 +37,8 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
             }}
             required
             placeholder="Entrez votre titre ici..."
-            className="input input-bordered border-red-100 w-full h-8 pl-2 rounded-md bg-[#FFEDED] text-gray-700"
+            className={`"input input-bordered border-red-100 w-full h-8 pl-2 rounded-md ${isTemplateToModify
+              ? "bg-[#766060] text-white" : "bg-[#FFEDED] text-gray-700"}`}
           />
         </div>
       </div>
@@ -50,7 +52,8 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
               handleTemplateChange(e, "templateNature", arrayToIterate);
             }}
             required
-            className="select select-bordered border-red-100 w-full h-8 pl-2 rounded-md bg-[#FFEDED] text-gray-700"
+            className={`select select-bordered border-red-100 w-full h-8 pl-2 rounded-md ${isTemplateToModify
+              ? "bg-[#766060] text-white" : "bg-[#FFEDED] text-gray-700"}`}
           >
             {templateNatures.map((templateNature, index) => (
               <option value={templateNature} selected>
@@ -79,7 +82,9 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
               handleTemplateChange(e, "description", arrayToIterate);
             }}
             placeholder="Entrez votre description ici..."
-            className="textarea textarea-bordered border-red-100 w-full h-[35dvh] px-2 rounded-md bg-[#FFEDED] focus:border-red-100 focus:ring-0 resize-none text-gray-700"
+            className={`textarea textarea-bordered border-red-100 w-full h-[35dvh] pt-1 px-2 rounded-md focus:border-red-100 focus:ring-0 resize-none text-gray-700
+            ${isTemplateToModify
+                ? "bg-[#766060] placeholder-gray-300 text-white" : "bg-[#FFEDED] text-gray-700"}`}
           ></textarea>
         </div>
       </div>

@@ -217,9 +217,9 @@ const TemplateModificationPage = () => {
       <TemplateNavBar
         saveButtonColor="#E83B4E"
         saveButtonHoverColor="#BB3241"
-        arrayToSave={"templateToModify"}
+        arrayToIterate={"templateToModify"}
       />
-      <section className="w-full h-[90vh] flex justify-between bg-[#FFEDED] gap-24">
+      <section className="w-full h-[90vh] flex justify-between bg-[#766060] gap-24">
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <DataTemplate arrayToIterate={"templateToModify"} />
           <TemplateModificationZone

@@ -21,10 +21,7 @@ const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
     if (isTemplateToModify) {
       setIsModalModifyOpen(true);
     } else {
-      const success = await saveTemplate("created");
-      if (success) {
-        router.push("/user/myTemplates");
-      }
+      saveTemplate("created");
     }
   };
 
@@ -49,8 +46,8 @@ const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
         <button
           type="button"
           className={`px-6 py-2 text-white rounded-xl text-md w-full xl:w-[9vw] shadow-lg ${isTemplateToModify
-              ? "bg-[#766060] hover:bg-[#5F4D4D]"
-              : "bg-red-500 hover:bg-red-600"
+            ? "bg-[#766060] hover:bg-[#5F4D4D]"
+            : "bg-red-500 hover:bg-red-600"
             }`}
           onClick={handleClick}
 

@@ -22,6 +22,7 @@ export const useTemplateCommonUtils = () => {
     zones,
     imgPreview,
     imgPreviews,
+    setIsModalErrorOpen
   } = useTemplate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -305,6 +306,14 @@ export const useTemplateCommonUtils = () => {
     return typeof subZone.id === "string";
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const closeErrorModal = () => {
+    setIsModalErrorOpen(false);
+  };
+
   return {
     zoneHasNoValue,
     handleResetZones,
@@ -317,5 +326,7 @@ export const useTemplateCommonUtils = () => {
     removeSubZone,
     isTemporarySubZone,
     listElements,
+    closeModal,
+    closeErrorModal
   };
 };

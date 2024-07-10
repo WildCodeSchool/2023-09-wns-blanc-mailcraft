@@ -220,7 +220,6 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     handleTextChange,
     removeZone,
     isModalOpen,
-    closeModifyModal,
     closeErrorModal,
     resetZones,
     removeSubZone,
@@ -304,40 +303,38 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
 
   return (
     <>
-      <button
-        onClick={() => {
-          handleResetZones("templateToModify");
-        }}
-      >
-        clean zones
-      </button>
       <Modal
         isOpen={isModalModifyOpen}
         onRequestClose={closeModifyModal}
         contentLabel="Enregistrement du template"
+        className="bg-white w-2/5 h-1/4 m-auto fixed inset-0 border border-gray-400 rounded-lg flex flex-col justify-start"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
       >
         <button
           onClick={closeModifyModal}
-          className="absolute top-0 right-0 p-2 text-lg text-gray-600 hover:text-gray-800"
+          className="absolute top-2 right-1 p-2 text-gray-700 hover:text-gray-900"
         >
           &times;
         </button>
-        <h2 className="text-lg font-semibold text-center">
-          Êtes-vous satisfait de ce template ?
-        </h2>
-        <div className="flex justify-around mt-4">
-          <button
-            onClick={() => saveTemplateToModify(templateToModify, "created")}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-          >
-            Oui, enregistrer
-          </button>
-          <button
-            onClick={() => saveTemplateToModify(templateToModify, "draft")}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-          >
-            Non, enregistrer en brouillon
-          </button>
+        <div className="w-full h-3 rounded-t-lg bg-red-500"></div>
+        <div className="flex flex-col justify-center items-center gap-10">
+          <h2 className="text-lg font-semibold text-center mt-3">
+            Êtes-vous satisfait de ce template ?
+          </h2>
+          <div className="flex justify-around gap-8">
+            <button
+              onClick={() => saveTemplateToModify(templateToModify, "created")}
+              className="px-7 py-2 bg-gray-100 text-black hover:bg-gray-200 rounded border border-gray-300 shadow-md"
+            >
+              Oui, sauvegarder
+            </button>
+            <button
+              onClick={() => saveTemplateToModify(templateToModify, "draft")}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Non, enregistrer en brouillon
+            </button>
+          </div>
         </div>
       </Modal>
 
@@ -375,8 +372,15 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
           <section
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="zones-container flex flex-col w-[65%] p-4 bg-white justify-center mt-10"
+            className="zones-container relative flex flex-col w-[65%] p-4 bg-white justify-center mt-7"
           >
+            <button className="absolute top-2 right-2" onClick={() => {
+              handleResetZones("templateToModify");
+            }}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+              </svg>
+            </button>
             {templateToModify.zones.map((zone, index) => (
               <Draggable
                 key={zone.dndId}
@@ -388,11 +392,8 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                     ref={providedZone.innerRef}
                     {...providedZone.draggableProps}
                     {...providedZone.dragHandleProps}
-                    className={`zone ${
-                      snapshotZone.isDragging ? "opacity-50" : ""
-                    } flex flex-col gap-2.5 p-5 border-2 border-dashed border-gray-400 mb-5 ${
-                      snapshotZone.isDraggingOver ? "bg-pink-100" : "bg-white"
-                    }`}
+                    className={`zone ${snapshotZone.isDragging ? "opacity-50" : ""
+                      } flex flex-col gap-2.5 p-5 border-2 border-dashed border-gray-400 mb-5`}
                   >
                     <Droppable
                       droppableId={zone.dndId}
@@ -420,11 +421,10 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                     ref={providedSubZone.innerRef}
                                     {...providedSubZone.draggableProps}
                                     {...providedSubZone.dragHandleProps}
-                                    className={`subzone flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative flex ${
-                                      snapshotSubZone.isDragging
-                                        ? "opacity-50"
-                                        : ""
-                                    }`}
+                                    className={`subzone flex justify-around items-center flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${snapshotSubZone.isDragging
+                                      ? "opacity-50"
+                                      : ""
+                                      }`}
                                   >
                                     <Droppable
                                       droppableId={subZone.dndId} // Convert ID to string
@@ -452,8 +452,8 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                                   "templateToModify"
                                                 )
                                               }
-                                              placeholder="Enter text here"
-                                              className="textarea w-full h-20"
+                                              placeholder="Entrez votre texte ici..."
+                                              className="w-full h-20 border-0 focus:ring-0 resize-none bg-transparent p-0 m-0 overflow-hidden"
                                             />
                                           )}
                                           {subZone.moduleType === "image" && (
@@ -477,9 +477,9 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                                 type="file"
                                                 hidden
                                                 ref={(el) =>
-                                                  (fileInputRefs.current[
-                                                    subZone.id
-                                                  ] = el)
+                                                (fileInputRefs.current[
+                                                  subZone.id
+                                                ] = el)
                                                 }
                                                 onChange={(event) =>
                                                   createHandleFileChange(
@@ -532,7 +532,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                             ))
                           ) : (
                             <p className="text-gray-500 text-center flex-grow">
-                              Drop columns here
+                              Glissez une structure ici
                             </p>
                           )}
                           {providedSub.placeholder}
