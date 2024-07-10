@@ -1,6 +1,6 @@
 import { useTemplate } from "@/contexts/TemplateContext";
 import { TemplateNavBarProps } from "@/types/interfaces/props/template-navbar-props";
-import { useTemplateUtils } from "@/utils/templateUtils";
+import { useTemplateCreationUtils } from "@/utils/templateCreationUtils";
 import { useRouter } from "next/router";
 
 const TemplateSaveButton = ({
@@ -8,7 +8,7 @@ const TemplateSaveButton = ({
   saveButtonHoverColor,
   arrayToSave,
 }: TemplateNavBarProps) => {
-  const { saveTemplate } = useTemplateUtils();
+  const { saveTemplate } = useTemplateCreationUtils();
   const { setIsModalModifyOpen } = useTemplate();
   const buttonClasses = `px-6 py-2 text-white bg-${saveButtonColor} hover:bg-${saveButtonHoverColor} rounded-xl text-md w-full xl:w-[9vw] shadow-lg`;
   const router = useRouter();

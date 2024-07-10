@@ -1,5 +1,5 @@
 import { templateNatures } from "@/utils/templateNatures";
-import { useTemplateUtils } from "@/utils/templateUtils";
+import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
 import { ArrayToIterate } from "@/types/interfaces/template/template-interfaces";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useEffect } from "react";
@@ -7,7 +7,7 @@ interface DataTemplateProps {
   arrayToIterate: string;
 }
 const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
-  const { handleTemplateChange } = useTemplateUtils();
+  const { handleTemplateChange } = useTemplateCommonUtils();
   const { template, templateToModify } = useTemplate();
 
   return (
@@ -84,7 +84,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
         </div>
       </div>
     </div>
-  );
+  );  
 };
 
 export default DataTemplate;

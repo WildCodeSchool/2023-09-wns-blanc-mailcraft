@@ -7,8 +7,21 @@ export const GET_TEMPLATE_BY_ITS_ID = gql`
       title
       description
       templateNature
+      creationDate
+      status
+      userId
       zones {
         id
+        order
+        subZones {
+          id
+          order
+          moduleType
+          content
+          size
+          links
+          zoneId
+        }
         templateId
         subZones {
           id
