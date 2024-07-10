@@ -20,6 +20,36 @@ export const useTemplateCreationUtils = () => {
   const saveTemplate = async (templateStatus) => {
     let newTemplateId;
     try {
+      // Vérification des champs obligatoires
+      if (!template.title) {
+        setErrorMessage("Le template n'a pas de titre");
+        setIsModalErrorOpen(true);
+        return;
+      }
+
+      // Vérification si les zones ou leurs subzones sont vides
+      const areAllZonesEmpty = zones.every(
+        (zone) => !zone.subZones || zone.subZones.length === 0
+      );
+
+      if (areAllZonesEmpty) {
+        setErrorMessage("Le template n'a pas de contenu");
+        setIsModalErrorOpen(true);
+        return;
+      }
+
+      for (const zone of zones) {
+        console.log("subzones : ", zones);
+        for (const subZone of zone.subZones) {
+          if (!subZone.content || subZone.content.length === 0) {
+            setErrorMessage("Les zones ne doivent pas être vides");
+            setIsModalErrorOpen(true);
+            return;
+          }
+        }
+      }
+
+      // Création du template
       const templateResponse = await createTemplate({
         variables: {
           templateData: { ...template, status: templateStatus },
@@ -27,18 +57,18 @@ export const useTemplateCreationUtils = () => {
       });
       newTemplateId = templateResponse.data.createTemplate.id;
 
+      // Création des zones et subzones en série pour chaque zone
       for (const zone of zones) {
-        if (zoneHasNoValue(zone)) {
-          continue;
-        }
         const { data: zoneResponse } = await createZone({
-          variables: { templateId: newTemplateId, zoneOrder: zone.order },
+          variables: { templateId: newTemplateId },
         });
         const newZoneId = zoneResponse.createZone.id;
 
+        // Gestion de toutes les subzones pour la zone courante
         for (const subZone of zone.subZones) {
           let subZoneContent = subZone.content;
-          if (subZone.moduleType === "image" && subZone.content.length > 0) {
+          // Gestion de l'upload d'images si nécessaire
+          if (subZone.moduleType === "image") {
             const formData = new FormData();
             formData.append("file", subZone.content[0]);
             const uploadResponse = await axios.post(
@@ -49,10 +79,10 @@ export const useTemplateCreationUtils = () => {
             subZoneContent = uploadResponse.data.url;
           }
 
+          // Création de la subzone avec le contenu possiblement mis à jour
           await createSubZone({
             variables: {
               subZoneData: {
-                order: subZone.order,
                 moduleType: subZone.moduleType,
                 content: subZoneContent,
                 size: subZone.size,
@@ -63,17 +93,18 @@ export const useTemplateCreationUtils = () => {
           });
         }
       }
-      alert("Succès");
-      console.log(
-        "Tous les templates, zones et subzones ont été créés avec succès."
-      );
-      // resetStateAfterSuccess();
+
+      alert("Votre template a été créé avec succès");
+      console.log("Succès");
+      return true;
+      // resetStateAfterSuccess(); à implémenter pour reset les states
     } catch (error) {
       console.error(
         "Erreur lors de la création du template ou des zones:",
         error
       );
       handleCreationError(newTemplateId);
+      return false;
     }
   };
 

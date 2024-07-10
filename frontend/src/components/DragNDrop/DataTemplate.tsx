@@ -84,7 +84,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
         </div>
       </div>
     </div>
-  );  
+  );
 };
 
 export default DataTemplate;

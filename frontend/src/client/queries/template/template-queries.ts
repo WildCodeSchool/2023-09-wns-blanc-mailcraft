@@ -22,15 +22,6 @@ export const GET_TEMPLATE_BY_ITS_ID = gql`
           links
           zoneId
         }
-        templateId
-        subZones {
-          id
-          content
-          links
-          moduleType
-          size
-          zoneId
-        }
       }
     }
   }
