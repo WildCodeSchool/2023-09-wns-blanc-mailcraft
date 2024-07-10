@@ -2,10 +2,9 @@ import React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import ZoneCreation from "./ZoneCreation";
 import Module from "./Module";
-import { useTemplateUtils } from "@/utils/templateUtils";
-
+import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
 const DroppableArea = () => {
-  const { listElements } = useTemplateUtils();
+  const { listElements } = useTemplateCommonUtils();
 
   return (
     <section className="w-[20%] h-[90%] me-5 my-6">

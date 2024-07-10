@@ -5,14 +5,11 @@ import TemplateCreationZone from "@/components/DragNDrop/TemplateCreationZone";
 import DroppableArea from "@/components/DragNDrop/DroppableArea";
 import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
 import { useTemplate } from "@/contexts/TemplateContext";
-import { useTemplateUtils } from "@/utils/templateUtils";
 import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 const TemplatePage = () => {
-  const { listElements } = useTemplateUtils();
   const { zones, setZones, template } = useTemplate();
-  const [arrayToIterate, setArrayToIterate] = useState(null);
   const [draggingType, setDraggingType] = useState("");
 
   const socialModule = [
@@ -55,9 +52,10 @@ const TemplatePage = () => {
     id.startsWith("zone-") && !id.includes("-subzone-");
   const isSubZone = (id) => id.includes("-subzone-");
 
+  // a factoriser ou simplifier plus tard mais fonctionnel
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
-    console.log("Drag End Result:", result); // Debugging log
+    console.log("Drag End Result:", result);
 
     if (!destination) {
       console.warn("Drag ended outside of any droppable area.");
@@ -72,7 +70,11 @@ const TemplatePage = () => {
       const newZones = Array.from(zones);
       const [removed] = newZones.splice(source.index, 1);
       newZones.splice(destination.index, 0, removed);
-      setZones(newZones);
+      const reorderedZones = newZones.map((zone, index) => ({
+        ...zone,
+        order: index + 1,
+      }));
+      setZones(reorderedZones);
     }
 
     // Handle swapping subzones within the same main zone
@@ -87,10 +89,14 @@ const TemplatePage = () => {
       const newSubZones = Array.from(zones[zoneIndex].subZones);
       const [removedSubZone] = newSubZones.splice(source.index, 1);
       newSubZones.splice(destination.index, 0, removedSubZone);
-
+      // Maj de order
+      const reorderedSubZones = newSubZones.map((subZone, index) => ({
+        ...subZone,
+        order: index + 1,
+      }));
       setZones((prevZones) =>
         prevZones.map((zone, idx) =>
-          idx === zoneIndex ? { ...zone, subZones: newSubZones } : zone
+          idx === zoneIndex ? { ...zone, subZones: reorderedSubZones } : zone
         )
       );
     }
@@ -103,6 +109,7 @@ const TemplatePage = () => {
       const numColumns = parseInt(draggableId.split("-")[1], 10);
       const newSubZones = Array.from({ length: numColumns }, (_, index) => ({
         id: `${destination.droppableId}-subzone-${index}`,
+        order: index + 1,
         moduleType: "",
         content: "",
         size: "",
@@ -148,9 +155,6 @@ const TemplatePage = () => {
     // setDraggingType("");
   };
 
-  // useEffect(() => {
-  //   console.log(`New value for ${draggingType}`);
-  // }, [draggingType]);
   return (
     <>
       <TemplateNavBar

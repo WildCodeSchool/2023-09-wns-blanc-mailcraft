@@ -6,6 +6,7 @@ export interface IListElement {
 
 export interface IZone {
   id: string;
+  dndId?: string;
   moduleType: string;
   content: any;
   size?: string;
@@ -20,7 +21,11 @@ export interface ISubZone {
   size?: string;
   zoneId: IZone;
 }
-
+export interface MainZone {
+  id: string;
+  dndId?: string;
+  subZones: IZone[];
+}
 export interface ModuleProps {
   title: string;
   picture: any;
@@ -38,7 +43,7 @@ export type Template = {
   templateNature?: string;
   status?: string;
   userId: number;
-  zones?: IZone[];
+  zones?: MainZone[];
 };
 
 export type ArrayToIterate = {

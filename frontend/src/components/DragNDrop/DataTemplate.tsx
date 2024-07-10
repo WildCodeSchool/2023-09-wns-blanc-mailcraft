@@ -1,5 +1,5 @@
 import { templateNatures } from "@/utils/templateNatures";
-import { useTemplateUtils } from "@/utils/templateUtils";
+import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
 import { ArrayToIterate } from "@/types/interfaces/template/template-interfaces";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useEffect } from "react";
@@ -7,7 +7,7 @@ interface DataTemplateProps {
   arrayToIterate: string;
 }
 const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
-  const { handleTemplateChange } = useTemplateUtils();
+  const { handleTemplateChange } = useTemplateCommonUtils();
   const { template, templateToModify } = useTemplate();
 
   return (
@@ -50,10 +50,10 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
               handleTemplateChange(e, "templateNature", arrayToIterate);
             }}
             required
-            className="select select-bordered border-red-100 w-full h-8 pl-2 rounded-md bg-[#FFEDED] text-gray-700"
+            className="select select-bordered border-red-100 w-11/12 h-8 rounded-md bg-[#FFEDED] text-gray-400"
           >
             {templateNatures.map((templateNature, index) => (
-              <option value={templateNature} selected>
+              <option key={index} value={templateNature} selected>
                 {templateNature}
               </option>
             ))}
@@ -61,10 +61,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
         </div>
       </div>
       <div className="input flex flex-col gap-3">
-        <label
-          htmlFor="description"
-          className="font-medium ms-1 text-[#5C5A5A]"
-        >
+        <label htmlFor="description" className="font-medium ms-1 text-[#5C5A5A]">
           Description du template
         </label>
         <div className="form-control w-full">

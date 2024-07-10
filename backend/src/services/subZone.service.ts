@@ -9,9 +9,10 @@ export const createSubZone = async (
 ): Promise<String | undefined> => {
   try {
     const newSubZone = new SubZone();
+    newSubZone.order = subZoneData.order;
     newSubZone.moduleType = subZoneData.moduleType;
     newSubZone.content = subZoneData.content;
-    newSubZone.size = subZoneData.size;
+    newSubZone.size = subZoneData.size || "defaultSize";
     if (
       subZoneData.links &&
       Array.isArray(subZoneData.links) &&
@@ -52,37 +53,94 @@ export const deleteZoneSubZones = async (
     return `No subZones have been deleted for zone ${zoneId}`;
   }
 };
-export const updateZoneSubZones = async (
-  zoneId: number,
-  newSubZonesData: Array<any>,
-  oldSubZonesId: Array<number>
-): Promise<string> => {
-  const queryRunner = dataSource.createQueryRunner();
+// export const updateZoneSubZones = async (
+//   zoneId: number,
+//   newSubZonesData: Array<any>
+// ): Promise<string> => {
+//   const queryRunner = dataSource.createQueryRunner();
 
-  await queryRunner.connect();
-  await queryRunner.startTransaction();
+//   await queryRunner.connect();
+//   await queryRunner.startTransaction();
 
+//   try {
+//     for (const subZoneData of newSubZonesData) {
+//       const newSubZone = queryRunner.manager.create(SubZone, {
+//         moduleType: subZoneData.moduleType,
+//         content: subZoneData.content,
+//         ...(subZoneData.size && { size: subZoneData.size }),
+//         zoneId: zoneId,
+//       });
+//       await queryRunner.manager.save(newSubZone);
+//     }
+
+//     await queryRunner.commitTransaction();
+//     return "Template, zones and subZones successfully updated";
+//   } catch (error) {
+//     // Rollback toute la transaction en cas d'erreur pour assurer l'intégrité
+//     await queryRunner.rollbackTransaction();
+//     console.error("Transaction failed:", error);
+//     return "Failed to update template, zones and subZones";
+//   } finally {
+//     await queryRunner.release();
+//   }
+// };
+
+export const deleteOldSubZones = async (
+  oldSubZonesId: number[]
+): Promise<String> => {
   try {
-    for (const subZoneData of newSubZonesData) {
-      const newSubZone = queryRunner.manager.create(SubZone, {
-        moduleType: subZoneData.moduleType,
-        content: subZoneData.content,
-        ...(subZoneData.size && { size: subZoneData.size }),
-        zoneId: zoneId,
-      });
-      await queryRunner.manager.save(newSubZone);
+    // On supprime en une fois les subZones obsolètes
+    const result = await SubZone.delete(oldSubZonesId);
+
+    return `Deleted ${result.affected} subZones.`;
+  } catch (error: unknown) {
+    console.error("Failed to delete subZones", error);
+    throw new Error(
+      `Failed to delete subZones due to an error: ${getErrorMessage(error)}`
+    );
+  }
+};
+
+function getErrorMessage(error: unknown): string {
+  if (typeof error === "string") {
+    return error;
+  } else if (error instanceof Error) {
+    return error.message;
+  } else {
+    return "An unknown error occurred";
+  }
+}
+
+export const modifySubZone = async (
+  subZoneId: number,
+  subZoneData: SubZoneInput
+): Promise<string> => {
+  try {
+    const subZoneToModify = await SubZone.findOneByOrFail({ id: subZoneId });
+    if (!subZoneToModify) {
+      throw new Error("SubZone not found");
     }
 
-    await queryRunner.manager.delete(SubZone, oldSubZonesId);
+    Object.entries(subZoneData).forEach(([key, value]) => {
+      if (key in subZoneToModify) {
+        const subZoneKey = key as keyof typeof subZoneToModify;
+        if (subZoneToModify[subZoneKey] !== value) {
+          (subZoneToModify as any)[subZoneKey] = value;
+        }
+      } else {
+        console.warn(`Key ${key} is not a valid property of SubZone`);
+      }
+    });
 
-    await queryRunner.commitTransaction();
-    return "Template , zones and subZones successfully updated";
-  } catch (error) {
-    // Rollback toute la transaction en cas d'erreur pour assurer l'intégrité
-    await queryRunner.rollbackTransaction();
-    console.error("Transaction failed:", error);
-    return "Failed to update template , zones and subZones";
-  } finally {
-    await queryRunner.release();
+    await subZoneToModify.save();
+    return `subZone : ${subZoneId} successfully processed`;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+      throw new Error("Error modifying the subZone: " + error.message);
+    } else {
+      console.error("An unknown error occurred.");
+      throw new Error("An unknown error occurred while modifying the subZone");
+    }
   }
 };

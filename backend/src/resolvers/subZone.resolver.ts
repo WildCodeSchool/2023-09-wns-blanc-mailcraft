@@ -18,19 +18,42 @@ export class SubZoneResolver {
   async updateZoneSubZones(
     @Arg("zoneId") zoneId: number,
     @Arg("newSubZonesData", () => [SubZoneInput])
-    newSubZonesData: SubZoneInput[],
-    @Arg("oldSubZonesId", () => [Number]) oldSubZonesId: number[]
+    newSubZonesData: SubZoneInput[]
   ): Promise<string> {
     try {
       const result = await subZoneService.updateZoneSubZones(
         zoneId,
-        newSubZonesData,
-        oldSubZonesId
+        newSubZonesData
       );
       return result;
     } catch (error) {
       console.error("Failed to update subzones for zone:", error);
       throw new Error("Failed to update subzones for zone");
+    }
+  }
+
+  @Mutation(() => String)
+  async deleteOldSubZones(
+    @Arg("oldSubZonesId", () => [Number]) oldSubZonesId: number[]
+  ): Promise<String> {
+    try {
+      return await subZoneService.deleteOldSubZones(oldSubZonesId);
+    } catch (error) {
+      console.error(`Error while deleting oldSubZones`);
+      throw new Error("Failed to delete old sub zones");
+    }
+  }
+
+  @Mutation(() => String)
+  async modifySubZone(
+    @Arg("subZoneId") subZoneId: number,
+    @Arg("subZoneData") subZoneData: SubZoneInput
+  ): Promise<string> {
+    try {
+      return await subZoneService.modifySubZone(subZoneId, subZoneData);
+    } catch (error: any) {
+      console.log(`Error updating subZone ${subZoneId}: ${error.message}`);
+      throw new Error("Not updated");
     }
   }
 }
