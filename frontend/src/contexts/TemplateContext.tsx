@@ -114,9 +114,7 @@ const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
         isModalErrorOpen,
         setIsModalErrorOpen,
         errorMessage,
-        setErrorMessage,
-        isModalOpen,
-        setIsModalOpen,
+        setErrorMessage
       }}
     >
       {children}

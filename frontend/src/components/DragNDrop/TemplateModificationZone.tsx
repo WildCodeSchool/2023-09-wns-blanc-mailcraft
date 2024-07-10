@@ -223,7 +223,6 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     closeErrorModal,
     resetZones,
     removeSubZone,
-    removeSubZone,
     getImageSrc,
     createHandleFileChange,
     handleResetZones,
