@@ -609,60 +609,60 @@
 //       setImgPreview(undefined);
 //     }
 
-    if (imgPreviews) {
-      const existingPreview = imgPreviews.find(
-        (obj) => obj.subZoneId === subZoneId
-      );
-      if (existingPreview) {
-        URL.revokeObjectURL(existingPreview.imgPreview);
-        const updatedPreviews = imgPreviews.filter(
-          (obj) => obj.subZoneId !== subZoneId
-        );
-        setImgPreviews(
-          updatedPreviews.length > 0 ? updatedPreviews : undefined
-        );
-        // console.log("Updated imgPreviews:", updatedPreviews);
-      }
-    }
-  };
+//     if (imgPreviews) {
+//       const existingPreview = imgPreviews.find(
+//         (obj) => obj.subZoneId === subZoneId
+//       );
+//       if (existingPreview) {
+//         URL.revokeObjectURL(existingPreview.imgPreview);
+//         const updatedPreviews = imgPreviews.filter(
+//           (obj) => obj.subZoneId !== subZoneId
+//         );
+//         setImgPreviews(
+//           updatedPreviews.length > 0 ? updatedPreviews : undefined
+//         );
+//         // console.log("Updated imgPreviews:", updatedPreviews);
+//       }
+//     }
+//   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+//   const closeModal = () => {
+//     setIsModalOpen(false);
+//   };
 
-  const closeModifyModal = () => {
-    setIsModalModifyOpen(false);
-  };
+//   const closeModifyModal = () => {
+//     setIsModalModifyOpen(false);
+//   };
 
-  const closeErrorModal = () => {
-    setIsModalErrorOpen(false);
-  };
+//   const closeErrorModal = () => {
+//     setIsModalErrorOpen(false);
+//   };
 
-  return {
-    saveTemplate,
-    deleteTemplate,
-    handleResetZones,
-    resetZones,
-    handleTemplateChange,
-    createHandleFileChange,
-    handleTextChange,
-    getImgPreviewBySubZoneId,
-    removeSubZone,
-    isModalOpen,
-    setIsModalOpen,
-    isModalModifyOpen,
-    setIsModalModifyOpen,
-    isModalErrorOpen,
-    setIsModalErrorOpen,
-    closeModal,
-    closeModifyModal,
-    closeErrorModal,
-    // onDragEnd,
-    listElements,
-    getImageSrc,
-    saveTemplateToModify,
-  };
-};
+//   return {
+//     saveTemplate,
+//     deleteTemplate,
+//     handleResetZones,
+//     resetZones,
+//     handleTemplateChange,
+//     createHandleFileChange,
+//     handleTextChange,
+//     getImgPreviewBySubZoneId,
+//     removeSubZone,
+//     isModalOpen,
+//     setIsModalOpen,
+//     isModalModifyOpen,
+//     setIsModalModifyOpen,
+//     isModalErrorOpen,
+//     setIsModalErrorOpen,
+//     closeModal,
+//     closeModifyModal,
+//     closeErrorModal,
+//     // onDragEnd,
+//     listElements,
+//     getImageSrc,
+//     saveTemplateToModify,
+//   };
+// };
 //     if (imgPreviews) {
 //       const existingPreview = imgPreviews.find(
 //         (obj) => obj.subZoneId === subZoneId

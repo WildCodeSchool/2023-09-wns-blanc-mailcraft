@@ -2,7 +2,7 @@ import Image from "next/image";
 import TemplateHeaderButton from "../Buttons/TemplateHeaderButton";
 import logo from "@/assets/homepage/logo.png";
 import { useTemplate } from "@/contexts/TemplateContext";
-import { useTemplateUtils } from "@/utils/templateUtils"
+import { useTemplateCreationUtils } from "@/utils/templateCreationUtils"
 import { useRouter } from "next/router";
 
 interface TemplateNavBarProps {
@@ -15,7 +15,7 @@ const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
   const saveButtonColor = isTemplateToModify ? "#766060" : undefined;
   const saveButtonHoverColor = isTemplateToModify ? "#5F4D4D" : undefined;
   const { setIsModalModifyOpen } = useTemplate();
-  const { saveTemplate } = useTemplateUtils();
+  const { saveTemplate } = useTemplateCreationUtils();
 
   const handleClick = async () => {
     if (isTemplateToModify) {
