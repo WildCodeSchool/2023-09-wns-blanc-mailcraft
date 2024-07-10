@@ -412,6 +412,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
       </Droppable>
     </>
   );
+
 };
 
 export default TemplateCreationZone;

@@ -212,7 +212,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     isModalModifyOpen,
     isModalErrorOpen,
     errorMessage,
-    oldSubZonesId,
+    oldSubZonesId
   } = useTemplate();
   const { saveTemplateToModify, closeModifyModal } =
     useTemplateModificationUtils();
@@ -222,6 +222,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     isModalOpen,
     closeErrorModal,
     resetZones,
+    removeSubZone,
     removeSubZone,
     getImageSrc,
     createHandleFileChange,
