@@ -15,7 +15,10 @@ import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
-
+import {
+  templateToHtml,
+  downloadHtmlTemplate,
+} from "@/utils/templateConversionUtils";
 const TemplateModificationPage = () => {
   const router = useRouter();
   const { template_id } = router.query;
@@ -219,6 +222,14 @@ const TemplateModificationPage = () => {
         saveButtonHoverColor="#BB3241"
         arrayToSave={"templateToModify"}
       />
+      <button
+        className=" border-4 border-red-900"
+        onClick={() =>
+          downloadHtmlTemplate(templateToModify?.title, templateToModify?.zones)
+        }
+      >
+        Télécharger le template
+      </button>
       <section className="w-full h-[90vh] flex justify-between bg-[#FFEDED] gap-24">
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <DataTemplate arrayToIterate={"templateToModify"} />

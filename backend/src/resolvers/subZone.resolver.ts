@@ -14,23 +14,23 @@ export class SubZoneResolver {
     }
   }
 
-  @Mutation(() => String)
-  async updateZoneSubZones(
-    @Arg("zoneId") zoneId: number,
-    @Arg("newSubZonesData", () => [SubZoneInput])
-    newSubZonesData: SubZoneInput[]
-  ): Promise<string> {
-    try {
-      const result = await subZoneService.updateZoneSubZones(
-        zoneId,
-        newSubZonesData
-      );
-      return result;
-    } catch (error) {
-      console.error("Failed to update subzones for zone:", error);
-      throw new Error("Failed to update subzones for zone");
-    }
-  }
+  // @Mutation(() => String)
+  // async updateZoneSubZones(
+  //   @Arg("zoneId") zoneId: number,
+  //   @Arg("newSubZonesData", () => [SubZoneInput])
+  //   newSubZonesData: SubZoneInput[]
+  // ): Promise<string> {
+  //   try {
+  //     const result = await subZoneService.updateZoneSubZones(
+  //       zoneId,
+  //       newSubZonesData
+  //     );
+  //     return result;
+  //   } catch (error) {
+  //     console.error("Failed to update subzones for zone:", error);
+  //     throw new Error("Failed to update subzones for zone");
+  //   }
+  // }
 
   @Mutation(() => String)
   async deleteOldSubZones(
