@@ -21,6 +21,7 @@ const MyTemplates = () => {
       zones {
         id
         templateId
+        order
         subZones {
           id
           content
@@ -28,6 +29,7 @@ const MyTemplates = () => {
           moduleType
           size
           zoneId
+          order
         }
       }
     }
@@ -40,8 +42,12 @@ const MyTemplates = () => {
 
   useEffect(() => {
     if (data) {
-      console.log("User Draft Templates retrieved", data.getAllUserDraftTemplates);
-      setFilteredDraftTemplates(data.getAllUserDraftTemplates.map(template => ({ ...template })));
+      console.log("User Templates retrieved", data.getAllUserDraftTemplates);
+      const sortedTemplates = data.getAllUserDraftTemplates.map(template => {
+        const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
+        return { ...template, zones: sortedZones };
+      });
+      setFilteredDraftTemplates(sortedTemplates);
     }
   }, [data]);
 
@@ -83,8 +89,7 @@ const MyTemplates = () => {
         </div>
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
           {/* Je trie les templates par ordre d'id puis je map pour les afficher */}
-          {data &&
-            [...data.getAllUserDraftTemplates]
+          {filteredDraftTemplates
               .sort((a: any, b: any) => a.id - b.id)
               .map((template: any) => (
                 <TemplateCard

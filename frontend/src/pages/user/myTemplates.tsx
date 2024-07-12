@@ -21,6 +21,7 @@ const MyTemplates = () => {
         zones {
           id
           templateId
+          order
           subZones {
             id
             content
@@ -28,6 +29,7 @@ const MyTemplates = () => {
             moduleType
             size
             zoneId
+            order
           }
         }
       }
@@ -41,7 +43,11 @@ const MyTemplates = () => {
   useEffect(() => {
     if (data) {
       console.log("User Templates retrieved", data.getAllUserCreatedTemplates);
-      setFilteredTemplates([...data.getAllUserCreatedTemplates]);
+      const sortedTemplates = data.getAllUserCreatedTemplates.map(template => {
+        const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
+        return { ...template, zones: sortedZones };
+      });
+      setFilteredTemplates(sortedTemplates);
     }
   }, [data]);
 
@@ -67,18 +73,6 @@ const MyTemplates = () => {
   if (filteredTemplates.length === 0) {
     return <p>No templates found.</p>;
   }
-  console.log('filtered : ', filteredTemplates[1])
-
-  const updatedTemplates = filteredTemplates.map(template => {
-    const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order); // Tri par id par défaut, ajuster selon vos besoins
-
-    return {
-      ...template,
-      zones: sortedZones,
-    };
-  });
-
-  console.log('updated : ', updatedTemplates[1])
 
   return (
     <>
@@ -103,7 +97,7 @@ const MyTemplates = () => {
         </div>
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
           {/* Je trie les templates par ordre d'id puis je map pour les afficher */}
-          {updatedTemplates
+          {filteredTemplates
             .sort((a: any, b: any) => a.id - b.id)
             .map((template: any) => (
               <TemplateCard
