@@ -25,6 +25,10 @@ export const useTemplateModificationUtils = () => {
     isModalModifyOpen,
     setIsModalModifyOpen,
     setOldSubZonesId,
+    isModalErrorOpen,
+    setIsModalErrorOpen,
+    errorMessage,
+    setErrorMessage,
   } = useTemplate();
 
   const [modifyTemplate] = useMutation(MODIFY_TEMPLATE);
@@ -37,6 +41,36 @@ export const useTemplateModificationUtils = () => {
 
   const router = useRouter();
 
+  const performPreSaveChecks = (template) => {
+    // Vérification des champs obligatoires
+    if (!template.title) {
+      return { success: false, message: "Le template n'a pas de titre" };
+    }
+
+    // Vérification si les zones ou leurs subzones sont vides
+    const areAllZonesEmpty = template.zones.every(
+      (zone) => !zone.subZones || zone.subZones.length === 0
+    );
+
+    if (areAllZonesEmpty) {
+      return { success: false, message: "Le template n'a pas de contenu" };
+    }
+
+    for (const zone of template.zones) {
+      for (const subZone of zone.subZones) {
+        if (!subZone.content || subZone.content.length === 0) {
+          return {
+            success: false,
+            message: "Les zones ne doivent pas être vides",
+          };
+        }
+      }
+    }
+
+    // Toutes les vérifications sont réussies
+    return { success: true };
+  };
+
   const saveTemplateToModify = async (template, status) => {
     const templateData = {
       title: template.title,
@@ -44,6 +78,15 @@ export const useTemplateModificationUtils = () => {
       templateNature: template.templateNature,
       status: status,
     };
+
+    // Appeler la fonction de vérification
+    const checkResult = performPreSaveChecks(template);
+
+    if (!checkResult.success) {
+      setErrorMessage(checkResult.message);
+      setIsModalErrorOpen(true);
+      return;
+    }
 
     try {
       await modifyTemplate({
@@ -129,8 +172,10 @@ export const useTemplateModificationUtils = () => {
         router.push(redirectPath);
       });
     } catch (error) {
-      console.error("Error while updating the template or zones:", error);
-      console.log(error.stack);
+      console.error(
+        "Erreur lors de la modification du template ou des zones:",
+        error
+      );
     }
   };
 
@@ -191,6 +236,7 @@ export const useTemplateModificationUtils = () => {
   };
 
   return {
+    performPreSaveChecks,
     saveTemplateToModify,
     handleSubZones,
     closeModifyModal,

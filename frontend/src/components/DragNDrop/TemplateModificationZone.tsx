@@ -212,7 +212,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     isModalModifyOpen,
     isModalErrorOpen,
     errorMessage,
-    oldSubZonesId
+    oldSubZonesId,
   } = useTemplate();
   const { saveTemplateToModify, closeModifyModal } =
     useTemplateModificationUtils();
@@ -227,6 +227,11 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     createHandleFileChange,
     handleResetZones,
   } = useTemplateCommonUtils();
+
+  const closeAllModals = () => {
+    closeErrorModal();
+    closeModifyModal();
+  };
 
   const fileInputRefs = useRef({});
 
@@ -356,7 +361,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
             {errorMessage}
           </h2>
           <button
-            onClick={closeErrorModal}
+            onClick={closeAllModals}
             className="px-7 py-2 bg-gray-100 text-black hover:bg-gray-200 rounded border border-gray-300 shadow-md"
           >
             J'ai compris

@@ -9,6 +9,8 @@ import {
   IZone,
   Template,
 } from "@/types/interfaces/template/template-interfaces";
+import { useTemplateModificationUtils } from "./templateModificationUtils";
+
 export const useTemplateCommonUtils = () => {
   const {
     setTemplate,
