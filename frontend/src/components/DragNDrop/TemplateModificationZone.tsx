@@ -328,12 +328,12 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
             >
               Oui, sauvegarder
             </button>
-            <button
-              onClick={() => saveTemplateToModify(templateToModify, "draft")}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-            >
-              Non, enregistrer en brouillon
-            </button>
+              <button
+                onClick={() => saveTemplateToModify(templateToModify, "draft")}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Non, enregistrer en brouillon
+              </button>
           </div>
         </div>
       </Modal>
@@ -421,7 +421,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                     ref={providedSubZone.innerRef}
                                     {...providedSubZone.draggableProps}
                                     {...providedSubZone.dragHandleProps}
-                                    className={`subzone flex justify-around items-center flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${snapshotSubZone.isDragging
+                                    className={`subzone flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${snapshotSubZone.isDragging
                                       ? "opacity-50"
                                       : ""
                                       }`}
@@ -436,7 +436,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                         <div
                                           ref={providedModule.innerRef}
                                           {...providedModule.droppableProps}
-                                          className="module-container flex-1"
+                                          className="module-container flex justify-center items-center"
                                         >
                                           {!subZone.moduleType && (
                                             <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
@@ -494,7 +494,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                             </button>
                                           )}
                                           {subZone.moduleType === "social" && (
-                                            <div className="flex justify-around w-full">
+                                            <div className="flex justify-around w-full mt-4">
                                               {socialModule.map((social) => (
                                                 <Link
                                                   key={social.link}

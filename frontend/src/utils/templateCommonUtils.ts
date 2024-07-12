@@ -47,7 +47,7 @@ export const useTemplateCommonUtils = () => {
     if (keyToIdentify === "templateToModify") {
       const oldZonesId = templateToModify?.zones
         ?.filter((zone) => typeof zone.id === "number")
-        .map((zone) => zone.id);
+        .map((zone) => zone.id) || [];
 
       setOldZonesId(oldZonesId);
       resetZones(keyToIdentify);

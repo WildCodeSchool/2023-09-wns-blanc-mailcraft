@@ -10,6 +10,15 @@ export interface IZone {
   moduleType: string;
   content: any;
   size?: string;
+  subZones: ISubZone[];
+}
+
+export interface ISubZone {
+  id: string;
+  dndId?: string;
+  moduleType: string;
+  content: any;
+  size?: string;
 }
 
 export interface MainZone {
@@ -17,6 +26,7 @@ export interface MainZone {
   dndId?: string;
   subZones: IZone[];
 }
+
 export interface ModuleProps {
   title: string;
   picture: any;

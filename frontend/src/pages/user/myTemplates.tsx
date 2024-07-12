@@ -41,24 +41,44 @@ const MyTemplates = () => {
   useEffect(() => {
     if (data) {
       console.log("User Templates retrieved", data.getAllUserCreatedTemplates);
-      setFilteredTemplates(data.getAllUserCreatedTemplates.map(template => ({ ...template })));
+      setFilteredTemplates([...data.getAllUserCreatedTemplates]);
     }
   }, [data]);
 
   // Fonction de recherche 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-    if (event.target.value) {
-      setFilteredTemplates(data.getAllUserCreatedTemplates.filter(template =>
-        template.title.includes(event.target.value)
-      ));
+    const value = event.target.value;
+    setSearchTerm(value);
+    if (value) {
+      const filtered = data.getAllUserCreatedTemplates.filter(template =>
+        template.title.includes(value)
+      );
+      setFilteredTemplates([...filtered]);
     } else {
-      setFilteredTemplates(JSON.parse(JSON.stringify(data.getAllUserCreatedTemplates)));
+      setFilteredTemplates([...data.getAllUserCreatedTemplates]);
     }
   };
-
+  
+  // Vérifier et afficher les données
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+  
+  // Vérifier si les données sont chargées et afficher
+  if (filteredTemplates.length === 0) {
+    return <p>No templates found.</p>;
+  }
+  console.log('filtered : ', filteredTemplates[1])
+
+  const updatedTemplates = filteredTemplates.map(template => {
+    const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order); // Tri par id par défaut, ajuster selon vos besoins
+
+    return {
+      ...template,
+      zones: sortedZones,
+    };
+  });
+
+  console.log('updated : ', updatedTemplates[1])
 
   return (
     <>
@@ -83,18 +103,18 @@ const MyTemplates = () => {
         </div>
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
           {/* Je trie les templates par ordre d'id puis je map pour les afficher */}
-          {filteredTemplates
-              .sort((a: any, b: any) => a.id - b.id)
-              .map((template: any) => (
-                <TemplateCard
-                  key={template.id}
-                  templateId={template.id}
-                  title={template.title}
-                  description={template.description}
-                  zones={template.zones}
-                  isCreated={true}
-                />
-              ))
+          {updatedTemplates
+            .sort((a: any, b: any) => a.id - b.id)
+            .map((template: any) => (
+              <TemplateCard
+                key={template.id}
+                templateId={template.id}
+                title={template.title}
+                description={template.description}
+                zones={template.zones}
+                isCreated={true}
+              />
+            ))
           }
         </section>
       </section>
