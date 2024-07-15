@@ -33,4 +33,17 @@ export class UserResolver {
       throw new Error("Invalid Auth");
     }
   }
+
+  @Mutation(() => String)
+  async resetPassword(
+    @Arg("token") token: string,
+    @Arg("newPassword") newPassword: string
+  ): Promise<string> {
+    try {
+      return await UserService.resetPassword(token, newPassword);
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      throw new Error("Failed to reset password");
+    }
+  }
 }
