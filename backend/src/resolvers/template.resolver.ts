@@ -1,6 +1,4 @@
-//resolver
-
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Mutation, Query, Resolver } from "type-graphql";
 import { Template } from "../entities/template";
 import { TemplateCreationInput } from "../types/createTemplateInput";
 import { TemplateInput } from "../types/modifyTemplateInputs";
@@ -8,6 +6,7 @@ import * as templateService from "../services/template.service";
 
 @Resolver(Template)
 export class TemplateResolver {
+  @Authorized()
   @Mutation(() => Template)
   async createTemplate(
     @Arg("templateData") templateData: TemplateCreationInput
@@ -19,6 +18,7 @@ export class TemplateResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => Template)
   async modifyTemplate(
     @Arg("templateId") templateId: number,
@@ -31,6 +31,7 @@ export class TemplateResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => String)
   async deleteTemplate(@Arg("templateId") templateId: number): Promise<String> {
     try {
@@ -40,6 +41,7 @@ export class TemplateResolver {
     }
   }
 
+  @Authorized()
   @Query(() => [Template])
   async getAllUserCreatedTemplates(
     @Arg("userId") userId: number
@@ -51,6 +53,7 @@ export class TemplateResolver {
     }
   }
 
+  @Authorized()
   @Query(() => [Template])
   async getAllUserDraftTemplates(
     @Arg("userId") userId: number
@@ -62,6 +65,7 @@ export class TemplateResolver {
     }
   }
 
+  @Authorized()
   @Query(() => [Template])
   async getAllTemplates(): Promise<Template[] | string> {
     try {
@@ -70,6 +74,8 @@ export class TemplateResolver {
       throw new Error(`error while fetching templates` + error);
     }
   }
+
+  @Authorized()
   @Query(() => Template)
   async getTemplateByItsId(
     @Arg("templateId") templateId: number

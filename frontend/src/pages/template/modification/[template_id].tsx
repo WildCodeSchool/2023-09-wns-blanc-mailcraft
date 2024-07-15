@@ -2,19 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-
 import TemplateModificationZone from "@/components/DragNDrop/TemplateModificationZone";
 import DataTemplate from "@/components/DragNDrop/DataTemplate";
 import DroppableArea from "@/components/DragNDrop/DroppableArea";
 import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { GET_TEMPLATE_BY_ITS_ID } from "@/client/queries/template/template-queries";
-
-// Social module icons
 import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
+import {
+  templateToHtml,
+  downloadHtmlTemplate,
+} from "@/utils/templateConversionUtils";
+import ProtectedComponent from "@/components/ProtectedComponent";
 
 const TemplateModificationPage = () => {
   const router = useRouter();
@@ -48,7 +50,6 @@ const TemplateModificationPage = () => {
     onCompleted: (data) => {
       if (data && data.getTemplateByItsId) {
         const template = data.getTemplateByItsId;
-
         const cleanedTemplate = removeTypenames(template);
 
         // Tri des zones en fonction de la clé order
@@ -68,6 +69,7 @@ const TemplateModificationPage = () => {
       }
     },
   });
+
   const socialModule = [
     {
       socialMedia: "Facebook",
@@ -103,6 +105,7 @@ const TemplateModificationPage = () => {
       setDraggingType("");
     }
   };
+
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination) {
@@ -213,13 +216,21 @@ const TemplateModificationPage = () => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <>
+    <ProtectedComponent>
       <TemplateNavBar
         saveButtonColor="#E83B4E"
         saveButtonHoverColor="#BB3241"
         arrayToIterate={"templateToModify"}
       />
-      <section className="w-full h-[90vh] flex justify-between bg-[#766060] gap-24">
+      <button
+        className="border-4 border-red-900"
+        onClick={() =>
+          downloadHtmlTemplate(templateToModify?.title, templateToModify?.zones)
+        }
+      >
+        Télécharger le template
+      </button>
+      <section className="w-full h-[90vh] flex justify-between bg-[#FFEDED] gap-24">
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <DataTemplate arrayToIterate={"templateToModify"} />
           <TemplateModificationZone
@@ -229,7 +240,7 @@ const TemplateModificationPage = () => {
           <DroppableArea />
         </DragDropContext>
       </section>
-    </>
+    </ProtectedComponent>
   );
 };
 

@@ -26,3 +26,28 @@ export const GET_TEMPLATE_BY_ITS_ID = gql`
     }
   }
 `;
+
+export const GET_ALL_USER_CREATED_TEMPLATE = gql`
+  query GetAllUserCreatedTemplates($userId: Float!) {
+    getAllUserCreatedTemplates(userId: $userId) {
+      id
+      title
+      description
+      templateNature
+      creationDate
+      zones {
+        id
+        order
+        subZones {
+          id
+          order
+          moduleType
+          content
+          size
+          links
+          zoneId
+        }
+      }
+    }
+  }
+`;

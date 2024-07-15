@@ -8,6 +8,8 @@ import { useTemplate } from "@/contexts/TemplateContext";
 import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
+import ProtectedComponent from "@/components/ProtectedComponent";
+
 const TemplatePage = () => {
   const { zones, setZones, template } = useTemplate();
   const [draggingType, setDraggingType] = useState("");
@@ -52,7 +54,6 @@ const TemplatePage = () => {
     id.startsWith("zone-") && !id.includes("-subzone-");
   const isSubZone = (id) => id.includes("-subzone-");
 
-  // a factoriser ou simplifier plus tard mais fonctionnel
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
     console.log("Drag End Result:", result);
@@ -156,7 +157,7 @@ const TemplatePage = () => {
   };
 
   return (
-    <>
+    <ProtectedComponent>
       <TemplateNavBar
         saveButtonColor="#E83B4E"
         saveButtonHoverColor="#BB3241"
@@ -172,7 +173,7 @@ const TemplatePage = () => {
           <DroppableArea />
         </DragDropContext>
       </section>
-    </>
+    </ProtectedComponent>
   );
 };
 

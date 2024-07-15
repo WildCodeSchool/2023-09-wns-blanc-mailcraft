@@ -59,6 +59,15 @@ services:
     ports:
       - 5000:5000
 
+  mailing:
+    build: ./mailing
+    env_file:
+      - .env
+    volumes:
+      - ./mailing/src:/app/src
+    ports:
+      - 5050:5050
+
   adminer:
     image: adminer
     ports:

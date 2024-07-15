@@ -5,6 +5,7 @@ import * as subZoneService from "../services/subZone.service";
 
 @Resolver(SubZone)
 export class SubZoneResolver {
+  @Authorized()
   @Mutation(() => String)
   async createSubZone(@Arg("subZoneData") subZoneData: SubZoneInput) {
     try {
@@ -14,24 +15,7 @@ export class SubZoneResolver {
     }
   }
 
-  // @Mutation(() => String)
-  // async updateZoneSubZones(
-  //   @Arg("zoneId") zoneId: number,
-  //   @Arg("newSubZonesData", () => [SubZoneInput])
-  //   newSubZonesData: SubZoneInput[]
-  // ): Promise<string> {
-  //   try {
-  //     const result = await subZoneService.updateZoneSubZones(
-  //       zoneId,
-  //       newSubZonesData
-  //     );
-  //     return result;
-  //   } catch (error) {
-  //     console.error("Failed to update subzones for zone:", error);
-  //     throw new Error("Failed to update subzones for zone");
-  //   }
-  // }
-
+  @Authorized()
   @Mutation(() => String)
   async deleteOldSubZones(
     @Arg("oldSubZonesId", () => [Number]) oldSubZonesId: number[]
@@ -44,6 +28,7 @@ export class SubZoneResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => String)
   async modifySubZone(
     @Arg("subZoneId") subZoneId: number,
