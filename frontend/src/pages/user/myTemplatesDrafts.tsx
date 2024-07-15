@@ -5,6 +5,7 @@ import UserPagesNavBar from "@/components/NavBars/UserPagesNavBar";
 import SearchBar from "@/components/SearchBar";
 import Link from "next/link";
 import filterLine from '@/assets/template-page/filter-line.png'
+import { TailSpin } from "react-loader-spinner"
 
 const MyTemplates = () => {
   const [userId, setUserId] = useState(1);
@@ -62,10 +63,6 @@ const MyTemplates = () => {
     }
   };
 
-  console.log(data);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
   return (
     <>
       <UserPagesNavBar />
@@ -87,20 +84,29 @@ const MyTemplates = () => {
             <img src={filterLine.src} className="object-cover" />
           </button>
         </div>
+        {loading &&
+          <div className="loader flex flex-col justify-center items-center gap-6">
+            <h1 className="text-xl">Chargement des templates...</h1>
+            <TailSpin color="#6C6C6C" height={80} width={80} />
+          </div>
+        }
+        {error &&
+          <h1 className="text-xl">Error: {error.message}</h1>
+        }
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
           {/* Je trie les templates par ordre d'id puis je map pour les afficher */}
           {filteredDraftTemplates
-              .sort((a: any, b: any) => a.id - b.id)
-              .map((template: any) => (
-                <TemplateCard
-                  key={template.id}
-                  templateId={template.id}
-                  title={template.title}
-                  description={template.description}
-                  zones={template.zones}
-                  isCreated={true}
-                />
-              ))
+            .sort((a: any, b: any) => a.id - b.id)
+            .map((template: any) => (
+              <TemplateCard
+                key={template.id}
+                templateId={template.id}
+                title={template.title}
+                description={template.description}
+                zones={template.zones}
+                isCreated={true}
+              />
+            ))
           }
         </section>
       </section>

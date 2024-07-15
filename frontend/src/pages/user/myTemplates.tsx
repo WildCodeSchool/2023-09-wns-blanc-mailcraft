@@ -5,6 +5,7 @@ import UserPagesNavBar from "@/components/NavBars/UserPagesNavBar";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import filterLine from '@/assets/template-page/filter-line.png'
+import { TailSpin } from "react-loader-spinner"
 
 const MyTemplates = () => {
   const [userId, setUserId] = useState(1);
@@ -51,6 +52,7 @@ const MyTemplates = () => {
     }
   }, [data]);
 
+
   // Fonction de recherche 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -64,15 +66,11 @@ const MyTemplates = () => {
       setFilteredTemplates([...data.getAllUserCreatedTemplates]);
     }
   };
-  
+
   // Vérifier et afficher les données
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-  
+
   // Vérifier si les données sont chargées et afficher
-  if (filteredTemplates.length === 0) {
-    return <p>No templates found.</p>;
-  }
+
 
   return (
     <>
@@ -95,6 +93,15 @@ const MyTemplates = () => {
             <img src={filterLine.src} className="object-cover" />
           </button>
         </div>
+        {loading &&
+          <div className="loader flex flex-col justify-center items-center gap-6">
+            <h1 className="text-xl">Chargement des templates...</h1>
+            <TailSpin color="#6C6C6C" height={80} width={80} />
+          </div>
+        }
+        {error &&
+          <h1 className="text-xl">Error: {error.message}</h1>
+        }
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
           {/* Je trie les templates par ordre d'id puis je map pour les afficher */}
           {filteredTemplates
@@ -111,7 +118,7 @@ const MyTemplates = () => {
             ))
           }
         </section>
-      </section>
+      </section >
     </>
   );
 };
