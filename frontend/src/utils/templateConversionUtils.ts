@@ -5,7 +5,7 @@ export const templateToHtml = async (templateZones) => {
 
   try {
     const response = await axios.post(
-      "http://localhost:5050/convertTemplateToHtml",
+      "http://localhost:5050/convertTemplateToHtmlInline",
       { templateZones },
       {
         headers: {

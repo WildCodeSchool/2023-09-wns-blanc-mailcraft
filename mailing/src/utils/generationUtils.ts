@@ -1,5 +1,7 @@
 import fs from "fs";
 import path from "path";
+import sanitizeHtml from "sanitize-html";
+
 interface SubZone {
   id?: number;
   dndId?: string;
@@ -32,12 +34,23 @@ const isValidUrl = (content: string[]): boolean => {
   return content.every((url) => validateURL(url));
 };
 
+const escapeHtml = (unsafe: string): string => {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
 const createTextElement = (content: string): string => {
-  return `<p style="margin: 0; word-wrap: break-word; max-width: 100%;">${content}</p>`;
+  const sanitizedContent = escapeHtml(content);
+  return `<p style="margin: 0; word-wrap: break-word; max-width: 100%;">${sanitizedContent}</p>`;
 };
 
 const createImageElement = (src: string): string => {
-  return `<img src="${src}" alt="Image" style="max-width: 100%; height: auto; display: block;" />`;
+  const sanitizedSrc = escapeHtml(src);
+  return `<img src="${sanitizedSrc}" alt="Image" style="max-width: 100%; height: auto; display: block;" />`;
 };
 
 const createLinkElement = (content: string, links: string[]): string => {
@@ -61,15 +74,16 @@ const createLinkElement = (content: string, links: string[]): string => {
         default:
           iconSrc = "";
       }
+      const sanitizedLink = escapeHtml(links[index] || "");
       return iconSrc
-        ? `<a href="${links[index]}" target="_blank" rel="noopener noreferrer"><img src="${iconSrc}" alt="${socialMedia}" style="width: 24px; height: 24px; margin-right: 10px; display: inline-block;" /></a>`
-        : `<a href="${links[index]}" target="_blank" rel="noopener noreferrer" style="display: inline-block;">${links[index]}</a>`;
+        ? `<a href="${sanitizedLink}" target="_blank" rel="noopener noreferrer"><img src="${iconSrc}" alt="${socialMedia}" style="width: 24px; height: 24px; margin-right: 10px; display: inline-block;" /></a>`
+        : `<a href="${sanitizedLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block;">${sanitizedLink}</a>`;
     })
     .join(" ");
 };
 
-const updateHtmlFile = (newHtml: string): Promise<void> => {
-  const filePath = path.resolve(__dirname, "../template.html");
+const updateHtmlFile = (newHtml: string, file: string): Promise<void> => {
+  const filePath = path.resolve(__dirname, `../${file}`);
   return new Promise((resolve, reject) => {
     fs.writeFile(filePath, newHtml, "utf-8", (err: any) => {
       if (err) {
@@ -83,70 +97,36 @@ const updateHtmlFile = (newHtml: string): Promise<void> => {
   });
 };
 
-export const convertTemplateToHtml = async (
+// Ibrahim
+export const convertTemplateToHtmlInline = async (
   templateZones: TemplateZone[]
 ): Promise<string> => {
   let templateHtml = `
     <!DOCTYPE html>
     <html>
     <head>
-      <title>Template Email</title>
+      
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 20px;
-        }
-        .content {
-          width: 100%;
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 20px;
-          border: 1px solid #ccc;
-          background-color: #fff;
-        }
-        .zone {
-          margin-bottom: 20px;
-        }
-        .subzone {
-          display: inline-block;
-          vertical-align: top;
-          width: 100%;
-          box-sizing: border-box;
-          padding: 10px;
-          overflow-wrap: break-word;
-          word-wrap: break-word;
-          hyphens: auto;
-        }
-        .subzone-2 {
-          width: 50%;
-        }
-        .subzone-3 {
-          width: 33.33%;
-        }
-        .social-icons img {
-          width: 24px;
-          height: 24px;
-          margin-right: 10px;
-        }
-      </style>
     </head>
-    <body>
-      <div class="content">`;
+    <body style="font-family: Arial, sans-serif; margin: 0; padding: 20px;">
+      <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; background-color: #fff;">`;
 
   templateZones.forEach((zone) => {
     let subzoneCount = zone.subZones.length;
     let subzoneClass =
-      subzoneCount === 2 ? "subzone-2" : subzoneCount === 3 ? "subzone-3" : "";
+      subzoneCount === 2
+        ? "width: 50%;"
+        : subzoneCount === 3
+        ? "width: 33.33%;"
+        : "width: 100%;";
 
     let zoneHtml = `
-      <div class="zone" style="width: 100%; display: flex; flex-wrap: wrap;">`;
+      <div style="width: 100%; display: flex; flex-wrap: wrap; margin-bottom: 20px;">`;
 
     zone.subZones.forEach((subZone) => {
       let subZoneHtml = `
-        <div class="subzone ${subzoneClass}">`;
+        <div style="display: inline-block; vertical-align: top; ${subzoneClass} box-sizing: border-box; padding: 10px; overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;">`;
 
       if (subZone.moduleType === "texte" && isValidText(subZone.content)) {
         subZoneHtml += createTextElement(subZone.content);
@@ -173,7 +153,16 @@ export const convertTemplateToHtml = async (
         </div>
     </body>
     </html>`;
-  // on update "template.html" qui sert pour la preview avec le nouveau html
-  await updateHtmlFile(templateHtml);
-  return templateHtml;
+
+  const sanitizedHtml = sanitizeHtml(templateHtml, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+    allowedAttributes: {
+      "*": ["style"],
+      a: ["href", "name", "target", "rel"],
+      img: ["src", "alt", "style"],
+    },
+  });
+
+  await updateHtmlFile(sanitizedHtml, "templateInline.html");
+  return sanitizedHtml;
 };

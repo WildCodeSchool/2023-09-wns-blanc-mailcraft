@@ -1,9 +1,11 @@
-import express, { Request, Response } from "express";
+import express, { Request, response, Response } from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
-import { convertTemplateToHtml } from "./utils/generationUtils";
+import { convertTemplateToHtmlInline } from "./utils/generationUtils";
 import fs from "fs";
+import nodemailer from "nodemailer";
+
 dotenv.config();
 
 const port = 5050;
@@ -26,19 +28,23 @@ app.get("/", (req: Request, res: Response) => {
   res.send("server running");
 });
 
-app.post("/convertTemplateToHtml", async (req: Request, res: Response) => {
-  const { templateZones } = req.body;
-  console.log(JSON.stringify(templateZones, null, 2));
-  try {
-    const htmlTemplate = await convertTemplateToHtml(templateZones);
-    res.status(200).json({ html: htmlTemplate });
-  } catch (error: any) {
-    console.error("Error during HTML conversion:", error);
-    res
-      .status(500)
-      .json({ error: `Failed to convert template to HTML: ${error.message}` });
+// endpoint pour obtenir le html pour les mails envoyés depuis la plateforme
+app.post(
+  "/convertTemplateToHtmlInline",
+  async (req: Request, res: Response) => {
+    const { templateZones } = req.body;
+    console.log(JSON.stringify(templateZones, null, 2));
+    try {
+      const htmlTemplate = await convertTemplateToHtmlInline(templateZones);
+      res.status(200).json({ html: htmlTemplate });
+    } catch (error: any) {
+      console.error("Error during HTML conversion:", error);
+      res.status(500).json({
+        error: `Failed to convert template to HTML: ${error.message}`,
+      });
+    }
   }
-});
+);
 
 app.get("/preview", (req, res) => {
   const filePath = path.join(__dirname, "template.html");
@@ -92,6 +98,38 @@ app.post("/downloadHtmlTemplate", async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ error: `Failed to convert template to HTML: ${error.message}` });
+  }
+});
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.MAILCRAFT_GMAIL,
+    pass: process.env.MAILCRAFT_GMAIL_PASSWORD,
+  },
+});
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+app.post("/sendMail", async (req: Request, res: Response) => {
+  const { userMail, recipient, subject, htmlContent } = req.body;
+
+  const textContent = htmlContent.replace(/<[^>]+>/g, ""); // convertir le HTML en texte brut
+  console.log(textContent);
+
+  const mailData = {
+    from: userMail,
+    to: recipient,
+    subject: subject,
+    html: htmlContent, // version HTML
+  };
+
+  try {
+    await transporter.sendMail(mailData);
+    // await sgMail.send(msg);
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
   }
 });
 

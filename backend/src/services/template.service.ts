@@ -69,7 +69,7 @@ export const getAllUserCreatedTemplates = async (
 ): Promise<Template[]> => {
   return await Template.find({
     where: { userId, status: "created" },
-    relations: ["zones"],
+    relations: ["zones", "zones.subZones"],
   });
 };
 
