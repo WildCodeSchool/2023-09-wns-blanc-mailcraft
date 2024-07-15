@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import RedButton from "./Buttons/Redbutton";
 import { useAuth } from "@/contexts/AuthContext";
 import { gql, useMutation } from "@apollo/client";
@@ -14,7 +14,7 @@ const SIGN_IN = gql`
 `;
 
 export default function SignInForm() {
-  const { setIsAuthenticated } = useAuth();
+  const { setIsAuthenticated, setUser } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -25,7 +25,7 @@ export default function SignInForm() {
     if (token) {
       router.push("/");
     }
-  });
+  }, [token, router]);
 
   const [signIn] = useMutation(SIGN_IN, {
     variables: {
@@ -36,6 +36,8 @@ export default function SignInForm() {
       localStorage.setItem("token", data.signIn);
       setIsAuthenticated(true);
       router.push("/");
+      // Après la connexion, récupérer les informations de l'utilisateur
+      window.location.reload(); // Recharger la page pour déclencher l'effet de useEffect dans AuthContextProvider
     },
   });
 
@@ -75,7 +77,7 @@ export default function SignInForm() {
             shadow="0"
             isBold={false}
             size={"lg"}
-            onClick={signIn}
+            onClick={() => signIn()}
             type="submit"
           />
         </div>

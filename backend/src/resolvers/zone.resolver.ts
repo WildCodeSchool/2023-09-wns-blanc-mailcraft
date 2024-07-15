@@ -1,10 +1,10 @@
+import { Arg, Authorized, Mutation, Resolver } from "type-graphql";
 import { Zone } from "../entities/zone";
-import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import * as zoneService from "../services/zone.service";
-import { ZoneInput } from "../types/createZoneInput";
 
 @Resolver(Zone)
 export class ZoneResolver {
+  @Authorized()
   @Mutation(() => Zone)
   async createZone(
     @Arg("templateId") templateId: number,
@@ -16,6 +16,8 @@ export class ZoneResolver {
       throw new Error("Error creating zone" + e); // à typer et renvoyer error
     }
   }
+
+  @Authorized()
   @Mutation(() => String)
   async deleteTemplateZones(
     @Arg("templateId") templateId: number,
@@ -31,6 +33,7 @@ export class ZoneResolver {
     }
   }
 
+  @Authorized()
   @Mutation(() => String)
   async updateZone(
     @Arg("zoneId") zoneId: number,

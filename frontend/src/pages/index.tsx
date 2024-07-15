@@ -6,8 +6,13 @@ import mediaLibrary from "@/assets/homepage/import.jpg";
 import builder from "@/assets/homepage/builder.jpg";
 import emailSender from "@/assets/homepage/send.jpg";
 import NavBar from "@/components/NavBars/HomeNavBar";
-
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
 export default function Home() {
+  const { user } = useAuth();
+  useEffect(() => {
+    console.log(`User is ---> ${JSON.stringify(user)}`);
+  }, [user]);
   return (
     <section className="xl:custom-bg w-full">
       <section className="w-[80%] xl:w-[70%] mx-auto ">
