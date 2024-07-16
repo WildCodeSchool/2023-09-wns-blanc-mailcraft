@@ -10,7 +10,7 @@ import { TailSpin } from "react-loader-spinner"
 const MyTemplates = () => {
   const [userId, setUserId] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredTemplates, setFilteredTemplates] = useState<any[]>([])
+  const [templates, setTemplates] = useState<any[]>([])
 
   const GET_USER_TEMPLATES = gql`
     query GetAllUserCreatedTemplates($userId: Float!) {
@@ -43,15 +43,13 @@ const MyTemplates = () => {
 
   useEffect(() => {
     if (data) {
-      console.log("User Templates retrieved", data.getAllUserCreatedTemplates);
       const sortedTemplates = data.getAllUserCreatedTemplates.map(template => {
         const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
         return { ...template, zones: sortedZones };
       });
-      setFilteredTemplates(sortedTemplates);
+      setTemplates(sortedTemplates);
     }
   }, [data]);
-
 
   // Fonction de recherche 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -59,18 +57,13 @@ const MyTemplates = () => {
     setSearchTerm(value);
     if (value) {
       const filtered = data.getAllUserCreatedTemplates.filter(template =>
-        template.title.includes(value)
+        template.title.toLowerCase().includes(value)
       );
-      setFilteredTemplates([...filtered]);
+      setTemplates([...filtered]);
     } else {
-      setFilteredTemplates([...data.getAllUserCreatedTemplates]);
+      setTemplates([...data.getAllUserCreatedTemplates]);
     }
   };
-
-  // Vérifier et afficher les données
-
-  // Vérifier si les données sont chargées et afficher
-
 
   return (
     <>
@@ -104,7 +97,7 @@ const MyTemplates = () => {
         }
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
           {/* Je trie les templates par ordre d'id puis je map pour les afficher */}
-          {filteredTemplates
+          {templates
             .sort((a: any, b: any) => a.id - b.id)
             .map((template: any) => (
               <TemplateCard

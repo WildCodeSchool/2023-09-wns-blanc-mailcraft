@@ -14,15 +14,6 @@ interface TemplateCardProps {
   description: string;
 }
 
-// Fonction pour tronquer le texte dans les zones à 8 mots maximum
-const truncateText = (text: string, wordLimit: number) => {
-  const words = text.split(" ");
-  if (words.length > wordLimit) {
-    return words.slice(0, wordLimit).join(" ") + "..";
-  }
-  return text;
-};
-
 const TemplateCard: React.FC<TemplateCardProps> = ({
   templateId,
   title,

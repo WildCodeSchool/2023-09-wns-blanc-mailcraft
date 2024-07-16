@@ -56,7 +56,7 @@ const MyTemplates = () => {
     setSearchTerm(event.target.value);
     if (event.target.value) {
       setFilteredDraftTemplates(data.getAllUserDraftTemplates.filter(template =>
-        template.title.includes(event.target.value)
+        template.title.toLowerCase().includes(event.target.value)
       ));
     } else {
       setFilteredDraftTemplates(JSON.parse(JSON.stringify(data.getAllUserDraftTemplates)));

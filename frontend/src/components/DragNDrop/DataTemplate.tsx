@@ -21,7 +21,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
   const isTemplateToModify = arrayToIterate === "templateToModify";
   const [selectedStyleIconIndex, setSelectedStyleIconIndex] = useState<number | null>(null);
   const [selectedJustificationIconIndex, setSelectedJustificationIconIndex] = useState<number | null>(null);
-  const [selectedColor, setSelectedColor] = useState("#FFEDED");
+  const [selectedColor, setSelectedColor] = useState("#000000");
   const [showColorPicker, setShowColorPicker] = useState(false);
 
   const handleStyleIconClick = (index: number) => {
