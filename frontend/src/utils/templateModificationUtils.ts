@@ -2,7 +2,7 @@ import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
-import { MODIFY_TEMPLATE } from "@/client/mutations/template/template-mutations";
+import { DELETE_TEMPLATE, MODIFY_TEMPLATE } from "@/client/mutations/template/template-mutations";
 import {
   CREATE_ZONE,
   UPDATE_ZONE,
@@ -34,6 +34,7 @@ export const useTemplateModificationUtils = () => {
   const [modifyTemplate] = useMutation(MODIFY_TEMPLATE);
   const [updateZone] = useMutation(UPDATE_ZONE);
   const [createZone] = useMutation(CREATE_ZONE);
+  const [deleteTemplateMutation] = useMutation(DELETE_TEMPLATE)
   const [deleteTemplateZones] = useMutation(DELETE_TEMPLATE_ZONES);
   const [createSubZone] = useMutation(CREATE_SUBZONE);
   const [modifySubZone] = useMutation(MODIFY_SUBZONE);
@@ -179,6 +180,18 @@ export const useTemplateModificationUtils = () => {
     }
   };
 
+  const deleteTemplate = async (templateId: number) => {
+    try {
+      const { data } = await deleteTemplateMutation({
+        variables: { templateId },
+      });
+      console.log("Template deleted:", data);
+    } catch (error) {
+      console.error("Error deleting template:", error);
+      throw new Error("Failed to delete template.");
+    }
+  };
+
   const handleSubZones = async (zone, newZoneId) => {
     for (const subZone of zone.subZones) {
       let subZoneContent = subZone.content;
@@ -238,6 +251,7 @@ export const useTemplateModificationUtils = () => {
   return {
     performPreSaveChecks,
     saveTemplateToModify,
+    deleteTemplate,
     handleSubZones,
     closeModifyModal,
     isTemporaryZone,
