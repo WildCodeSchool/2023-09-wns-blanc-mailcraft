@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
-import RedButton from "./buttons/Redbutton";
+import { useState, useEffect } from "react";
+import RedButton from "./Buttons/Redbutton";
 import { useAuth } from "@/contexts/AuthContext";
 import { gql, useMutation } from "@apollo/client";
 import Image from "next/image";
@@ -13,8 +13,8 @@ const SIGN_IN = gql`
   }
 `;
 
-export default function SignInForm() {
-  const { setIsAuthenticated } = useAuth();
+export default function SignInForm({ setShowResetPassword }) {
+  const { setIsAuthenticated, setUser } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -25,7 +25,7 @@ export default function SignInForm() {
     if (token) {
       router.push("/");
     }
-  });
+  }, [token, router]);
 
   const [signIn] = useMutation(SIGN_IN, {
     variables: {
@@ -36,6 +36,8 @@ export default function SignInForm() {
       localStorage.setItem("token", data.signIn);
       setIsAuthenticated(true);
       router.push("/");
+      // Après la connexion, récupérer les informations de l'utilisateur
+      window.location.reload(); // Recharger la page pour déclencher l'effet de useEffect dans AuthContextProvider
     },
   });
 
@@ -67,13 +69,21 @@ export default function SignInForm() {
             className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-black border-0 pl-6"
           />
         </div>
+        <button
+          className="flex items-center"
+          onClick={() => setShowResetPassword(true)}
+        >
+          <p>Mot de passe oublié ?</p>
+        </button>
         <div className="mb-6">
           <RedButton
             text="Connexion"
+            color="red-500"
             padding={"p-3"}
+            shadow="0"
             isBold={false}
             size={"lg"}
-            onClick={signIn}
+            onClick={() => signIn()}
             type="submit"
           />
         </div>

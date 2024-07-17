@@ -14,7 +14,7 @@ COPY tailwind.config.ts tailwind.config.ts
 COPY jest.config.ts jest.config.ts
 COPY jest.setup.ts jest.setup.ts
 
-RUN npm i
+RUN npm i --legacy-peer-deps
 
 COPY src src
 
