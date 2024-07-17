@@ -9,7 +9,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Goto frontend and run tests
-        run: cd frontend && npm i && npm test
+        run: cd frontend && npm i --legacy-peer-deps && npm test
   docker:
     needs: test-front
     if: github.ref == 'refs/heads/main'

@@ -1,5 +1,5 @@
 import NavBar from "@/components/NavBars/HomeNavBar";
-import SignInForm from "@/components/SignInForm";
+import SignInForm from "@/components/Forms/SignInForm";
 import ResetPasswordLink from "@/components/ResetPasswordLink";
 import { useState } from "react";
 
