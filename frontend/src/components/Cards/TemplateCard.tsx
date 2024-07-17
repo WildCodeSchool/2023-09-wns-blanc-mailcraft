@@ -55,6 +55,8 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
       <div className="template-wrapper flex items-center relative">
         <ActionPanelTemplateCard
           templateId={templateId}
+          templateTitle={title}
+          templateZones={zones}
           showDataPanel={showDataPanel}
           onTogglePanel={toggleDataPanel}
         />

@@ -222,14 +222,6 @@ const TemplateModificationPage = () => {
         saveButtonHoverColor="#BB3241"
         arrayToIterate={"templateToModify"}
       />
-      <button
-        className="border-4 border-red-900"
-        onClick={() =>
-          downloadHtmlTemplate(templateToModify?.title, templateToModify?.zones)
-        }
-      >
-        Télécharger le template
-      </button>
       <section className="w-full h-[90vh] flex justify-between bg-[#766060] gap-24">
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <DataTemplate arrayToIterate={"templateToModify"} />
