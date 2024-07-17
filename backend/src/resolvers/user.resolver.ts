@@ -46,4 +46,14 @@ export class UserResolver {
       throw new Error("Failed to reset password");
     }
   }
+
+  @Mutation(() => String)
+  async doesMailAlreadyExist(@Arg("mail") mail: string): Promise<boolean> {
+    try {
+      return await UserService.doesMailAlreadyExist(mail);
+    } catch (error) {
+      console.error("Error evaluating mail", error);
+      throw new Error("Failed to check user mail");
+    }
+  }
 }

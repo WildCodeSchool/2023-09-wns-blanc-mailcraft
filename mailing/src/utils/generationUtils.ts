@@ -97,7 +97,6 @@ const updateHtmlFile = (newHtml: string, file: string): Promise<void> => {
   });
 };
 
-// Ibrahim
 export const convertTemplateToHtmlInline = async (
   templateZones: TemplateZone[]
 ): Promise<string> => {

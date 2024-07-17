@@ -34,8 +34,6 @@ const GET_ME = gql`
     getMe {
       id
       pseudo
-      firstname
-      lastname
       email
       subscriptionType
       role

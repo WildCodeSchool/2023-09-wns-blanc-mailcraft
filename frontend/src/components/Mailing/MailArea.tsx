@@ -112,7 +112,7 @@ export default function MailArea({
                   </div>
                   <div className="absolute inset-0 flex justify-center items-center opacity-0 hover:opacity-100 bg-gray-600 bg-opacity-50 transition duration-300 ease-in-out">
                     <button className="text-white text-4xl" onClick={openModal}>
-                      <i className="fas fa-search"></i>{" "}
+                      <i className="fas fa-search"></i> *
                     </button>
                   </div>
                 </div>

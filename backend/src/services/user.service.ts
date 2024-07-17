@@ -6,8 +6,8 @@ export async function create(userData: UserInput): Promise<string> {
   try {
     const newUser = new User();
     newUser.pseudo = userData.pseudo;
-    newUser.firstname = userData.firstname;
-    newUser.lastname = userData.lastname;
+    newUser.firstname = userData.firstname || "";
+    newUser.lastname = userData.lastname || "";
     newUser.email = userData.email;
     newUser.hashedPassword = await argon2.hash(userData.password);
     newUser.role = userData.role ? userData.role : "MEMBER"; // si rien n'est spécifié par défaut MEMBER
@@ -49,3 +49,9 @@ export async function resetPassword(
     throw new Error("Failed to update password");
   }
 }
+
+export const doesMailAlreadyExist = async (mail: string): Promise<boolean> => {
+  const users = await User.find({ select: ["email"] });
+  const emailList = users.map((user: User) => user.email);
+  return emailList.includes(mail);
+};

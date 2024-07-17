@@ -7,13 +7,13 @@ export class UserInput {
   @Length(1, 30)
   pseudo: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Length(1, 30)
-  firstname: string;
+  firstname?: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Length(1, 30)
-  lastname: string;
+  lastname?: string;
 
   @Field()
   @IsEmail({}, { message: "Invalid email" })
