@@ -21,12 +21,12 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   description,
 }) => {
   const [showDataPanel, setShowDataPanel] = useState(false);
-  console.log("zones ici : ", zones);
 
   const toggleDataPanel = () => {
     setShowDataPanel(!showDataPanel);
   };
 
+  //Fonction de troncage du texte
   const truncateText = (text: string, charLimit: number) => {
     if (text.length > charLimit) {
       return text.slice(0, charLimit) + "..";
