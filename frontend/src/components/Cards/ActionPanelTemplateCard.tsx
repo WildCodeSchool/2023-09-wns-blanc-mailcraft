@@ -3,11 +3,13 @@ import { downloadHtmlTemplate } from "@/utils/templateConversionUtils";
 
 interface ActionPanelTemplateCardProps {
     templateId: number;
+    templateTitle: string;
+    templateZones: any;
     showDataPanel: boolean;
     onTogglePanel?: () => void;
 }
 
-const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templateId, showDataPanel, onTogglePanel }) => {
+const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templateId, templateTitle, templateZones, showDataPanel, onTogglePanel }) => {
     // const router = useRouter();
     // const { deleteTemplate } = useTemplateUtils();
 
@@ -41,7 +43,7 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templ
                     </svg>
                 </button>
                 <button className="mb-2 text-white hover:text-gray-300" onClick={() =>
-                    downloadHtmlTemplate(template?.title, template?.zones)
+                    downloadHtmlTemplate(templateTitle, templateZones)
                 }>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v10m0 0l-3.5-3.5m3.5 3.5L15.5 9.5M5.25 15.75h13.5" />
