@@ -5,6 +5,7 @@ import path from "path";
 import { convertTemplateToHtmlInline } from "./utils/generationUtils";
 import fs from "fs";
 import nodemailer from "nodemailer";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -126,6 +127,39 @@ app.post("/sendMail", async (req: Request, res: Response) => {
   try {
     await transporter.sendMail(mailData);
     // await sgMail.send(msg);
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
+});
+
+const resetPasswordURL =
+  process.env.RESET_PASSWORD_URL || "localhost:3000/resetPassword";
+const jwtSecret = process.env.JWT_SECRET_KEY || "temporary_reset_key";
+
+app.post("/generateResetPasswordLink", async (req: Request, res: Response) => {
+  const { recipient } = req.body;
+
+  if (!recipient) {
+    return res.status(400).json({ error: "Recipient email is required" });
+  }
+
+  try {
+    const token = jwt.sign({ email: recipient }, jwtSecret, {
+      expiresIn: "1h",
+    });
+    const resetLink = `${resetPasswordURL}?token=${token}`;
+
+    const mailData = {
+      from: process.env.MAILCRAFT_GMAIL,
+      to: recipient,
+      subject: "Réinitialisation de votre mot de passe",
+      html: `<p>Vous avez demandé la réinitialisation de votre mot de passe. Veuillez cliquer sur le lien suivant pour poursuivre :</p>
+             <a href="${resetLink}">Réinitialiser le mot de passe</a>`,
+    };
+
+    await transporter.sendMail(mailData);
     res.status(200).json({ message: "Email sent successfully" });
   } catch (error) {
     console.error("Error sending email:", error);

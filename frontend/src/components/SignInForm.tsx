@@ -13,7 +13,7 @@ const SIGN_IN = gql`
   }
 `;
 
-export default function SignInForm() {
+export default function SignInForm({ setShowResetPassword }) {
   const { setIsAuthenticated, setUser } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
@@ -69,6 +69,12 @@ export default function SignInForm() {
             className="input input-bordered w-2/6 rounded-3xl bg-red-100 placeholder:text-black border-0 pl-6"
           />
         </div>
+        <button
+          className="flex items-center"
+          onClick={() => setShowResetPassword(true)}
+        >
+          <p>Mot de passe oublié ?</p>
+        </button>
         <div className="mb-6">
           <RedButton
             text="Connexion"
