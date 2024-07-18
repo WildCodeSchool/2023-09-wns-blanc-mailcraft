@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import {
-    GET_ME,
     UPDATE_USER,
     VERIFY_PASSWORD
 } from "@/client/mutations/user/user-mutations";
@@ -11,24 +11,27 @@ interface UserInformationFormProps {
     setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function UserInformationForm({setErrorMessage, setSuccessMessage}: UserInformationFormProps) {
+export default function UserInformationForm({ setErrorMessage, setSuccessMessage }: UserInformationFormProps) {
+    const { user, loading, error } = useAuth();
     const [prenom, setPrenom] = useState('');
     const [nom, setNom] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
-    const { loading, error, data } = useQuery(GET_ME);
-    const [updateUser, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_USER);
+    const [updateUser] = useMutation(UPDATE_USER);
     const [verifyPassword] = useMutation(VERIFY_PASSWORD);
 
     useEffect(() => {
-        if (data) {
-            setPrenom(data.getMe.firstname || '');
-            setNom(data.getMe.lastname || '');
-            setEmail(data.getMe.email || '');
+        console.log(`User is ---> ${JSON.stringify(user)}`);
+    }, [user]);
+
+    useEffect(() => {
+        if (user) {
+            setPrenom(user.firstname || '');
+            setNom(user.lastname || '');
+            setEmail(user.email || '');
         }
-    }, [data]);
+    }, [user]);
 
     if (loading) return <p>Chargement en cours...</p>;
     if (error) return <p>Erreur : {error.message}</p>;
@@ -61,7 +64,7 @@ export default function UserInformationForm({setErrorMessage, setSuccessMessage}
                 });
 
                 if (updateData.updateUserName) {
-                    setSuccessMessage("Informations personnelles mises à jour avec succès.");
+                    setSuccessMessage("Les informations personnelles ont été mises à jour.");
                 }
             } else {
                 setErrorMessage("Le mot de passe actuel est incorrect. Veuillez réessayer.");

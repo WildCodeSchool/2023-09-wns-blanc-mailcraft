@@ -55,3 +55,16 @@ export const doesMailAlreadyExist = async (mail: string): Promise<boolean> => {
   const emailList = users.map((user: User) => user.email);
   return emailList.includes(mail);
 };
+
+export async function updateUserName(email: string, firstname: string, lastname: string): Promise<string> {
+  try {
+    const user = await User.findOneByOrFail({ email });
+    user.firstname = firstname;
+    user.lastname = lastname;
+    await user.save();
+    return "User name successfully updated";
+  } catch (error) {
+    console.error("Error updating the user name: ", error);
+    throw new Error("Failed to update user name");
+  }
+};

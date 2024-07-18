@@ -1,7 +1,7 @@
 import NavBar from "@/components/NavBars/UserPagesNavBar";
 import Sidebar from "@/components/NavBars/SideBar";
-import UserInformation from "@/components/UserInformation";
 import React, { useState } from 'react';
+import UserInformation from "@/components/UserInformation";
 
 export default function profilePage() {
   const [currentView, setCurrentView] = useState('informations');

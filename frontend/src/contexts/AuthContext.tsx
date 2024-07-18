@@ -17,6 +17,8 @@ interface AuthContextType {
   setIsAuthenticated: (isAuth: boolean) => void;
   user: any;
   setUser: React.Dispatch<React.SetStateAction<any>>;
+  loading: boolean;
+  error: any;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,6 +36,8 @@ const GET_ME = gql`
     getMe {
       id
       pseudo
+      firstname
+      lastname
       email
       subscriptionType
       role
@@ -69,7 +73,7 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     }
   }, [getMe]);
 
-  const value = { isAuthentificated, setIsAuthenticated, user, setUser };
+  const value = { isAuthentificated, setIsAuthenticated, user, setUser, loading, error };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
