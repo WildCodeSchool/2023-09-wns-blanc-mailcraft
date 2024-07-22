@@ -27,6 +27,7 @@ const isValidText = (content: string): boolean => {
 
 const validateURL = (url: string): boolean => {
   const urlPattern = /^(https:\/\/)[\w.-]+\.[a-zA-Z]{2,}$/;
+  console.log(urlPattern);
   return urlPattern.test(url);
 };
 
