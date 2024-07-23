@@ -1,15 +1,14 @@
-// components/Sidebar.js
 import React, { useState } from 'react';
-import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "next/router";
 
-const Sidebar = ({ onSelect, onToggle }) => {
+interface SideBarProps {
+  onSelect: (form: string) => void;
+}
+
+const SideBar = ({ onSelect }: SideBarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const toggleSidebar = () => {
-    const newCollapsedState = !isCollapsed;
-    setIsCollapsed(newCollapsedState);
-    onToggle(newCollapsedState); // Appeler la fonction onToggle avec le nouvel état
+    setIsCollapsed(!isCollapsed);
   };
 
   return (
@@ -47,7 +46,7 @@ const Sidebar = ({ onSelect, onToggle }) => {
             </li>
             <li>
               <button
-                onClick={() => onSelect('variables')}
+                onClick={() => onSelect('links')}
                 className="flex items-center w-full px-4 py-2 text-left bg-rose-100 hover:bg-rose-300"
               >
                 <svg
@@ -121,4 +120,4 @@ const Sidebar = ({ onSelect, onToggle }) => {
   );
 };
 
-export default Sidebar;
+export default SideBar;

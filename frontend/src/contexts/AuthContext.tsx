@@ -41,6 +41,12 @@ const GET_ME = gql`
       email
       subscriptionType
       role
+      socialLinks {
+        id
+        facebook
+        twitter
+        linkedin
+      }
     }
   }
 `;

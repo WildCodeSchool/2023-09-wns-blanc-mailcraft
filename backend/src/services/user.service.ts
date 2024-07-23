@@ -1,7 +1,10 @@
 import { User } from "../entities/user";
+import { SocialLink } from "../entities/socialLink";
 import * as argon2 from "argon2";
 import { UserInput } from "../types/createUserInput";
+import { SocialLinkInput } from "../types/createSocialLinkInput";
 import { verifyToken } from "./auth.service";
+
 export async function create(userData: UserInput): Promise<string> {
   try {
     const newUser = new User();
@@ -22,7 +25,10 @@ export async function create(userData: UserInput): Promise<string> {
 }
 
 export async function getByEmail(email: string): Promise<User> {
-  return await User.findOneByOrFail({ email });
+  return await User.findOneOrFail({
+    where: { email },
+    relations: ["socialLinks"],
+  });
 }
 
 export async function resetPassword(
@@ -56,7 +62,11 @@ export const doesMailAlreadyExist = async (mail: string): Promise<boolean> => {
   return emailList.includes(mail);
 };
 
-export async function updateUserName(email: string, firstname: string, lastname: string): Promise<string> {
+export async function updateUserName(
+  email: string,
+  firstname: string,
+  lastname: string
+): Promise<string> {
   try {
     const user = await User.findOneByOrFail({ email });
     user.firstname = firstname;
@@ -67,4 +77,59 @@ export async function updateUserName(email: string, firstname: string, lastname:
     console.error("Error updating the user name: ", error);
     throw new Error("Failed to update user name");
   }
-};
+}
+
+export async function createSocialLink(
+  email: string,
+  socialLinkData: SocialLinkInput
+): Promise<string> {
+  try {
+    const user = await User.findOneByOrFail({ email });
+
+    const socialLink = new SocialLink();
+    socialLink.facebook = socialLinkData.facebook || "";
+    socialLink.twitter = socialLinkData.twitter || "";
+    socialLink.linkedin = socialLinkData.linkedin || "";
+    socialLink.userId = user.id;
+
+    await socialLink.save();
+    return "Social link successfully added";
+  } catch (error) {
+    console.error("Error adding the social link: ", error);
+    throw new Error("Failed to add the social link");
+  }
+}
+
+export async function updateSocialLink(
+  email: string,
+  id: number,
+  facebook: string,
+  twitter: string,
+  linkedin: string
+): Promise<string> {
+  try {
+    const user = await User.findOneOrFail({
+      where: { email },
+      relations: ["socialLinks"],
+    });
+
+    if (!user.socialLinks || user.socialLinks.length === 0) {
+      throw new Error("No social links found for the user");
+    }
+
+    const socialLink = user.socialLinks.find(link => link.id === id);
+    if (!socialLink) {
+      throw new Error("Social link not found");
+    }
+
+    socialLink.facebook = facebook;
+    socialLink.twitter = twitter;
+    socialLink.linkedin = linkedin;
+
+    await socialLink.save();
+    return "Social link successfully updated";
+  } catch (error) {
+    console.error("Error updating the social link: ", error);
+    throw new Error("Failed to update the social link");
+  }
+}

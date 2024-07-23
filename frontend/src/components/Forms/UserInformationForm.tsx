@@ -1,24 +1,20 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { ProfileForm } from '@/types/interfaces/profile/profileForm'
 import {
-    UPDATE_USER,
+    UPDATE_USER_INFORMATION,
     VERIFY_PASSWORD
 } from "@/client/mutations/user/user-mutations";
 
-interface UserInformationFormProps {
-    setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-    setSuccessMessage: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export default function UserInformationForm({ setErrorMessage, setSuccessMessage }: UserInformationFormProps) {
+export default function UserInformationForm({ setErrorMessage, setSuccessMessage }: ProfileForm) {
     const { user, loading, error } = useAuth();
     const [prenom, setPrenom] = useState('');
     const [nom, setNom] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [updateUser] = useMutation(UPDATE_USER);
+    const [updateUser] = useMutation(UPDATE_USER_INFORMATION);
     const [verifyPassword] = useMutation(VERIFY_PASSWORD);
 
     useEffect(() => {
