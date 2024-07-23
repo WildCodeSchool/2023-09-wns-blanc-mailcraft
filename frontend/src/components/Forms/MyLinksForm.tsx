@@ -15,6 +15,16 @@ export default function MyLinksForm({ setErrorMessage, setSuccessMessage }: Prof
     const [createUserLinks] = useMutation(CREATE_USER_LINKS);
     const [updateUserLinks] = useMutation(UPDATE_USER_LINKS);
 
+    //regex pour s'assurer que les URL sont pertinentes
+    const facebookRegex = /^(https?:\/\/)?(www\.)?facebook.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+    const twitterRegex = /^(https?:\/\/)?(www\.)?twitter.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+    const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin.com\/in\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+
+
+    const validateLink = (link, regex) => {
+        return regex.test(link);
+    };
+
     useEffect(() => {
         if (user && user.socialLinks && user.socialLinks.length > 0) {
             const socialLinks = user.socialLinks[0];
@@ -28,6 +38,39 @@ export default function MyLinksForm({ setErrorMessage, setSuccessMessage }: Prof
         e.preventDefault();
         setErrorMessage('');
         setSuccessMessage('');
+
+        let invalidCount = 0;
+
+        if (facebookLink && !validateLink(facebookLink, facebookRegex)) {
+            invalidCount++;
+        }
+
+        if (twitterLink && !validateLink(twitterLink, twitterRegex)) {
+            invalidCount++;
+        }
+
+        if (linkedinLink && !validateLink(linkedinLink, linkedinRegex)) {
+            invalidCount++;
+        }
+
+        if (invalidCount >= 2) {
+            setErrorMessage('Veuillez entrer des liens valides.');
+            return;
+        } else {
+            // Set individual error messages only if one link is invalid
+            if (facebookLink && !validateLink(facebookLink, facebookRegex)) {
+                setErrorMessage('Veuillez entrer un lien Facebook valide.');
+                return;
+            }
+            if (twitterLink && !validateLink(twitterLink, twitterRegex)) {
+                setErrorMessage('Veuillez entrer un lien Twitter valide.');
+                return;
+            }
+            if (linkedinLink && !validateLink(linkedinLink, linkedinRegex)) {
+                setErrorMessage('Veuillez entrer un lien LinkedIn valide.');
+                return;
+            }
+        }
 
         try {
             let mutationResult;
