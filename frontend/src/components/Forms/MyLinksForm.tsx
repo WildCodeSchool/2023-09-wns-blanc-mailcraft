@@ -15,16 +15,6 @@ export default function MyLinksForm({ setErrorMessage, setSuccessMessage }: Prof
     const [createUserLinks] = useMutation(CREATE_USER_LINKS);
     const [updateUserLinks] = useMutation(UPDATE_USER_LINKS);
 
-    //regex pour s'assurer que les URL sont pertinentes
-    const facebookRegex = /^(https?:\/\/)?(www\.)?facebook.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
-    const twitterRegex = /^(https?:\/\/)?(www\.)?twitter.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
-    const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin.com\/in\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
-
-
-    const validateLink = (link, regex) => {
-        return regex.test(link);
-    };
-
     useEffect(() => {
         if (user && user.socialLinks && user.socialLinks.length > 0) {
             const socialLinks = user.socialLinks[0];
@@ -34,42 +24,43 @@ export default function MyLinksForm({ setErrorMessage, setSuccessMessage }: Prof
         }
     }, [user]);
 
+    const validateLinks = (facebookLink, twitterLink, linkedinLink) => {
+        const facebookRegex = /^(https?:\/\/)?(www\.)?facebook.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+        const twitterRegex = /^(https?:\/\/)?(www\.)?twitter.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+        const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin.com\/in\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+
+        let errors = [];
+
+        if (facebookLink && !facebookRegex.test(facebookLink)) {
+            errors.push('Veuillez entrer un lien Facebook valide.');
+        }
+
+        if (twitterLink && !twitterRegex.test(twitterLink)) {
+            errors.push('Veuillez entrer un lien Twitter valide.');
+        }
+
+        if (linkedinLink && !linkedinRegex.test(linkedinLink)) {
+            errors.push('Veuillez entrer un lien LinkedIn valide.');
+        }
+
+        if (errors.length >= 2) {
+            return ['Veuillez entrer des liens valides.'];
+        }
+
+        return errors;
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage('');
         setSuccessMessage('');
 
-        let invalidCount = 0;
+        const errors = validateLinks(facebookLink, twitterLink, linkedinLink);
 
-        if (facebookLink && !validateLink(facebookLink, facebookRegex)) {
-            invalidCount++;
-        }
-
-        if (twitterLink && !validateLink(twitterLink, twitterRegex)) {
-            invalidCount++;
-        }
-
-        if (linkedinLink && !validateLink(linkedinLink, linkedinRegex)) {
-            invalidCount++;
-        }
-
-        if (invalidCount >= 2) {
-            setErrorMessage('Veuillez entrer des liens valides.');
+        if (errors.length > 0) {
+            setErrorMessage(errors[0]);
             return;
-        } else {
-            // Set individual error messages only if one link is invalid
-            if (facebookLink && !validateLink(facebookLink, facebookRegex)) {
-                setErrorMessage('Veuillez entrer un lien Facebook valide.');
-                return;
-            }
-            if (twitterLink && !validateLink(twitterLink, twitterRegex)) {
-                setErrorMessage('Veuillez entrer un lien Twitter valide.');
-                return;
-            }
-            if (linkedinLink && !validateLink(linkedinLink, linkedinRegex)) {
-                setErrorMessage('Veuillez entrer un lien LinkedIn valide.');
-                return;
-            }
         }
 
         try {
