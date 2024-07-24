@@ -8,11 +8,12 @@ interface ActionPanelTemplateCardProps {
     templateId: number;
     templateTitle: string;
     templateZones: any;
+    templateStatus: string;
     showDataPanel: boolean;
     onTogglePanel?: () => void;
 }
 
-const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templateId, templateTitle, templateZones, showDataPanel, onTogglePanel }) => {
+const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templateId, templateTitle, templateZones, templateStatus, showDataPanel, onTogglePanel }) => {
     const router = useRouter();
     const { deleteTemplate } = useTemplateModificationUtils();
 
@@ -32,7 +33,7 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templ
                     </svg>
                 </button>
             </div>
-            <div className="flex flex-col items-center justify-center gap-12 mb-3 flex-grow">
+            <div className={`flex flex-col items-center justify-center ${templateStatus === "created" ? "gap-12" : "gap-24"} mb-3 flex-grow`}>
                 <Link href={`/template/modification/${templateId}`}>
                     <button className="mb-2 text-white hover:text-gray-300">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -40,18 +41,22 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templ
                         </svg>
                     </button>
                 </Link>
-                <button className="mb-2 text-white hover:text-gray-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                    </svg>
-                </button>
-                <button className="mb-2 text-white hover:text-gray-300" onClick={() =>
-                    downloadHtmlTemplate(templateTitle, templateZones)
-                }>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v10m0 0l-3.5-3.5m3.5 3.5L15.5 9.5M5.25 15.75h13.5" />
-                    </svg>
-                </button>
+                {templateStatus === "created" && (
+                    <>
+                        <button className="mb-2 text-white hover:text-gray-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                            </svg>
+                        </button>
+                        <button className="mb-2 text-white hover:text-gray-300" onClick={() =>
+                            downloadHtmlTemplate(templateTitle, templateZones)
+                        }>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v10m0 0l-3.5-3.5m3.5 3.5L15.5 9.5M5.25 15.75h13.5" />
+                            </svg>
+                        </button>
+                    </>
+                )}
                 <button className="mb-2 text-white hover:text-gray-300" onClick={() =>
                     handleDelete()
                 }>

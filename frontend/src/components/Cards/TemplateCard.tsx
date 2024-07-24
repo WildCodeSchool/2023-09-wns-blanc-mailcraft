@@ -12,6 +12,7 @@ interface TemplateCardProps {
   zones: IZone[];
   isCreated: boolean;
   description: string;
+  status: string;
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({
@@ -19,6 +20,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   title,
   zones,
   description,
+  status
 }) => {
   const [showDataPanel, setShowDataPanel] = useState(false);
 
@@ -57,6 +59,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           templateId={templateId}
           templateTitle={title}
           templateZones={zones}
+          templateStatus={status}
           showDataPanel={showDataPanel}
           onTogglePanel={toggleDataPanel}
         />

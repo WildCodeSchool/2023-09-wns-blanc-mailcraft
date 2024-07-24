@@ -19,6 +19,7 @@ const MyTemplates = () => {
         title
         description
         templateNature
+        status
         zones {
           id
           templateId
@@ -107,6 +108,7 @@ const MyTemplates = () => {
                 description={template.description}
                 zones={template.zones}
                 isCreated={true}
+                status={template.status}
               />
             ))
           }
