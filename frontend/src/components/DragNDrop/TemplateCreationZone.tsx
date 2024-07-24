@@ -173,8 +173,7 @@ import Modal from "react-modal";
 
 const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
   const { zones, setZones, isModalErrorOpen, errorMessage } = useTemplate();
-  const { saveTemplate, handleCreationError } =
-    useTemplateCreationUtils();
+  const { saveTemplate, handleCreationError } = useTemplateCreationUtils();
 
   const {
     handleTextChange,

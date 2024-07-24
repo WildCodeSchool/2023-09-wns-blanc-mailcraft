@@ -26,7 +26,7 @@ export default function MyLinksForm({ setErrorMessage, setSuccessMessage }: Prof
 
     const validateLinks = (facebookLink, twitterLink, linkedinLink) => {
         const facebookRegex = /^(https?:\/\/)?(www\.)?facebook.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
-        const twitterRegex = /^(https?:\/\/)?(www\.)?twitter.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+        const twitterRegex = /^(https?:\/\/)?(www\.)?x.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
         const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin.com\/in\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
 
         let errors = [];

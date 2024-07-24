@@ -188,13 +188,17 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
           </li>
         </ul>
         <div className="me-7">
-          <RedButton
-            text="Mon compte"
-            padding={"py-2"}
-            isBold={false}
-            size={"lg"}
-            shadow={"lg"}
-          />
+          <Link
+            href="/user/myProfile"
+          >
+            <RedButton
+              text="Mon compte"
+              padding={"py-2"}
+              isBold={false}
+              size={"lg"}
+              shadow={"lg"}
+            />
+          </Link>
         </div>
       </div>
     </div>
