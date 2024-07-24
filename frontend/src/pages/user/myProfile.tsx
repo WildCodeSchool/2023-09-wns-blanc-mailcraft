@@ -27,7 +27,7 @@ export default function ProfilePage() {
               <span className="block sm:inline">{successMessage}</span>
             </div>
           )}
-          <div className="mt-8 ml-4 md:ml-16">
+          <div className="mt-3 md:ml-16">
             <h2 className="font-bold text-2xl mb-8">
               {selectedForm === 'informations' ? 'Informations Personnelles' : 'Mes Liens'}
             </h2>

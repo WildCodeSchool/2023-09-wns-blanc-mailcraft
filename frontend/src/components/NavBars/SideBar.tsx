@@ -19,9 +19,9 @@ const SideBar = ({ onSelect }: SideBarProps) => {
       >
         {isCollapsed ? '≡' : '×'}
       </button>
-      <div className={`h-screen bg-white text-black w-64 sm:w-3/4 md:w-64 flex flex-col border-r-2 border-black font-semibold ${isCollapsed ? 'hidden' : 'block'} md:block`}>
+      <div className={`h-screen bg-white text-black w-2/5 sm:w-3/4 md:w-64 flex flex-col border-r-2 border-black font-semibold ${isCollapsed ? 'hidden' : 'block'} md:block`}>
         <nav className="flex-1 flex flex-col space-y-36 overflow-y-auto">
-          <ul className="space-y-1 mt-8 mb-8">
+          <ul className="space-y-4 mt-8 mb-8">
             <li>
               <button
                 onClick={() => onSelect('informations')}
@@ -76,10 +76,10 @@ const SideBar = ({ onSelect }: SideBarProps) => {
           <div className="flex flex-col items-center justify-center space-y-8">
             <button
               type="button"
-              className="flex w-2/3 text-white text-md bg-[#E83B4E] hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-200 font-medium rounded-lg px-3 md:px-4 py-2 text-center"
+              className="flex justify-center items-center gap-4 w-4/5 h-10 text-white text-sm md:text-base bg-[#E83B4E] hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-200 font-medium rounded-lg"
             >
               <svg
-                className="shadow-xl h-8 w-8 mt-2"
+                className="hidden md:block shadow-xl h-7 w-7"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 48"
@@ -93,14 +93,14 @@ const SideBar = ({ onSelect }: SideBarProps) => {
                   fill-rule="evenodd"
                 />
               </svg>
-              Changer d'offre
+              <p>Changer d'offre</p>
             </button>
             <button
               type="button"
-              className="flex w-2/3 text-white text-md bg-[#E83B4E] hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-200 font-medium rounded-lg px-3 md:px-4 py-2 text-center"
+              className="flex justify-center items-center gap-4 w-4/5 h-10 text-white text-md bg-[#E83B4E] hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-200 font-medium rounded-lg"
             >
               <svg
-                className="shadow-xl h-5 w-5 mr-2"
+                className="hidden md:block shadow-xl h-6 w-6 me-3"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

@@ -4,6 +4,7 @@ import logo from "@/assets/homepage/logo.png";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateCreationUtils } from "@/utils/templateCreationUtils"
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface TemplateNavBarProps {
   arrayToIterate: string;
@@ -27,11 +28,13 @@ const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
 
   return (
     <div className="h-[10vh] bg-white flex justify-between items-center border-b border-gray-400">
-      <Image
-        src={logo}
-        className="h-[5vh] w-[30vw] md:h-[7vh] md:w-[10vw] ms-7"
-        alt="Mailcraft Logo"
-      />
+      <Link href="/">
+        <Image
+          src={logo}
+          className="h-[5vh] w-[30vw] md:h-[7vh] md:w-[10vw] ms-7"
+          alt="Mailcraft Logo"
+        />
+      </Link>
       <TemplateHeaderButton
         link="/user/myTemplates"
         text="Mes templates"
