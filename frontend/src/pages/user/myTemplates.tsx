@@ -4,13 +4,15 @@ import TemplateCard from "@/components/Cards/TemplateCard";
 import UserPagesNavBar from "@/components/NavBars/UserPagesNavBar";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
-import filterLine from '@/assets/template-page/filter-line.png'
 import { TailSpin } from "react-loader-spinner"
+import FilterButton from "@/components/Buttons/FilterButton";
+import { templateNatures } from "@/utils/templateNatures";
 
 const MyTemplates = () => {
   const [userId, setUserId] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [templates, setTemplates] = useState<any[]>([])
+  const [selectedNature, setSelectedNature] = useState<string>('');
 
   const GET_USER_TEMPLATES = gql`
     query GetAllUserCreatedTemplates($userId: Float!) {
@@ -44,27 +46,55 @@ const MyTemplates = () => {
 
   useEffect(() => {
     if (data) {
-      const sortedTemplates = data.getAllUserCreatedTemplates.map(template => {
-        const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
-        return { ...template, zones: sortedZones };
-      });
-      setTemplates(sortedTemplates);
+      const filteredAndSortedTemplates = data.getAllUserCreatedTemplates
+        .filter(template =>
+          (!searchTerm || template.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          (!selectedNature || template.templateNature.includes(selectedNature))
+        )
+        .map(template => {
+          const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
+          return { ...template, zones: sortedZones };
+        });
+      setTemplates(filteredAndSortedTemplates);
     }
-  }, [data]);
+  }, [data, searchTerm, selectedNature]);
 
-  // Fonction de recherche 
+
+  const applyFilters = () => {
+    let templates = data.getAllUserCreatedTemplates;
+
+    if (searchTerm) {
+      templates = data.getAllUserCreatedTemplates.filter(template =>
+        template.title.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    if (selectedNature) {
+      templates = data.getAllUserCreatedTemplates.filter(template =>
+        template.templateNature.includes(selectedNature)
+      );
+    }
+    setTemplates(templates);
+  };
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
-    if (value) {
-      const filtered = data.getAllUserCreatedTemplates.filter(template =>
-        template.title.toLowerCase().includes(value)
-      );
-      setTemplates([...filtered]);
-    } else {
-      setTemplates([...data.getAllUserCreatedTemplates]);
-    }
+    applyFilters();
   };
+
+  const handleFilter = (event: ChangeEvent<HTMLSelectElement>) => {
+    const selectedNature = event.target.value
+    console.log('selected nature :', selectedNature)
+    if (selectedNature === 'Tous') {
+      setSelectedNature('');
+    } else {
+      setSelectedNature(selectedNature);
+    }
+    applyFilters();
+  };
+
+  console.log('templates : ', templates)
 
   return (
     <>
@@ -83,9 +113,10 @@ const MyTemplates = () => {
               Nouveau modèle
             </button>
           </Link>
-          <button className="h-12 w-12 bg-gray-400 hover:bg-gray-500 border border-gray-300 shadow-sm rounded-md flex justify-center items-center">
-            <img src={filterLine.src} className="object-cover" />
-          </button>
+          <FilterButton
+            onChange={handleFilter}
+            options={templateNatures}
+          />
         </div>
         {loading &&
           <div className="loader flex flex-col justify-center items-center gap-6">
@@ -98,7 +129,7 @@ const MyTemplates = () => {
         }
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
           {/* Je trie les templates par ordre d'id puis je map pour les afficher */}
-          {templates
+          {[...templates]
             .sort((a: any, b: any) => a.id - b.id)
             .map((template: any) => (
               <TemplateCard

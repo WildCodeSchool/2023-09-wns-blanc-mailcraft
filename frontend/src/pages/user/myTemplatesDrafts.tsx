@@ -4,13 +4,15 @@ import TemplateCard from "@/components/Cards/TemplateCard";
 import UserPagesNavBar from "@/components/NavBars/UserPagesNavBar";
 import SearchBar from "@/components/SearchBar";
 import Link from "next/link";
-import filterLine from '@/assets/template-page/filter-line.png'
 import { TailSpin } from "react-loader-spinner"
+import FilterButton from "@/components/Buttons/FilterButton";
+import { templateNatures } from "@/utils/templateNatures"
 
 const MyTemplates = () => {
   const [userId, setUserId] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredDraftTemplates, setFilteredDraftTemplates] = useState<any[]>([])
+  const [templates, setTemplates] = useState<any[]>([])
+  const [selectedNature, setSelectedNature] = useState<string>('');
 
   const GET_USER_DRAFT_TEMPLATES = gql`
   query GetAllUserDraftTemplates($userId: Float!) {
@@ -44,24 +46,52 @@ const MyTemplates = () => {
 
   useEffect(() => {
     if (data) {
-      console.log("User Templates retrieved", data.getAllUserDraftTemplates);
-      const sortedTemplates = data.getAllUserDraftTemplates.map(template => {
-        const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
-        return { ...template, zones: sortedZones };
-      });
-      setFilteredDraftTemplates(sortedTemplates);
+      const filteredAndSortedTemplates = data.getAllUserDraftTemplates
+        .filter(template =>
+          (!searchTerm || template.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          (!selectedNature || template.templateNature.includes(selectedNature))
+        )
+        .map(template => {
+          const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
+          return { ...template, zones: sortedZones };
+        });
+      setTemplates(filteredAndSortedTemplates);
     }
-  }, [data]);
+  }, [data, searchTerm, selectedNature]);
+
+
+  const applyFilters = () => {
+    let templates = data.getAllUserDraftTemplates;
+
+    if (searchTerm) {
+      templates = data.getAllUserDraftTemplates.filter(template =>
+        template.title.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    if (selectedNature) {
+      templates = data.getAllUserDraftTemplates.filter(template =>
+        template.templateNature.includes(selectedNature)
+      );
+    }
+    setTemplates(templates);
+  };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-    if (event.target.value) {
-      setFilteredDraftTemplates(data.getAllUserDraftTemplates.filter(template =>
-        template.title.toLowerCase().includes(event.target.value)
-      ));
+    const value = event.target.value;
+    setSearchTerm(value);
+    applyFilters();
+  };
+
+  const handleFilter = (event: ChangeEvent<HTMLSelectElement>) => {
+    const selectedNature = event.target.value
+    console.log('selected nature :', selectedNature)
+    if (selectedNature === 'Tous') {
+      setSelectedNature('');
     } else {
-      setFilteredDraftTemplates(JSON.parse(JSON.stringify(data.getAllUserDraftTemplates)));
+      setSelectedNature(selectedNature);
     }
+    applyFilters();
   };
 
   return (
@@ -81,9 +111,10 @@ const MyTemplates = () => {
               Nouveau modèle
             </button>
           </Link>
-          <button className="h-12 w-12 bg-gray-400 hover:bg-gray-500 border border-gray-300 shadow-sm rounded-md flex justify-center items-center">
-            <img src={filterLine.src} className="object-cover" />
-          </button>
+          <FilterButton
+            onChange={handleFilter}
+            options={templateNatures}
+          />
         </div>
         {loading &&
           <div className="loader flex flex-col justify-center items-center gap-6">
@@ -96,7 +127,7 @@ const MyTemplates = () => {
         }
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
           {/* Je trie les templates par ordre d'id puis je map pour les afficher */}
-          {filteredDraftTemplates
+          {templates
             .sort((a: any, b: any) => a.id - b.id)
             .map((template: any) => (
               <TemplateCard
