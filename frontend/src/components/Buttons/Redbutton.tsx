@@ -5,6 +5,7 @@ type RedButtonProps = {
   padding: string;
   isBold: boolean;
   shadow: string;
+  color?: string;
   size: string;
   link?: string;
   type?: "submit" | "reset" | "button";
@@ -16,6 +17,7 @@ const RedButton = ({
   padding,
   isBold,
   shadow,
+  color,
   size,
   link,
   type,

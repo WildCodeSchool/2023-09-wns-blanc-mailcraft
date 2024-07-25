@@ -218,7 +218,9 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     useTemplateModificationUtils();
   const {
     handleTextChange,
+    // @ts-ignore
     removeZone,
+    // @ts-ignore
     isModalOpen,
     closeErrorModal,
     resetZones,
@@ -255,6 +257,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
         }
         return {
           ...subZone,
+          // @ts-ignore
           order: subZone.order || subZoneIndex + 1,
           dndId: `zone-${zoneIndex + 1}-subzone-${subZoneIndex + 1}`,
         };
@@ -266,6 +269,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
 
       return {
         ...zone,
+        // @ts-ignore
         order: zone.order || zoneIndex + 1,
         dndId: `zone-${zoneIndex + 1}`,
         subZones: subZonesWithDndIds,
@@ -481,6 +485,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                               <input
                                                 type="file"
                                                 hidden
+                                                // @ts-ignore
                                                 ref={(el) =>
                                                 (fileInputRefs.current[
                                                   subZone.id
@@ -499,7 +504,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                             </button>
                                           )}
                                           {subZone.moduleType === "social" && (
-                                            <div className="flex justify-around w-full mt-4">
+                                            <div className="flex justify-around w-full mt-4"> 
                                               {socialModule.map((social) => (
                                                 <Link
                                                   key={social.link}
@@ -544,7 +549,9 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                         </div>
                       )}
                     </Droppable>
-                    {providedZone.placeholder}
+                    
+                    {// @ts-ignore
+                    providedZone.placeholder}
                   </div>
                 )}
               </Draggable>

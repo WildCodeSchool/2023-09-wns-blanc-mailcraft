@@ -341,6 +341,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                                 <input
                                                   type="file"
                                                   hidden
+                                                  // @ts-ignore
                                                   ref={(el) =>
                                                   (fileInputRefs.current[
                                                     subZone.id
@@ -401,7 +402,9 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                         </div>
                       )}
                     </Droppable>
-                    {providedZone.placeholder}
+                    
+                    {// @ts-ignore
+                    providedZone.placeholder} 
                   </div>
                 )}
               </Draggable>

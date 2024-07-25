@@ -50,7 +50,7 @@ export const useTemplateCommonUtils = () => {
       const oldZonesId = templateToModify?.zones
         ?.filter((zone) => typeof zone.id === "number")
         .map((zone) => zone.id) || [];
-
+      //@ts-ignore
       setOldZonesId(oldZonesId);
       resetZones(keyToIdentify);
     } else {

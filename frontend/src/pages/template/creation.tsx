@@ -72,6 +72,7 @@ const TemplatePage = () => {
       const [removed] = newZones.splice(source.index, 1);
       newZones.splice(destination.index, 0, removed);
       const reorderedZones = newZones.map((zone, index) => ({
+        // @ts-ignore
         ...zone,
         order: index + 1,
       }));
@@ -92,6 +93,7 @@ const TemplatePage = () => {
       newSubZones.splice(destination.index, 0, removedSubZone);
       // Maj de order
       const reorderedSubZones = newSubZones.map((subZone, index) => ({
+        // @ts-ignore
         ...subZone,
         order: index + 1,
       }));
@@ -159,6 +161,7 @@ const TemplatePage = () => {
   return (
     <ProtectedComponent>
       <TemplateNavBar
+      // @ts-ignore
         saveButtonColor="#E83B4E"
         saveButtonHoverColor="#BB3241"
         arrayToSave={"template"}

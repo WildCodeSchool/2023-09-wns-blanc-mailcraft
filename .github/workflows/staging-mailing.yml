@@ -41,4 +41,4 @@ jobs:
           context: ./mailing
           file: ./mailing/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_SERVER_IMAGE_NAME }}:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_MAILING_IMAGE_NAME }}:latest

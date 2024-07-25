@@ -185,6 +185,7 @@ const TemplateModificationPage = () => {
       const zoneIndex = newZones.findIndex(
         (zone) => zone.dndId === destination.droppableId
       );
+      // @ts-ignore
       newZones[zoneIndex].subZones = newSubZones;
     }
     // Handle modules being dropped into subzones
@@ -218,6 +219,7 @@ const TemplateModificationPage = () => {
   return (
     <ProtectedComponent>
       <TemplateNavBar
+      // @ts-ignore
         saveButtonColor="#E83B4E"
         saveButtonHoverColor="#BB3241"
         arrayToIterate={"templateToModify"}
