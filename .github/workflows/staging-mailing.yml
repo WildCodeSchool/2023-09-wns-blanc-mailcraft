@@ -1,5 +1,5 @@
-# .github/workflows/staging-server.yml
-name: Compile and push server image
+# .github/workflows/staging-mailing.yml
+name: Compile and push mailing image
 
 # Controls when the workflow will run
 on:

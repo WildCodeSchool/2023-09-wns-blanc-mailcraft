@@ -1,5 +1,5 @@
-# .github/workflows/staging-server.yml
-name: Compile and push server image
+# .github/workflows/staging-image.yml
+name: Compile and push  image
 
 # Controls when the workflow will run
 on:
@@ -41,4 +41,4 @@ jobs:
           context: ./image
           file: ./image/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGE_IMAGE_NAME }}:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_CLOUDINARY_IMAGE_NAME }}:latest
