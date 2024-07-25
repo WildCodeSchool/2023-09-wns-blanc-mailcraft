@@ -4,10 +4,12 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   JoinColumn,
 } from "typeorm";
 import { Template } from "./template";
+import { SubZone } from "./subZone";
 
 @ObjectType()
 @Entity()
@@ -18,21 +20,19 @@ export class Zone extends BaseEntity {
 
   @Field()
   @Column()
-  moduleType: string; // texte / logo / image
+  order: number;
 
-  @Field()
-  @Column()
-  content: string;
-
-  @Field()
-  @Column()
-  size: number;
+  @Field(() => [SubZone])
+  @OneToMany(() => SubZone, (subZone: SubZone) => subZone.zone)
+  subZones: SubZone[];
 
   @Field()
   @Column()
   templateId: number;
 
-  @ManyToOne(() => Template, (template) => template.zones)
+  @ManyToOne(() => Template, (template: Template) => template.zones, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "templateId" })
   template: Template;
 }
