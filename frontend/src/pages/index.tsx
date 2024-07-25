@@ -8,7 +8,10 @@ import emailSender from "@/assets/homepage/send.jpg";
 import NavBar from "@/components/NavBars/HomeNavBar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
+import { useRouter } from 'next/router';
+
 export default function Home() {
+  const router = useRouter();
   const { user } = useAuth();
   useEffect(() => {
     console.log(`User is ---> ${JSON.stringify(user)}`);
@@ -33,13 +36,14 @@ export default function Home() {
             </p>
             <div className="mx-auto xl:mx-0 w-1/2">
               <Redbutton
-                text="Je m'inscris !"
+                text="S'inscrire"
                 padding={"px-4 py-3"}
                 isBold={false}
                 size={"lg"}
-                link={"/signUp"}
                 type="button"
+                href="/signUp"
                 shadow={"lg"}
+                //onClick={() => router.push('/signUp')}
               />
             </div>
           </div>
@@ -52,14 +56,14 @@ export default function Home() {
             Découvrez nos services :
           </h2>
           <HomeCard
-            title="Importez vos fichiers"
+            title="Télécharger vos mails"
             picture={mediaLibrary}
-            description="Importez et stockez vos fichiers dans votre médiathèque pour les réutiliser facilement dans vos templates."
+            description="Télécharger vos mails personnalisés en format HTML et utilisez les facilement via votre mesagerie"
           />
           <HomeCard
             title="Personnalisez vos templates"
             picture={builder}
-            description="Notre interface drag & drop intuitive vous aide à créer des modèles personnalisés et attrayants en toute simplicité."
+            description="Notre interface drag & drop intuitive vous aide à créer des modèles personnalisés en toute simplicité."
           />
           <HomeCard
             title="Envoyez vos mails"
