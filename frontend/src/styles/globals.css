@@ -17,3 +17,7 @@
   margin: 0;
   padding: 0;
 }
+
+.custom-resize-handle {
+  cursor: row-resize; /* Vous pouvez également utiliser une image personnalisée ici */
+}
