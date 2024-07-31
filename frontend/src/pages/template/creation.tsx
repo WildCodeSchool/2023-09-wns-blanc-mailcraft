@@ -90,7 +90,7 @@ const TemplatePage = () => {
       const newSubZones = Array.from(zones[zoneIndex].subZones);
       const [removedSubZone] = newSubZones.splice(source.index, 1);
       newSubZones.splice(destination.index, 0, removedSubZone);
-      // Maj de order
+      // Update the order of subZones
       const reorderedSubZones = newSubZones.map((subZone, index) => ({
         ...subZone,
         order: index + 1,
