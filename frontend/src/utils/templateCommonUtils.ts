@@ -24,7 +24,7 @@ export const useTemplateCommonUtils = () => {
     zones,
     imgPreview,
     imgPreviews,
-    setIsModalErrorOpen
+    setIsModalErrorOpen,
   } = useTemplate();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,9 +47,10 @@ export const useTemplateCommonUtils = () => {
   ];
   const handleResetZones = (keyToIdentify: string) => {
     if (keyToIdentify === "templateToModify") {
-      const oldZonesId = templateToModify?.zones
-        ?.filter((zone) => typeof zone.id === "number")
-        .map((zone) => zone.id) || [];
+      const oldZonesId =
+        templateToModify?.zones
+          ?.filter((zone) => typeof zone.id === "number")
+          .map((zone) => zone.id) || [];
 
       setOldZonesId(oldZonesId);
       resetZones(keyToIdentify);
@@ -187,14 +188,7 @@ export const useTemplateCommonUtils = () => {
       }
     };
 
-  const handleTextChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-    subZones: IZone[],
-    subZoneId: string,
-    keyToIdentify: string
-  ) => {
-    const value = event.target.value;
-
+  const handleTextChange = (content, subZoneId, keyToIdentify) => {
     const updateSubZones = (zones, subZoneId, newContent) => {
       return zones.map((zone) => {
         return {
@@ -214,7 +208,7 @@ export const useTemplateCommonUtils = () => {
         const updatedZones = updateSubZones(
           templateToModify.zones,
           subZoneId,
-          value
+          content
         );
 
         setTemplateToModify({
@@ -225,7 +219,7 @@ export const useTemplateCommonUtils = () => {
         console.error("templateToModify is null, cannot update zones");
       }
     } else {
-      const updatedZones = updateSubZones(zones, subZoneId, value);
+      const updatedZones = updateSubZones(zones, subZoneId, content);
       setZones(updatedZones);
     }
   };
@@ -329,6 +323,6 @@ export const useTemplateCommonUtils = () => {
     isTemporarySubZone,
     listElements,
     closeModal,
-    closeErrorModal
+    closeErrorModal,
   };
 };
