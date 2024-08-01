@@ -44,8 +44,7 @@ const escapeHtml = (unsafe: string): string => {
 };
 
 const createTextElement = (content: string): string => {
-  const sanitizedContent = escapeHtml(content);
-  return `<p style="margin: 0; word-wrap: break-word; max-width: 100%;">${sanitizedContent}</p>`;
+  return `<div style="margin: 0; word-wrap: break-word; max-width: 100%;">${content}</div>`;
 };
 
 const createImageElement = (src: string): string => {

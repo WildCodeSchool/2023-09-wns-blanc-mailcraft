@@ -48,7 +48,7 @@ app.post(
 );
 
 app.get("/preview", (req, res) => {
-  const filePath = path.join(__dirname, "template.html");
+  const filePath = path.join(__dirname, "templateInline.html");
 
   fs.access(filePath, fs.constants.F_OK, (err) => {
     if (err) {

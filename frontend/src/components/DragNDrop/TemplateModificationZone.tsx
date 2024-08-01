@@ -105,7 +105,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
   // }, [oldSubZonesId]);
 
   if (!templateToModify || !templateToModify.zones) {
-    return <p>Loading template...</p>; // Adjust as necessary for your loading state
+    return <p>Loading template...</p>;
   }
 
   return (
@@ -233,8 +233,8 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                           {zone.subZones.length > 0 ? (
                             zone.subZones.map((subZone, subIndex) => (
                               <Draggable
-                                key={subZone.dndId} // Ensure key is a string
-                                draggableId={subZone.dndId} // Convert ID to string
+                                key={subZone.dndId}
+                                draggableId={subZone.dndId}
                                 index={subIndex}
                               >
                                 {(providedSubZone, snapshotSubZone) => (
@@ -249,7 +249,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                     }`}
                                   >
                                     <Droppable
-                                      droppableId={subZone.dndId} // Convert ID to string
+                                      droppableId={subZone.dndId}
                                       isDropDisabled={
                                         draggingItemType !== "module"
                                       }
