@@ -180,7 +180,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                                 statusbar: false,
                                                 branding: false,
                                                 language: "fr_FR",
-                                                language_url: "/langs/fr_FR.js", // à debug
+                                                language_url: "/langs/fr_FR.js", // à debug marche pas
                                                 plugins: [
                                                   "advlist autolink lists link image charmap print preview anchor",
                                                   "searchreplace visualblocks code fullscreen",

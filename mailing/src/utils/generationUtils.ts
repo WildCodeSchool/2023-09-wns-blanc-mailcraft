@@ -27,6 +27,7 @@ const isValidText = (content: string): boolean => {
 
 const validateURL = (url: string): boolean => {
   const urlPattern = /^(https:\/\/)[\w.-]+\.[a-zA-Z]{2,}$/;
+  console.log(urlPattern);
   return urlPattern.test(url);
 };
 
@@ -44,8 +45,7 @@ const escapeHtml = (unsafe: string): string => {
 };
 
 const createTextElement = (content: string): string => {
-  const sanitizedContent = escapeHtml(content);
-  return `<p style="margin: 0; word-wrap: break-word; max-width: 100%;">${sanitizedContent}</p>`;
+  return `<div style="margin: 0; word-wrap: break-word; max-width: 100%;">${content}</div>`;
 };
 
 const createImageElement = (src: string): string => {
