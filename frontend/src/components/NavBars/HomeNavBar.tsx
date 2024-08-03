@@ -17,8 +17,8 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
 
   const logOut = () => {
     localStorage.removeItem("token");
-    setIsAuthenticated(false); // ensure authentication state is updated
     router.push("/").then(() => window.location.reload());
+    setIsAuthenticated(false);
   };
 
   const handleMenuToggle = () => {
@@ -103,7 +103,7 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
                     </Link>
                   )}
                 </li>
-                
+
                 {isAuthentificated && (
                   <li>
                     <button
@@ -178,14 +178,13 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
               </Link>
             )}
           </li>
-          
         </ul>
         <div className="me-2">
           {isAuthentificated ? (
             <RedButton
               text="Mon Compte"
               onClick={logOut}
-             // href="/account"//Rajouter lien vers la page Infos pers
+              // href="/account"//Rajouter lien vers la page Infos pers
               padding={"p-2"}
               isBold={false}
               size={"lg"}

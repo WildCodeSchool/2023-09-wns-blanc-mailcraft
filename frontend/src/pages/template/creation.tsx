@@ -9,11 +9,21 @@ import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 import ProtectedComponent from "@/components/ProtectedComponent";
+import { useAuth } from "@/contexts/AuthContext";
 
 const TemplatePage = () => {
-  const { zones, setZones, template } = useTemplate();
+  const { zones, setZones, template, setTemplate, setIsModalOpen } =
+    useTemplate();
+  const { user } = useAuth();
   const [draggingType, setDraggingType] = useState("");
 
+  useEffect(() => {
+    if (user && user.id) {
+      setIsModalOpen(false);
+      setTemplate({ userId: user.id });
+      setZones([]);
+    }
+  }, [user, setTemplate, setZones]);
   const socialModule = [
     {
       socialMedia: "Facebook",

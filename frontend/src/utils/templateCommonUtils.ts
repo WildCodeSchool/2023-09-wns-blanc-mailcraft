@@ -25,9 +25,10 @@ export const useTemplateCommonUtils = () => {
     imgPreview,
     imgPreviews,
     setIsModalErrorOpen,
+    isModalOpen,
+    setIsModalOpen,
   } = useTemplate();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const listElements: IListElement[] = [
     {
       id: "module-Texte",
@@ -55,7 +56,9 @@ export const useTemplateCommonUtils = () => {
       setOldZonesId(oldZonesId);
       resetZones(keyToIdentify);
     } else {
-      if (zones.some((zone) => zone.content)) {
+      if (
+        zones.some((zone) => zone.subZones.some((subZone) => subZone.content))
+      ) {
         setIsModalOpen(true);
       } else {
         resetZones("zones");
