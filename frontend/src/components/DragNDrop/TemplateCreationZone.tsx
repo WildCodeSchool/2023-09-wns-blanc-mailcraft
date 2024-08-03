@@ -8,7 +8,8 @@ import Link from "next/link";
 import Modal from "react-modal";
 import { Editor } from "@tinymce/tinymce-react";
 const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
-  const { zones, setZones, isModalErrorOpen, errorMessage } = useTemplate();
+  const { zones, setZones, isModalErrorOpen, errorMessage, isModalOpen } =
+    useTemplate();
   const { saveTemplate, handleCreationError } = useTemplateCreationUtils();
 
   const {
@@ -18,6 +19,8 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
     createHandleFileChange,
     handleResetZones,
     closeErrorModal,
+    closeModal,
+    resetZones,
   } = useTemplateCommonUtils();
 
   const fileInputRefs = useRef({});
@@ -41,6 +44,42 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
 
   return (
     <>
+      {" "}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Enregistrement du template brouillon"
+        className="bg-white w-2/5 h-1/4 m-auto fixed inset-0 border border-gray-400 rounded-lg flex flex-col justify-start"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40"
+      >
+        <button
+          onClick={closeModal}
+          className="absolute top-2 right-1 p-2 text-gray-700 hover:text-gray-900"
+        >
+          &times;
+        </button>
+        <div className="w-full h-3 rounded-t-lg bg-red-500"></div>
+        <div className="flex flex-col justify-center items-center gap-10">
+          <h2 className="text-lg font-semibold text-center mt-3">
+            Souhaitez-vous plutôt enregistrer ce template en tant que brouillon
+            ?
+          </h2>
+          <div className="flex justify-around gap-8">
+            <button
+              onClick={() => saveTemplate("draft")}
+              className="px-7 py-2 bg-gray-100 text-black hover:bg-gray-200 rounded border border-gray-300 shadow-md"
+            >
+              Oui, sauvegarder en tant que brouillon
+            </button>
+            <button
+              onClick={() => resetZones("zones")}
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Non, supprimer ce template
+            </button>
+          </div>
+        </div>
+      </Modal>
       <Droppable
         droppableId="all-zones"
         direction="vertical"

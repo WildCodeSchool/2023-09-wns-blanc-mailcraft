@@ -44,6 +44,7 @@ const escapeHtml = (unsafe: string): string => {
     .replace(/'/g, "&#039;");
 };
 
+// NOUVELLE VERSION AVEC LE TEXTE CUSTOMIZE
 const createTextElement = (content: string): string => {
   return `<div style="margin: 0; word-wrap: break-word; max-width: 100%;">${content}</div>`;
 };

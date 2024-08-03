@@ -9,6 +9,7 @@ import {
 import { CREATE_ZONE } from "@/client/mutations/template/zone-mutations";
 import { CREATE_SUBZONE } from "@/client/mutations/template/subZone-mutations";
 import { useRouter } from "next/router";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const useTemplateCreationUtils = () => {
   const {
@@ -20,7 +21,11 @@ export const useTemplateCreationUtils = () => {
     setIsModalErrorOpen,
     errorMessage,
     setErrorMessage,
+    setTemplate,
+    setZones,
   } = useTemplate();
+
+  const { user } = useAuth();
 
   const [createTemplate] = useMutation(CREATE_TEMPLATE);
   const [deleteTemplate] = useMutation(DELETE_TEMPLATE);
@@ -111,8 +116,13 @@ export const useTemplateCreationUtils = () => {
         "Tous les templates, zones et subzones ont été créés avec succès."
       );
       // Redirection avec  rechargement de la page
+      setTemplate({ userId: user.id });
+      setZones([]);
+      setIsModalOpen(false);
+      const page =
+        templateStatus === "created" ? "myTemplates" : "myTemplatesDrafts";
       router.replace(router.asPath).then(() => {
-        router.push("/user/myTemplates");
+        router.push(`/user/${page}`);
       });
       return true;
     } catch (error) {
