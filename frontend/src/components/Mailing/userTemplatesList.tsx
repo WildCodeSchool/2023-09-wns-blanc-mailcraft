@@ -139,42 +139,46 @@ const UserTemplatesList: React.FC<{ isSectionOpen: boolean, setIsSectionOpen: (i
     } 
   }}
 >
-            {selectedTemplate.zones.map((zone) => (
-              <div key={zone.id} className="mb-1">
-                <div className={`flex ${zone.subZones.length > 1 ? 'justify-between' : ''}`}>
-                  {zone.subZones.map((subZone) => (
-                    <div
-                      key={subZone.id}
-                      className={`mb-1 ${zone.subZones.length === 1 ? 'w-full' : 'flex-1'}`}
-                    >
-                      {subZone.moduleType === "texte" && (
-                        <p className="xl:text-sm sm:text-xs md:text-xs">{subZone.content}</p>
-                      )}
-                      {subZone.moduleType === "image" && (
-                        <img
-                          src={subZone.content}
-                          alt="Template Image"
-                          className=" max-w-[95%] h-36 xl:ml-5"
-                        />
-                      )}
-                      {subZone.moduleType === "social" && (
-                        <a
-                          href={subZone.content}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img
-                            src="/path/to/social/icon.png"
-                            alt="Social Icon"
-                            className="w-4 h-4"
-                          />
-                        </a>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+{selectedTemplate.zones.map((zone) => (
+  <div key={zone.id} className="mb-1">
+    <div className={`flex ${zone.subZones.length > 1 ? 'justify-between' : ''}`}>
+      {zone.subZones.map((subZone) => (
+        <div
+          key={subZone.id}
+          className={`mb-1 ${zone.subZones.length === 1 ? 'w-full' : 'flex-1'}`}
+        >
+          {subZone.moduleType === "texte" && (
+            <div
+              className="xl:text-sm sm:text-xs md:text-xs"
+              dangerouslySetInnerHTML={{ __html: subZone.content }}
+            ></div>
+          )}
+          {subZone.moduleType === "image" && (
+            <img
+              src={subZone.content}
+              alt="Template Image"
+              className="max-w-[95%] h-36 xl:ml-5"
+            />
+          )}
+          {subZone.moduleType === "social" && (
+            <a
+              href={subZone.content}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/path/to/social/icon.png"
+                alt="Social Icon"
+                className="w-4 h-4"
+              />
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+))}
+
           </div>
         </div>
         <button onClick={closeModal}

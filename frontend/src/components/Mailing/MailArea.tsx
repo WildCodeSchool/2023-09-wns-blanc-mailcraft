@@ -79,79 +79,79 @@ export default function MailArea({
               {...provided.droppableProps}
             >
               {templateToSend ? (
-                <div className="relative border border-gray-200 rounded-md p-2 bg-white w-full h-full overflow-y-auto hover:bg-gray-200 transition duration-300 ease-in-out">
-                  <div className="max-h-full text-sm">
-                    {templateToSend.zones.map((zone) => (
-                      <div key={zone.id} className="mb-1">
-                        <div
-                          className={`flex ${
-                            zone.subZones.length > 1 ? "justify-between" : ""
-                          }`}
-                        >
-                          {zone.subZones.map((subZone) => (
-                            <div
-                              key={subZone.id}
-                              className={`mb-1 ${
-                                zone.subZones.length === 1 ? "w-full" : "flex-1"
-                              }`}
-                            >
-                              {subZone.moduleType === "texte" && (
-                                <p>{subZone.content}</p>
-                              )}
-                              {subZone.moduleType === "image" && (
-                                <img
-                                  src={subZone.content}
-                                  alt="Template Image"
-                                  className="ml-5  max-w-full h-36"
-                                />
-                              )}
-                              {subZone.moduleType === "social" && (
-                                <a
-                                  href={subZone.content}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src="/path/to/social/icon.png"
-                                    alt="Social Icon"
-                                    className="w-4 h-4"
-                                  />
-                                </a>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="absolute inset-0 flex justify-center items-center opacity-0 hover:opacity-100 bg-gray-300 bg-opacity-40 transition duration-300 ease-in-out">
-                    <button className="text-black text-4xl" onClick={openModal}>
-                      <i className="fas fa-search"></i>
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  className="absolute text-black hover:text-blue-800 text-4xl"
-                  onClick={() => alert("Ouvrir Template")}
-                  style={{ pointerEvents: "none" }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-28"
+  <div className="relative border border-gray-200 rounded-md p-2 bg-white w-full h-full overflow-y-auto hover:bg-gray-200 transition duration-300 ease-in-out">
+    <div className="max-h-full text-sm">
+      {templateToSend.zones.map((zone) => (
+        <div key={zone.id} className="mb-1">
+          <div
+            className={`flex ${
+              zone.subZones.length > 1 ? "justify-between" : ""
+            }`}
+          >
+            {zone.subZones.map((subZone) => (
+              <div
+                key={subZone.id}
+                className={`mb-1 ${
+                  zone.subZones.length === 1 ? "w-full" : "flex-1"
+                }`}
+              >
+                {subZone.moduleType === "texte" && (
+                  <div dangerouslySetInnerHTML={{ __html: subZone.content }} />
+                )}
+                {subZone.moduleType === "image" && (
+                  <img
+                    src={subZone.content}
+                    alt="Template Image"
+                    className="ml-5  max-w-full h-36"
+                  />
+                )}
+                {subZone.moduleType === "social" && (
+                  <a
+                    href={subZone.content}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                    <img
+                      src="/path/to/social/icon.png"
+                      alt="Social Icon"
+                      className="w-4 h-4"
                     />
-                  </svg>
-                </button>
-              )}
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+    <div className="absolute inset-0 flex justify-center items-center opacity-0 hover:opacity-100 bg-gray-300 bg-opacity-40 transition duration-300 ease-in-out">
+      <button className="text-black text-4xl" onClick={openModal}>
+        <i className="fas fa-search"></i>
+      </button>
+    </div>
+  </div>
+) : (
+  <button
+    className="absolute text-black hover:text-blue-800 text-4xl"
+    onClick={() => alert("Ouvrir Template")}
+    style={{ pointerEvents: "none" }}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="size-28"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+      />
+    </svg>
+  </button>
+)}
               {provided.placeholder}
             </div>
           )}
