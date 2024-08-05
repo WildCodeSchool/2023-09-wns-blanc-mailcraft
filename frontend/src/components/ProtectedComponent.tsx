@@ -1,20 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/contexts/AuthContext";
 
-// Wrap les pages à sécuriser avec ce composant
-
 const ProtectedComponent = ({ children }) => {
-  const { isAuthentificated } = useAuth();
+  const { isAuthentificated, loading } = useAuth();
   const router = useRouter();
+  const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
-    if (!isAuthentificated) {
-      router.push("/signIn");
+    if (!loading) {
+      if (!isAuthentificated) {
+        router.replace("/signIn");
+      } else {
+        setIsVerified(true);
+      }
     }
-  }, [isAuthentificated, router]);
+  }, [isAuthentificated, loading, router]);
 
-  if (!isAuthentificated) {
+  if (!isVerified) {
     return <div>Loading...</div>;
   }
 

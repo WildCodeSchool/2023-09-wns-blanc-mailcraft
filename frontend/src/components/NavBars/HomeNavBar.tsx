@@ -16,8 +16,9 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const logOut = () => {
-    localStorage.removeItem("token");
     router.push("/").then(() => window.location.reload());
+    localStorage.removeItem("token");
+
     setIsAuthenticated(false);
   };
 
@@ -29,11 +30,13 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
     <div className="max-w-screen-xl flex flex-wrap items-center justify-between border-b border-gray-400 md:border-none py-8 mb-10">
       {/* Vue mobile */}
       <div className="flex items-center md:hidden">
-        <Image
-          src={logo}
-          className="h-[5dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7 md:mr-4"
-          alt="Mailcraft Logo"
-        />
+        <Link href="/">
+          <Image
+            src={logo}
+            className="h-[5dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7 md:mr-4"
+            alt="Mailcraft Logo"
+          />
+        </Link>
       </div>
       <div className="flex items-center md:hidden">
         <div className="flex ml-auto">
@@ -122,15 +125,18 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
 
       {/* Vue desktop */}
       <div className="hidden md:flex justify-between items-center w-full">
-        <Image
-          src={logo}
-          className="xl:h-[7dvh] w-[30dvw] md:h-[3dvh] md:w-[10dvw] ms-2"
-          alt="Mailcraft Logo"
-        />
+        <Link href="/">
+          <Image
+            src={logo}
+            className="xl:h-[7dvh] w-[30dvw] md:h-[3dvh] md:w-[10dvw] ms-2"
+            alt="Mailcraft Logo"
+          />
+        </Link>
+
         <ul className="flex flex-row items-center p-4 md:p-0 md:space-x-20">
           <li>
             <Link
-              href="/"
+              href={isAuthentificated ? "/template/creation" : "/signIn"}
               className={
                 !issignUpPage
                   ? "block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:text-red-500 md:text-xl"
@@ -138,53 +144,43 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
               }
               aria-current="page"
             >
-              Accueil
+              Templates
             </Link>
           </li>
           <li>
             <Link
-              href="/ressources"
+              href={isAuthentificated ? "mailing" : "/signIn"}
               className={
                 !issignUpPage
                   ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
                   : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
               }
             >
-              Ressources
+              Emails
             </Link>
           </li>
-          <li>
-            {!isAuthentificated ? (
+          {isAuthentificated && (
+            <li>
               <Link
-                href="/prix"
+                href="/"
                 className={
                   !issignUpPage
                     ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
                     : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
                 }
               >
-                Prix
+                Mon Compte
               </Link>
-            ) : (
-              <Link
-                href="/template/creation"
-                className={
-                  !issignUpPage
-                    ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
-                    : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
-                }
-              >
-                Template
-              </Link>
-            )}
-          </li>
+            </li>
+          )}
         </ul>
+
         <div className="me-2">
           {isAuthentificated ? (
             <RedButton
-              text="Mon Compte"
+              text="Déconnexion"
+              href=""
               onClick={logOut}
-              // href="/account"//Rajouter lien vers la page Infos pers
               padding={"p-2"}
               isBold={false}
               size={"lg"}
@@ -193,7 +189,7 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
           ) : (
             <RedButton
               text="Se connecter"
-              href="/signUp"
+              href="/signIn"
               padding={"p-2"}
               isBold={false}
               size={"lg"}
