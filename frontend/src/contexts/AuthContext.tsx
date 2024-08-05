@@ -17,6 +17,7 @@ interface AuthContextType {
   setIsAuthenticated: (isAuth: boolean) => void;
   user: any;
   setUser: React.Dispatch<React.SetStateAction<any>>;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,17 +48,20 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     return !!token; // Convertit la présence du token en un booléen
   });
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const [getMe, { data, loading, error }] = useLazyQuery(GET_ME, {
+  const [getMe, { data, loading: queryLoading, error }] = useLazyQuery(GET_ME, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
       setUser(data.getMe);
+      setLoading(false);
     },
     onError: () => {
       localStorage.removeItem("token");
       setIsAuthenticated(false);
       setUser(null);
+      setLoading(false);
       router.push("/signIn");
     },
   });
@@ -66,10 +70,18 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     const token = localStorage.getItem("token");
     if (token) {
       getMe();
+    } else {
+      setLoading(false);
     }
   }, [getMe]);
 
-  const value = { isAuthentificated, setIsAuthenticated, user, setUser };
+  const value = {
+    isAuthentificated,
+    setIsAuthenticated,
+    user,
+    setUser,
+    loading,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

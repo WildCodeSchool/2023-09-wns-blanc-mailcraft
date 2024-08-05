@@ -8,11 +8,12 @@ import emailSender from "@/assets/homepage/send.jpg";
 import NavBar from "@/components/NavBars/HomeNavBar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isAuthentificated } = useAuth();
   useEffect(() => {
     console.log(`User is ---> ${JSON.stringify(user)}`);
   }, [user]);
@@ -34,18 +35,26 @@ export default function Home() {
               personnalisés en une seule plateforme, prêt à l'envoi en quelques
               minutes. Glissez, déposez, envoyez !
             </p>
-            <div className="mx-auto xl:mx-0 w-1/2">
-              <Redbutton
-                text="S'inscrire"
-                padding={"px-4 py-3"}
-                isBold={false}
-                size={"lg"}
-                type="button"
-                href="/signUp"
-                shadow={"lg"}
-                //onClick={() => router.push('/signUp')}
-              />
-            </div>
+            {!isAuthentificated ? (
+              <div className="mx-auto xl:mx-0 w-1/2">
+                <Redbutton
+                  text="S'inscrire"
+                  padding={"px-4 py-3"}
+                  isBold={false}
+                  size={"lg"}
+                  type="button"
+                  href="/signUp"
+                  shadow={"lg"}
+                  onClick={() => router.push("/signUp")}
+                />
+              </div>
+            ) : (
+              <Link href="/template/creation">
+                <p className="underline text-red-500">
+                  Je crée mon premier template
+                </p>
+              </Link>
+            )}
           </div>
           {/* <div className="hidden xl:block">
             <Image src={preview} alt="app preview" width={600} height={200} />
@@ -56,9 +65,9 @@ export default function Home() {
             Découvrez nos services :
           </h2>
           <HomeCard
-            title="Télécharger vos mails"
+            title="Télécharger vos templates"
             picture={mediaLibrary}
-            description="Télécharger vos mails personnalisés en format HTML et utilisez les facilement via votre mesagerie"
+            description="Télécharger vos templates personnalisés en format HTML et utilisez les facilement via votre mesagerie"
           />
           <HomeCard
             title="Personnalisez vos templates"
