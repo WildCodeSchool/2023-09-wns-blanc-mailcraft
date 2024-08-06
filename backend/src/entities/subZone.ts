@@ -30,7 +30,7 @@ export class SubZone extends BaseEntity {
 
   @Field()
   @Column()
-  size: string;
+  width: string;
 
   @Field(() => [String], { nullable: true })
   @Column({ type: "simple-array", nullable: true })

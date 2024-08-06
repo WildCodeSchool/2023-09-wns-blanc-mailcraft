@@ -97,7 +97,7 @@ export const useTemplateCreationUtils = () => {
                 order: subZone.order,
                 moduleType: subZone.moduleType,
                 content: subZoneContent,
-                size: subZone.size,
+                width: subZone.width.toString(),
                 links: subZone.links,
                 zoneId: newZoneId,
               },

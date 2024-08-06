@@ -31,7 +31,7 @@ const MyTemplates = () => {
             content
             links
             moduleType
-            size
+            width
             zoneId
             order
           }

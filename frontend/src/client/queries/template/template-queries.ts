@@ -18,7 +18,7 @@ export const GET_TEMPLATE_BY_ITS_ID = gql`
           order
           moduleType
           content
-          size
+          width
           links
           zoneId
         }
@@ -43,7 +43,7 @@ export const GET_ALL_USER_CREATED_TEMPLATE = gql`
           order
           moduleType
           content
-          size
+          width
           links
           zoneId
         }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateCreationUtils } from "@/utils/templateCreationUtils";
@@ -22,20 +22,40 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
   } = useTemplateCommonUtils();
 
   const fileInputRefs = useRef({});
+  const containerRef = useRef(null);
+  const [panelSizes, setPanelSizes] = useState({});
 
   useEffect(() => {
     if (zones.length === 0) {
       setZones([
-        { id: "zone-1", order: 1, subZones: [] },
-        { id: "zone-2", order: 2, subZones: [] },
-        { id: "zone-3", order: 3, subZones: [] },
+        { id: "zone-1", dndId: "zone-1", order: 1, subZones: [] },
+        { id: "zone-2", dndId: "zone-2", order: 2, subZones: [] },
+        { id: "zone-3", dndId: "zone-3", order: 3, subZones: [] },
       ]);
     }
-  }, [zones, setZones]);
+  }, [zones, setZones]);  
 
   useEffect(() => {
     console.log(`New Zones are ${JSON.stringify(zones)}`);
   }, [zones]);
+
+  const handlePanelResize = (id, size) => {
+    setPanelSizes((prevSizes) => ({
+      ...prevSizes,
+      [id]: size.toString(),
+    }));
+
+    // Update zones with the new size
+    setZones((prevZones) =>
+      prevZones.map((zone) => ({
+        ...zone,
+        subZones: zone.subZones.map((subZone) =>
+          subZone.id === id ? { ...subZone, width: size } : subZone
+        ),
+      }))
+    );
+  };
+
 
   return (
     <>
@@ -46,7 +66,10 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
       >
         {(provided) => (
           <section
-            ref={provided.innerRef}
+          ref={(el) => {
+            provided.innerRef(el);
+            containerRef.current = el;
+          }}
             {...provided.droppableProps}
             className="zones-container relative flex flex-col w-[60%] p-4 bg-white justify-center mt-7"
           >
@@ -105,7 +128,12 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                           <PanelGroup direction="horizontal">
                             {zone.subZones.length > 0 ? (
                               zone.subZones.map((subZone, subIndex) => (
-                                <Panel key={subZone.id} defaultSize={100 / zone.subZones.length} minSize={20}>
+                                <Panel
+                                  key={subZone.id}
+                                  defaultSize={100 / zone.subZones.length}
+                                  minSize={20}
+                                  onResize={(size) => handlePanelResize(subZone.id, size)}
+                                >
                                   <Draggable key={subZone.id} draggableId={subZone.id} index={subIndex}>
                                     {(providedSubZone, snapshotSubZone) => (
                                       <div
@@ -117,7 +145,6 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                         {...providedSubZone.draggableProps}
                                         {...providedSubZone.dragHandleProps}
                                         className="subzone flex flex-1 border border-dashed border-blue-500 p-2.5 relative"
-                                        style={{ minWidth: '50px', height: '100px' }}
                                       >
                                         <Droppable droppableId={subZone.id} isDropDisabled={draggingItemType !== 'module'}>
                                           {(providedModule) => (

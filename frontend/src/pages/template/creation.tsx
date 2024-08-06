@@ -129,7 +129,7 @@ const TemplatePage = () => {
         order: index + 1,
         moduleType: "",
         content: "",
-        size: "",
+        width: "",
       }));
 
       setZones((prevZones) =>

@@ -179,7 +179,7 @@ const TemplateModificationPage = () => {
         order: idx + 1,
         moduleType: "",
         content: "",
-        size: "",
+        width: "",
       }));
 
       const zoneIndex = newZones.findIndex(

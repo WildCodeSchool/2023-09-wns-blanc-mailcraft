@@ -12,7 +12,7 @@ export const createSubZone = async (
     newSubZone.order = subZoneData.order;
     newSubZone.moduleType = subZoneData.moduleType;
     newSubZone.content = subZoneData.content;
-    newSubZone.size = subZoneData.size || "defaultSize";
+    newSubZone.width = subZoneData.width || "defaultSize";
     if (
       subZoneData.links &&
       Array.isArray(subZoneData.links) &&

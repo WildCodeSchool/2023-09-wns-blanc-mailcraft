@@ -36,7 +36,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
     return text;
   };
 
-  //Fonction pour déterminer la taille des zones selon leur nombre dans leur row
+  //Fonction pour déterminer la taille des sous-zones selon leur nombre dans leur row
   const getWidthClass = (length: number) => {
     switch (length) {
       case 1:
