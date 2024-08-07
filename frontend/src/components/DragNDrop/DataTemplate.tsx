@@ -1,15 +1,7 @@
 import { templateNatures } from "@/utils/templateNatures";
 import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
-import { ArrayToIterate } from "@/types/interfaces/template/template-interfaces";
 import { useTemplate } from "@/contexts/TemplateContext";
-import { useEffect, useState } from "react";
-import { ChromePicker, ColorResult } from "react-color";
-import boldIcon from "@/assets/template-page/boldIcon.png";
-import italicIcon from "@/assets/template-page/italicIcon.png";
-import underlineIcon from "@/assets/template-page/underlineIcon.png";
-import alignLeft from "@/assets/template-page/alignLeft.png";
-import alignCenter from "@/assets/template-page/alignCenter.png";
-import alignRight from "@/assets/template-page/alignRight.png";
+import React from "react";
 
 interface DataTemplateProps {
   arrayToIterate: string;
@@ -19,39 +11,8 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
   const { handleTemplateChange } = useTemplateCommonUtils();
   const { template, templateToModify } = useTemplate();
   const isTemplateToModify = arrayToIterate === "templateToModify";
-  const [selectedStyleIconIndex, setSelectedStyleIconIndex] = useState<
-    number | null
-  >(null);
-  const [selectedJustificationIconIndex, setSelectedJustificationIconIndex] =
-    useState<number | null>(null);
-  const [selectedColor, setSelectedColor] = useState("#000000");
-  const [showColorPicker, setShowColorPicker] = useState(false);
 
-  const handleStyleIconClick = (index: number) => {
-    setSelectedStyleIconIndex(index === selectedStyleIconIndex ? null : index);
-  };
-
-  const handleJustificationIconClick = (index: number) => {
-    setSelectedJustificationIconIndex(
-      index === selectedJustificationIconIndex ? null : index
-    );
-  };
-
-  const handleColorChange = (color: ColorResult) => {
-    setSelectedColor(color.hex);
-  };
-
-  const styleIcons = [
-    { src: boldIcon.src, alt: "Bold Icon" },
-    { src: italicIcon.src, alt: "Italic Icon" },
-    { src: underlineIcon.src, alt: "Underline Icon" },
-  ];
-
-  const justificationIcons = [
-    { src: alignLeft.src, alt: "Align left Icon" },
-    { src: alignCenter.src, alt: "Align center Icon" },
-    { src: alignRight.src, alt: "Align right Icon" },
-  ];
+  const currentTemplate = isTemplateToModify ? templateToModify : template;
 
   return (
     <div
@@ -69,11 +30,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
         </label>
         <div className="form-control w-full">
           <input
-            value={
-              arrayToIterate === "templateToModify"
-                ? templateToModify?.title
-                : template?.title
-            }
+            value={currentTemplate?.title || ""}
             onChange={(e) => {
               handleTemplateChange(e, "title", arrayToIterate);
             }}
@@ -93,6 +50,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
         </label>
         <div className="form-control w-full">
           <select
+            value={currentTemplate?.templateNature || ""}
             onChange={(e) => {
               handleTemplateChange(e, "templateNature", arrayToIterate);
             }}
@@ -104,7 +62,7 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
             }`}
           >
             {templateNatures.map((templateNature, index) => (
-              <option key={index} value={templateNature} selected>
+              <option key={index} value={templateNature}>
                 {templateNature}
               </option>
             ))}
@@ -121,16 +79,12 @@ const DataTemplate: React.FC<DataTemplateProps> = ({ arrayToIterate }) => {
         <div className="form-control w-full">
           <textarea
             required
-            value={
-              arrayToIterate === "templateToModify"
-                ? templateToModify?.description
-                : template?.description
-            }
+            value={currentTemplate?.description || ""}
             onChange={(e) => {
               handleTemplateChange(e, "description", arrayToIterate);
             }}
             placeholder="Entrez votre description ici..."
-            className={`textarea textarea-bordered border-red-100 w-full h-[15dvh] pt-1 px-2 rounded-md focus:border-red-100 focus:ring-0 resize-none text-gray-700 ${
+            className={`textarea textarea-bordered border-red-100 w-full h-[15dvh] pt-1 px-2 rounded-md focus:border-red-100 focus:ring-0 resize-none ${
               isTemplateToModify
                 ? "bg-[#766060] placeholder-gray-300 text-white"
                 : "bg-[#FFEDED] text-gray-700"
