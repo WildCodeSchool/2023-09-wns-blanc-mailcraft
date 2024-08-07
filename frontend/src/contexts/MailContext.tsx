@@ -1,6 +1,5 @@
 import { createContext, useState, FC, ReactNode } from "react";
 import { contactInputs } from "@/types/interfaces/mailing/mailing-interface";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface MailingContextType {
   contactInputs: contactInputs | null;
@@ -31,15 +30,12 @@ interface MailingProviderProps {
   children: ReactNode;
 }
 
-const { user } = useAuth();
-
 export const MailingProvider: FC<MailingProviderProps> = ({ children }) => {
   const [contactInputs, setContactInputs] = useState<contactInputs | null>({
     firstname: "",
     lastname: "",
     email: "",
-    profilepic: "",
-    userId: user.id,
+    profilepic: ""
   });
   const [isModalContactsOpen, setIsModalContactsOpen] = useState(false);
   const [addresses, setAddresses] = useState<string[]>([

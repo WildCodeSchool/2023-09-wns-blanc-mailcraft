@@ -122,9 +122,7 @@ export const useTemplateCreationUtils = () => {
       setTemplate({ userId: user.id });
       setZones([]);
       setIsModalOpen(false);
-      router.replace(router.asPath).then(() => {
-        router.push(`/user/${page}`);
-      });
+      router.push(`/user/${page}`);
 
       return true;
     } catch (error) {
