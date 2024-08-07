@@ -152,7 +152,7 @@ const MyTemplates = () => {
         )}
         {error && <h1 className="text-xl">Error: {error.message}</h1>}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-x-10 gap-y-12 md:gap-y-16 mb-5 md:my-3">
-          {templates
+        {[...templates]
             .sort((a: any, b: any) => a.id - b.id)
             .map((template: any) => (
               <TemplateCard

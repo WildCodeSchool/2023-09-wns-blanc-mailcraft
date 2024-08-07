@@ -48,13 +48,18 @@ const MyTemplates = () => {
 
   useEffect(() => {
     if (data) {
-      const sortedTemplates = data.getAllUserCreatedTemplates.map(template => {
-        const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
-        return { ...template, zones: sortedZones };
-      });
-      setTemplates(sortedTemplates);
+      const filteredAndSortedTemplates = data.getAllUserCreatedTemplates
+        .filter(template =>
+          (!searchTerm || template.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          (!selectedNature || template.templateNature.includes(selectedNature))
+        )
+        .map(template => {
+          const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
+          return { ...template, zones: sortedZones };
+        });
+      setTemplates(filteredAndSortedTemplates);
     }
-  }, [data]);
+  }, [data, searchTerm, selectedNature]);
 
   const applyFilters = () => {
     let templates = data.getAllUserCreatedTemplates;
@@ -72,7 +77,6 @@ const MyTemplates = () => {
     }
     setTemplates(templates);
   };
-
   // Fonction de recherche 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;

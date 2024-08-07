@@ -237,7 +237,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                                 )
                                               }
                                               init={{
-                                                height: 200,
+                                                height: 100,
                                                 menubar: false,
                                                 toolbar_sticky: true,
                                                 statusbar: false,

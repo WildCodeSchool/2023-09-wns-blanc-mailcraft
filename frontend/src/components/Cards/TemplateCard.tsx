@@ -28,12 +28,16 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
     setShowDataPanel(!showDataPanel);
   };
 
-  //Fonction de troncage du texte
-  const truncateText = (text: string, charLimit: number) => {
-    if (text.length > charLimit) {
-      return text.slice(0, charLimit) + "..";
+  const cleanText = (text: string, charLimit: number) => {
+    // Regex pour retirer les balises de tinymce
+    const regex = /<[^>]*>/g;
+    const cleanedText = text.replace(regex, '');
+  
+    // Troncage du texte
+    if (cleanedText.length > charLimit) {
+      return cleanedText.slice(0, charLimit);
     }
-    return text;
+    return cleanedText;
   };
 
   //Fonction pour déterminer la taille des sous-zones selon leur nombre dans leur row
@@ -73,7 +77,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
                     className={`flex p-2 h-24 md:max-h-none text-sm md:text-base border-2 border-dashed border-gray-600 ${getWidthClass(zone.subZones.length)}`}
                   >
                     {subZone.moduleType === 'texte' ? (
-                      <p className="text-gray-800 text-sm">{truncateText(subZone.content, 8)}</p>
+                      <p className="text-gray-800 text-sm">{cleanText(subZone.content, 8)}..</p>
                     ) : subZone.moduleType === 'image' ? (
                       <Image
                         src={subZone.content}

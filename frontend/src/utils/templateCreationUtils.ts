@@ -115,15 +115,17 @@ export const useTemplateCreationUtils = () => {
       console.log(
         "Tous les templates, zones et subzones ont été créés avec succès."
       );
-      // Redirection avec  rechargement de la page
+
+      // Redirection
+      const page =
+        templateStatus === "created" ? "myTemplates" : "myTemplatesDrafts";
       setTemplate({ userId: user.id });
       setZones([]);
       setIsModalOpen(false);
-      const page =
-        templateStatus === "created" ? "myTemplates" : "myTemplatesDrafts";
       router.replace(router.asPath).then(() => {
         router.push(`/user/${page}`);
       });
+
       return true;
     } catch (error) {
       console.error(

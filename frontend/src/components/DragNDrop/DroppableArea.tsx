@@ -18,7 +18,7 @@ const DroppableArea = () => {
     (user.socialLinks[0].facebook || user.socialLinks[0].twitter || user.socialLinks[0].linkedin);
 
   return (
-    <section className="w-[20%] h-[90%] me-5 my-6">
+    <section className="w-[20%] h-[90%] me-5 my-6 relative">
       <Droppable droppableId="droppable-area" direction="horizontal">
         {(provided) => (
           <div
@@ -84,7 +84,7 @@ const DroppableArea = () => {
                 })}
               </div>
               {isHovered && !hasSocialLinks && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 absolute bottom-0" role="alert">
                   <strong className="font-bold">Aucun lien enregistré !</strong>
                 </div>
               )}
