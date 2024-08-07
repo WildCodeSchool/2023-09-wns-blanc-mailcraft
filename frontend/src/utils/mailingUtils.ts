@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useMutation } from "@apollo/client";
 import { MailingContext } from "@/contexts/MailContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DELETE_CONTACT,
   ADD_NEW_CONTACT,
@@ -26,6 +27,8 @@ export const useMailingUtils = () => {
     recipient,
     htmlTemplateContent,
   } = context;
+
+  const { user } = useAuth();
 
   const [addContact, { data, loading, error }] = useMutation(ADD_NEW_CONTACT);
 
@@ -56,7 +59,7 @@ export const useMailingUtils = () => {
           lastname: "",
           email: "",
           profilepic: "",
-          userId: 1,
+          userId: user.id,
         });
         setIsModalContactsOpen(false);
       }

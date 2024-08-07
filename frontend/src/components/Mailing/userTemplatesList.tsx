@@ -4,6 +4,7 @@ import { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { MailingContext } from "@/contexts/MailContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const UserTemplatesList: React.FC<{ isSectionOpen: boolean, setIsSectionOpen: (isOpen: boolean) => void }> = ({ isSectionOpen, setIsSectionOpen }) => {
   const context = useContext(MailingContext);
@@ -19,11 +20,12 @@ const UserTemplatesList: React.FC<{ isSectionOpen: boolean, setIsSectionOpen: (i
     setSelectedTemplate,
   } = context;
 
+  const { user } = useAuth();
   const [isModalPreviewOpen, setIsPreviewModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
   const { data, loading, error } = useQuery(GET_ALL_USER_CREATED_TEMPLATE, {
-    variables: { userId: 1 },
+    variables: { userId: user.id },
   });
 
   useEffect(() => {

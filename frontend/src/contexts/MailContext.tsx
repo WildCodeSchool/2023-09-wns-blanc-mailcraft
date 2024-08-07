@@ -1,5 +1,7 @@
 import { createContext, useState, FC, ReactNode } from "react";
 import { contactInputs } from "@/types/interfaces/mailing/mailing-interface";
+import { useAuth } from "@/contexts/AuthContext";
+
 interface MailingContextType {
   contactInputs: contactInputs | null;
   setContactInputs: React.Dispatch<React.SetStateAction<contactInputs | null>>;
@@ -29,13 +31,15 @@ interface MailingProviderProps {
   children: ReactNode;
 }
 
+const { user } = useAuth();
+
 export const MailingProvider: FC<MailingProviderProps> = ({ children }) => {
   const [contactInputs, setContactInputs] = useState<contactInputs | null>({
     firstname: "",
     lastname: "",
     email: "",
     profilepic: "",
-    userId: 1,
+    userId: user.id,
   });
   const [isModalContactsOpen, setIsModalContactsOpen] = useState(false);
   const [addresses, setAddresses] = useState<string[]>([
@@ -48,6 +52,7 @@ export const MailingProvider: FC<MailingProviderProps> = ({ children }) => {
   const [htmlTemplateContent, setHtmlTemplateContent] = useState<string>("");
   const [recipient, setRecipient] = useState<string>("");
   const [mailSubject, setMailSubject] = useState<string>("");
+
   return (
     <MailingContext.Provider
       value={{

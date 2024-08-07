@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Template,
   IZone,
@@ -49,8 +50,10 @@ interface TemplateProviderProps {
   children: ReactNode;
 }
 
+const { user } = useAuth();
+
 export const TemplateProvider = ({ children }: TemplateProviderProps) => {
-  const [template, setTemplate] = useState<Template>({ userId: 1 });
+  const [template, setTemplate] = useState<Template>({ userId: user.id });
   const [zones, setZones] = useState<any>([]);
   const [imgPreview, setImgPreview] = useState<string | undefined>(undefined);
   const [imgPreviews, setImgPreviews] = useState<ImgPreviews[] | undefined>(
