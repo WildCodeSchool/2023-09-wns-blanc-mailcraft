@@ -215,7 +215,7 @@ export const useTemplateModificationUtils = () => {
         order: subZone.order,
         moduleType: subZone.moduleType,
         content: subZoneContent,
-        size: subZone.size || "138",
+        width: subZone.width.toString() || "138",
         links: subZone.links,
       };
 

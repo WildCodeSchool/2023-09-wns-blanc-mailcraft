@@ -13,9 +13,7 @@ interface TemplateContextType {
   imgPreview: string | undefined;
   setImgPreview: React.Dispatch<React.SetStateAction<string | undefined>>;
   imgPreviews: ImgPreviews[] | undefined;
-  setImgPreviews: React.Dispatch<
-    React.SetStateAction<ImgPreviews[] | undefined>
-  >;
+  setImgPreviews: React.Dispatch<React.SetStateAction<ImgPreviews[] | undefined>>;
   templateToModify: Template | null;
   setTemplateToModify: React.Dispatch<React.SetStateAction<Template | null>>;
   oldTemplateToModify: Template | null;
@@ -26,9 +24,9 @@ interface TemplateContextType {
   setOldZonesId: React.Dispatch<React.SetStateAction<Number[] | null>>;
   isModalModifyOpen: boolean;
   setIsModalModifyOpen: React.Dispatch<React.SetStateAction<boolean>>;
-isModalOpen: boolean;
-setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;  
-isModalErrorOpen: boolean;
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isModalErrorOpen: boolean;
   setIsModalErrorOpen: React.Dispatch<React.SetStateAction<boolean>>;
   errorMessage: string;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
@@ -66,8 +64,8 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
   const [oldSubZonesId, setOldSubZonesId] = useState<Number[] | []>([]);
   const [oldZonesId, setOldZonesId] = useState<Number[] | null>(null);
   const [isModalModifyOpen, setIsModalModifyOpen] = useState(false);
-const [isModalOpen, setIsModalOpen] = useState(false);  
-const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   // const listElements: IListElement[] = [

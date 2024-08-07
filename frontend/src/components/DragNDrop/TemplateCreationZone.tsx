@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateCreationUtils } from "@/utils/templateCreationUtils";
@@ -7,9 +7,10 @@ import Image from "next/image";
 import Link from "next/link";
 import Modal from "react-modal";
 import { Editor } from "@tinymce/tinymce-react";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+
 const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
-  const { zones, setZones, isModalErrorOpen, errorMessage, isModalOpen } =
-    useTemplate();
+  const { zones, setZones, isModalErrorOpen, errorMessage, isModalOpen } = useTemplate();
   const { saveTemplate, handleCreationError } = useTemplateCreationUtils();
 
   const {
@@ -24,23 +25,44 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
   } = useTemplateCommonUtils();
 
   const fileInputRefs = useRef({});
+  const containerRef = useRef(null);
+  const [panelSizes, setPanelSizes] = useState({});
+
   const handleEditorChange = (content, subZoneId) => {
     handleTextChange(content, subZoneId, "template");
   };
+  
   useEffect(() => {
-    // Initialize zones if they are empty
     if (zones.length === 0) {
       setZones([
-        { id: "zone-1", order: 1, subZones: [] },
-        { id: "zone-2", order: 2, subZones: [] },
-        { id: "zone-3", order: 3, subZones: [] },
+        { id: "zone-1", dndId: "zone-1", order: 1, subZones: [] },
+        { id: "zone-2", dndId: "zone-2", order: 2, subZones: [] },
+        { id: "zone-3", dndId: "zone-3", order: 3, subZones: [] },
       ]);
     }
-  }, [zones, setZones]);
+  }, [zones, setZones]);  
 
   useEffect(() => {
     console.log(`New Zones are ${JSON.stringify(zones)}`);
   }, [zones]);
+
+  const handlePanelResize = (id, size) => {
+    setPanelSizes((prevSizes) => ({
+      ...prevSizes,
+      [id]: size.toString(),
+    }));
+
+    // Update zones with the new size
+    setZones((prevZones) =>
+      prevZones.map((zone) => ({
+        ...zone,
+        subZones: zone.subZones.map((subZone) =>
+          subZone.id === id ? { ...subZone, width: size } : subZone
+        ),
+      }))
+    );
+  };
+
 
   return (
     <>
@@ -87,7 +109,10 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
       >
         {(provided) => (
           <section
-            ref={provided.innerRef}
+          ref={(el) => {
+            provided.innerRef(el);
+            containerRef.current = el;
+          }}
             {...provided.droppableProps}
             className="zones-container relative flex flex-col w-[60%] p-4 bg-white justify-center mt-7"
           >
@@ -153,10 +178,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                     <Droppable
                       droppableId={zone.id}
                       direction="horizontal"
-                      isDropDisabled={
-                        draggingItemType !== "column" &&
-                        draggingItemType !== "subZone"
-                      }
+                      isDropDisabled={draggingItemType !== "column" && draggingItemType !== "subZone"}
                     >
                       {(providedSub, snapshotSub) => (
                         <div
@@ -165,40 +187,42 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                           {...providedSub.droppableProps}
                           className="subzone-container flex gap-2"
                         >
-                          {zone.subZones.length > 0 ? (
-                            zone.subZones.map((subZone, subIndex) => (
-                              <Draggable
-                                key={subZone.id}
-                                draggableId={subZone.id}
-                                index={subIndex}
-                              >
-                                {(providedSubZone, snapshotSubZone) => (
-                                  <div
-                                    ref={providedSubZone.innerRef}
-                                    {...providedSubZone.draggableProps}
-                                    {...providedSubZone.dragHandleProps}
-                                    className={`subzone flex justify-around items-center flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${
-                                      snapshotSubZone.isDragging
-                                        ? "opacity-50"
-                                        : ""
-                                    }`}
-                                  >
-                                    <Droppable
-                                      droppableId={subZone.id}
-                                      isDropDisabled={
-                                        draggingItemType !== "module"
-                                      }
-                                    >
-                                      {(providedModule) => (
-                                        <div
-                                          ref={providedModule.innerRef}
-                                          {...providedModule.droppableProps}
-                                          className="module-container flex-1"
-                                        >
-                                          {!subZone.moduleType && (
-                                            <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                                          )}
-                                          {subZone.moduleType === "texte" && (
+                          <PanelGroup direction="horizontal">
+                            {zone.subZones.length > 0 ? (
+                              zone.subZones.map((subZone, subIndex) => (
+                                <Panel
+                                  key={subZone.id}
+                                  defaultSize={100 / zone.subZones.length}
+                                  minSize={20}
+                                  onResize={(size) => handlePanelResize(subZone.id, size)}
+                                >
+                                  <Draggable key={subZone.id} draggableId={subZone.id} index={subIndex}>
+                                    {(providedSubZone, snapshotSubZone) => (
+                                      <div
+                                        ref={useCallback((node) => {
+                                          if (node) {
+                                            providedSubZone.innerRef(node);
+                                          }
+                                        }, [subZone.id])}
+                                        {...providedSubZone.draggableProps}
+                                        {...providedSubZone.dragHandleProps}
+                                        className={`subzone flex justify-around items-center flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${
+                                          snapshotSubZone.isDragging
+                                            ? "opacity-50"
+                                            : ""
+                                        }`}
+                                      >
+                                        <Droppable droppableId={subZone.id} isDropDisabled={draggingItemType !== 'module'}>
+                                          {(providedModule) => (
+                                            <div
+                                              ref={providedModule.innerRef}
+                                              {...providedModule.droppableProps}
+                                              className="module-container flex-1"
+                                            >
+                                              {!subZone.moduleType && (
+                                                <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                                              )}
+                                              {subZone.moduleType === "texte" && (
                                             <Editor
                                               key={`${subZone.id}-${subZone.order}`}
                                               apiKey={
@@ -235,88 +259,63 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                               }}
                                             />
                                           )}
-                                          {subZone.moduleType === "image" && (
-                                            <div className="flex justify-center ms-5 mt-2">
-                                              <button
-                                                onClick={() =>
-                                                  fileInputRefs.current[
-                                                    subZone.id
-                                                  ]?.click()
-                                                }
-                                              >
-                                                <Image
-                                                  src={getImageSrc(
-                                                    subZone,
-                                                    "image"
-                                                  )}
-                                                  alt="Template Image"
-                                                  width={150}
-                                                  height={150}
-                                                />
-                                                <input
-                                                  type="file"
-                                                  hidden
-                                                  ref={(el) =>
-                                                    (fileInputRefs.current[
-                                                      subZone.id
-                                                    ] = el)
-                                                  }
-                                                  onChange={(event) =>
-                                                    createHandleFileChange(
-                                                      subZone.id
-                                                    )(event, zones, "template")
-                                                  }
-                                                />
-                                              </button>
+                                              {subZone.moduleType === 'image' && (
+                                                <div className="flex justify-center ms-5 mt-2">
+                                                  <button onClick={() => fileInputRefs.current[subZone.id]?.click()}>
+                                                    <Image
+                                                      src={getImageSrc(subZone, 'image')}
+                                                      alt="Template Image"
+                                                      width={70}
+                                                      height={70}
+                                                    />
+                                                    <input
+                                                      type="file"
+                                                      hidden
+                                                      ref={(el) => (fileInputRefs.current[subZone.id] = el)}
+                                                      onChange={(event) =>
+                                                        createHandleFileChange(subZone.id)(event, zones, 'template')
+                                                      }
+                                                    />
+                                                  </button>
+                                                </div>
+                                              )}
+                                              {subZone.moduleType === 'social' && (
+                                                <div className="flex justify-around w-full mt-3">
+                                                  {socialModule.map((social) => (
+                                                    <Link key={social.link} href={social.link}>
+                                                      <Image src={social.src} alt="Social Media Icon" width={50} height={50} />
+                                                    </Link>
+                                                  ))}
+                                                </div>
+                                              )}
+                                              {providedModule.placeholder}
                                             </div>
                                           )}
-                                          {subZone.moduleType === "social" && (
-                                            <div className="flex justify-around w-full">
-                                              {socialModule.map((social) => (
-                                                <Link
-                                                  key={social.link}
-                                                  href={social.link}
-                                                >
-                                                  <Image
-                                                    src={social.src}
-                                                    alt="Social Media Icon"
-                                                    width={50}
-                                                    height={50}
-                                                  />
-                                                </Link>
-                                              ))}
-                                            </div>
-                                          )}
-                                          {providedModule.placeholder}
-                                        </div>
-                                      )}
-                                    </Droppable>
-                                    <button
-                                      className="absolute top-0 right-0 pe-1 text-lg"
-                                      onClick={() =>
-                                        removeSubZone(
-                                          subZone,
-                                          subZone.id,
-                                          "template"
-                                        )
-                                      }
-                                    >
-                                      ×
-                                    </button>
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))
-                          ) : (
-                            <p className="text-gray-500 text-center flex-grow">
-                              Glissez une structure ici
-                            </p>
-                          )}
+                                        </Droppable>
+                                        <button
+                                          className="absolute top-0 right-0 pe-1 text-lg"
+                                          onClick={() => removeSubZone(subZone, subZone.id, 'template')}
+                                        >
+                                          ×
+                                        </button>
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                  {subIndex < zone.subZones.length - 1 && (
+                                    <PanelResizeHandle
+                                      style={{ cursor: 'col-resize' }}
+                                    />
+                                  )}
+                                </Panel>
+                              ))
+                            ) : (
+                              <p className="text-gray-500 text-center flex-grow">Glissez une structure ici</p>
+                            )}
+                          </PanelGroup>
                           {providedSub.placeholder}
                         </div>
                       )}
                     </Droppable>
-                    {providedZone.placeholder}
                   </div>
                 )}
               </Draggable>
@@ -330,19 +329,3 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
 };
 
 export default TemplateCreationZone;
-
-// useEffect(() => {
-//   if (zones.length > 0) {
-//     zones.forEach((zone) => {
-//       zone.subZones.forEach((subZone) => {
-//         console.log(subZone.content);
-//         if (subZone.links) {
-//           console.log(subZone.links);
-//         }
-//       });
-//     });
-//   }
-
-//   // Pour logger toute la structure des zones si nécessaire
-//   // console.log(JSON.stringify(zones));
-// }, [zones]);

@@ -4,22 +4,17 @@ import { useTemplateModificationUtils } from "@/utils/templateModificationUtils"
 import { useRouter } from "next/router";
 
 interface ActionPanelTemplateCardProps {
-  templateId: number;
-  templateTitle: string;
-  templateZones: any;
-  showDataPanel: boolean;
-  onTogglePanel?: () => void;
+    templateId: number;
+    templateTitle: string;
+    templateZones: any;
+    templateStatus: string;
+    showDataPanel: boolean;
+    onTogglePanel?: () => void;
 }
 
-const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({
-  templateId,
-  templateTitle,
-  templateZones,
-  showDataPanel,
-  onTogglePanel,
-}) => {
-  const router = useRouter();
-  const { deleteTemplate } = useTemplateModificationUtils();
+const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templateId, templateTitle, templateZones, templateStatus, showDataPanel, onTogglePanel }) => {
+    const router = useRouter();
+    const { deleteTemplate } = useTemplateModificationUtils();
 
   const handleDelete = async () => {
     if (confirm("Êtes-vous sûr de vouloir supprimer ce template ?")) {

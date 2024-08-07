@@ -8,7 +8,7 @@ interface SubZone {
   order: number;
   moduleType: string;
   content: string;
-  size?: string;
+  width?: string;
   links?: string[];
   zoneId?: number;
 }

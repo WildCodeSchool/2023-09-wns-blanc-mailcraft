@@ -12,6 +12,7 @@ interface TemplateCardProps {
   zones: IZone[];
   isCreated: boolean;
   description: string;
+  status: string;
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({
@@ -19,6 +20,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   title,
   zones,
   description,
+  status
 }) => {
   const [showDataPanel, setShowDataPanel] = useState(false);
 
@@ -34,7 +36,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
     return text;
   };
 
-  //Fonction pour déterminer la taille des zones selon leur nombre dans leur row
+  //Fonction pour déterminer la taille des sous-zones selon leur nombre dans leur row
   const getWidthClass = (length: number) => {
     switch (length) {
       case 1:
@@ -57,6 +59,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
           templateId={templateId}
           templateTitle={title}
           templateZones={zones}
+          templateStatus={status}
           showDataPanel={showDataPanel}
           onTogglePanel={toggleDataPanel}
         />

@@ -5,6 +5,7 @@ import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateCreationUtils } from "@/utils/templateCreationUtils";
 import { useRouter } from "next/router";
 import Link from "next/link";
+
 interface TemplateNavBarProps {
   arrayToIterate: string;
 }

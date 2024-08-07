@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
@@ -7,6 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Modal from "react-modal";
 import { Editor } from "@tinymce/tinymce-react";
+import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+
 const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
   const {
     templateToModify,
@@ -14,20 +16,21 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     isModalModifyOpen,
     isModalErrorOpen,
     errorMessage,
-    oldSubZonesId,
   } = useTemplate();
+
   const { saveTemplateToModify, closeModifyModal } =
     useTemplateModificationUtils();
+
   const {
     handleTextChange,
     removeZone,
-    isModalOpen,
     closeErrorModal,
     resetZones,
     removeSubZone,
     getImageSrc,
     createHandleFileChange,
     handleResetZones,
+    handleAddSubZone // Ensure this function is available
   } = useTemplateCommonUtils();
 
   const closeAllModals = () => {
@@ -36,6 +39,8 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
   };
 
   const fileInputRefs = useRef({});
+  const [panelSizes, setPanelSizes] = useState({});
+  const containerRef = useRef(null);
 
   useEffect(() => {
     if (!templateToModify || !templateToModify.zones) {
@@ -59,6 +64,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
           ...subZone,
           order: subZone.order || subZoneIndex + 1,
           dndId: `zone-${zoneIndex + 1}-subzone-${subZoneIndex + 1}`,
+          width: subZone.width || '100'
         };
       });
 
@@ -74,7 +80,6 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
       };
     });
 
-    // S'assurer qu'il y ai toujours 3 zones
     while (zonesWithDndIds.length < 3) {
       const newZoneId = zonesWithDndIds.length + 1;
       zonesWithDndIds.push({
@@ -94,15 +99,29 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     }
   }, [templateToModify, setTemplateToModify]);
 
-  // useEffect(() => {
-  //   console.log(
-  //     `TEMPLATE TO MODIFY IS ----> ${JSON.stringify(templateToModify)}`
-  //   );
-  // }, [templateToModify]);
+  const handlePanelResize = (id, size) => {
+    if (containerRef.current) {
+      const containerWidth = containerRef.current.offsetWidth;
+      const percentage = (size / containerWidth) * 100;
 
-  // useEffect(() => {
-  //   console.log(`OLD SUB ZONES ID ===`, oldSubZonesId);
-  // }, [oldSubZonesId]);
+      setPanelSizes((prevSizes) => ({
+        ...prevSizes,
+        [id]: percentage.toFixed(2),
+      }));
+
+      setTemplateToModify((prevTemplate) => ({
+        ...prevTemplate,
+        zones: prevTemplate.zones.map((zone) => ({
+          ...zone,
+          subZones: zone.subZones.map((subZone) =>
+            subZone.dndId === id
+              ? { ...subZone, width: percentage.toFixed(2) }
+              : subZone
+          ),
+        })),
+      }));
+    }
+  };
 
   if (!templateToModify || !templateToModify.zones) {
     return <p>Loading template...</p>;
@@ -135,11 +154,17 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
             >
               Oui, sauvegarder
             </button>
+            {/* <button
+              onClick={() => handleResetZones}
+              className="px-7 py-2 bg-gray-100 text-black hover:bg-gray-200 rounded border border-gray-300 shadow-md"
+            >
+              Non
+            </button> */}
             <button
               onClick={() => saveTemplateToModify(templateToModify, "draft")}
               className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
             >
-              Non, enregistrer en brouillon
+              Enregistrer en brouillon
             </button>
           </div>
         </div>
@@ -158,17 +183,16 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
         ></button>
         <div className="w-full h-3 rounded-t-lg bg-red-500"></div>
         <div className="flex flex-col justify-center items-center gap-10">
-          <h2 className="text-lg font-semibold text-center mt-3">
-            {errorMessage}
-          </h2>
+          <h2 className="text-lg font-semibold text-center mt-3">{errorMessage}</h2>
           <button
-            onClick={closeAllModals}
+            onClick={closeErrorModal}
             className="px-7 py-2 bg-gray-100 text-black hover:bg-gray-200 rounded border border-gray-300 shadow-md"
           >
-            J'ai compris
+            OK
           </button>
         </div>
       </Modal>
+
       <Droppable
         droppableId="all-zones"
         direction="vertical"
@@ -176,7 +200,10 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
       >
         {(provided) => (
           <section
-            ref={provided.innerRef}
+            ref={(el) => {
+              provided.innerRef(el);
+              containerRef.current = el;
+            }}
             {...provided.droppableProps}
             className="zones-container relative flex flex-col w-[65%] p-4 bg-white justify-center mt-7"
           >
@@ -230,40 +257,49 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                           {...providedSub.droppableProps}
                           className="subzone-container flex gap-2"
                         >
-                          {zone.subZones.length > 0 ? (
-                            zone.subZones.map((subZone, subIndex) => (
-                              <Draggable
-                                key={subZone.dndId}
-                                draggableId={subZone.dndId}
-                                index={subIndex}
-                              >
-                                {(providedSubZone, snapshotSubZone) => (
-                                  <div
-                                    ref={providedSubZone.innerRef}
-                                    {...providedSubZone.draggableProps}
-                                    {...providedSubZone.dragHandleProps}
-                                    className={`subzone flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${
-                                      snapshotSubZone.isDragging
-                                        ? "opacity-50"
-                                        : ""
-                                    }`}
+                          <PanelGroup direction="horizontal">
+                            {zone.subZones.length > 0 ? (
+                              zone.subZones.map((subZone, subIndex) => (
+                                <Panel
+                                  key={subZone.dndId}
+                                  defaultSize={parseFloat(subZone.width)}
+                                  minSize={20}
+                                  onResize={(size) =>
+                                    handlePanelResize(subZone.dndId, size)
+                                  }
+                                >
+                                  <Draggable
+                                    key={subZone.dndId}
+                                    draggableId={subZone.dndId}
+                                    index={subIndex}
                                   >
-                                    <Droppable
-                                      droppableId={subZone.dndId}
-                                      isDropDisabled={
-                                        draggingItemType !== "module"
-                                      }
-                                    >
-                                      {(providedModule) => (
-                                        <div
-                                          ref={providedModule.innerRef}
-                                          {...providedModule.droppableProps}
-                                          className="module-container flex justify-center items-center"
+                                    {(providedSubZone, snapshotSubZone) => (
+                                      <div
+                                        ref={providedSubZone.innerRef}
+                                        {...providedSubZone.draggableProps}
+                                        {...providedSubZone.dragHandleProps}
+                                        className={`subzone flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${
+                                          snapshotSubZone.isDragging
+                                            ? "opacity-50"
+                                            : ""
+                                        }`}
+                                      >
+                                        <Droppable
+                                          droppableId={subZone.dndId}
+                                          isDropDisabled={
+                                            draggingItemType !== "module"
+                                          }
                                         >
-                                          {!subZone.moduleType && (
-                                            <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                                          )}
-                                          {subZone.moduleType === "texte" && (
+                                          {(providedModule) => (
+                                            <div
+                                              ref={providedModule.innerRef}
+                                              {...providedModule.droppableProps}
+                                              className="module-container flex justify-center items-center"
+                                            >
+                                              {!subZone.moduleType && (
+                                                <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                                              )}
+                                              {subZone.moduleType === "texte" && (
                                             <Editor
                                               key={`${subZone.id}-${subZone.order}`}
                                               apiKey={
@@ -301,85 +337,92 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                               }}
                                             />
                                           )}
-                                          {subZone.moduleType === "image" && (
-                                            <button
-                                              onClick={() =>
-                                                fileInputRefs.current[
-                                                  subZone.id
-                                                ]?.click()
-                                              }
-                                            >
-                                              <Image
-                                                src={getImageSrc(
-                                                  subZone,
-                                                  "image"
-                                                )}
-                                                alt="Template Image"
-                                                width={150}
-                                                height={150}
-                                              />
-                                              <input
-                                                type="file"
-                                                hidden
-                                                ref={(el) =>
-                                                  (fileInputRefs.current[
-                                                    subZone.id
-                                                  ] = el)
-                                                }
-                                                onChange={(event) =>
-                                                  createHandleFileChange(
-                                                    subZone.id
-                                                  )(
-                                                    event,
-                                                    templateToModify.zones,
-                                                    "templateToModify"
-                                                  )
-                                                }
-                                              />
-                                            </button>
-                                          )}
-                                          {subZone.moduleType === "social" && (
-                                            <div className="flex justify-around w-full mt-4">
-                                              {socialModule.map((social) => (
-                                                <Link
-                                                  key={social.link}
-                                                  href={social.link}
+                                              {subZone.moduleType === "image" && (
+                                                <button
+                                                  onClick={() =>
+                                                    fileInputRefs.current[
+                                                      subZone.id
+                                                    ]?.click()
+                                                  }
                                                 >
                                                   <Image
-                                                    src={social.src}
-                                                    alt="Social Media Icon"
-                                                    width={50}
-                                                    height={50}
+                                                    src={getImageSrc(
+                                                      subZone,
+                                                      "image"
+                                                    )}
+                                                    alt="Template Image"
+                                                    width={150}
+                                                    height={150}
                                                   />
-                                                </Link>
-                                              ))}
+                                                  <input
+                                                    type="file"
+                                                    hidden
+                                                    ref={(el) =>
+                                                    (fileInputRefs.current[
+                                                      subZone.id
+                                                    ] = el)
+                                                    }
+                                                    onChange={(event) =>
+                                                      createHandleFileChange(
+                                                        subZone.id
+                                                      )(
+                                                        event,
+                                                        templateToModify.zones,
+                                                        "templateToModify"
+                                                      )
+                                                    }
+                                                  />
+                                                </button>
+                                              )}
+                                              {subZone.moduleType === "social" && (
+                                                <div className="flex justify-around w-full mt-4">
+                                                  {socialModule.map((social) => (
+                                                    <Link
+                                                      key={social.link}
+                                                      href={social.link}
+                                                    >
+                                                      <Image
+                                                        src={social.src}
+                                                        alt="Social Media Icon"
+                                                        width={50}
+                                                        height={50}
+                                                      />
+                                                    </Link>
+                                                  ))}
+                                                </div>
+                                              )}
+                                              {providedModule.placeholder}
                                             </div>
                                           )}
-                                          {providedModule.placeholder}
-                                        </div>
-                                      )}
-                                    </Droppable>
-                                    <button
-                                      className="absolute top-0 right-0 p-1 text-lg"
-                                      onClick={() =>
-                                        removeSubZone(
-                                          subZone,
-                                          subZone.dndId,
-                                          "templateToModify"
-                                        )
-                                      }
-                                    >
-                                      ×
-                                    </button>
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))
-                          ) : (
-                            <p className="text-gray-500 text-center flex-grow">
-                              Glissez une structure ici
-                            </p>
-                          )}
+                                        </Droppable>
+                                        <button
+                                          className="absolute top-0 right-0 p-1 text-lg"
+                                          onClick={() =>
+                                            removeSubZone(
+                                              subZone,
+                                              subZone.dndId,
+                                              "templateToModify"
+                                            )
+                                          }
+                                        >
+                                          ×
+                                        </button>
+                                      </div>
+                                    )}
+                                  </Draggable>
+                                  {subIndex < zone.subZones.length - 1 && (
+                                    <PanelResizeHandle
+                                      style={{ cursor: 'col-resize' }}
+                                    />
+                                  )}
+                                </Panel>
+                              ))
+                            ) : (
+                              <p className="text-gray-500 text-center flex-grow">
+                                Glissez une structure ici
+                              </p>
+                            )}
+                          </PanelGroup>
                           {providedSub.placeholder}
                         </div>
                       )}

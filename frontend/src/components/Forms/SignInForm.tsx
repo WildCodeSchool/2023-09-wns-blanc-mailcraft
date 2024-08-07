@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import RedButton from "./Buttons/Redbutton";
+import RedButton from "@/components/Buttons/Redbutton";
 import { useAuth } from "@/contexts/AuthContext";
 import { gql, useMutation } from "@apollo/client";
 import Image from "next/image";

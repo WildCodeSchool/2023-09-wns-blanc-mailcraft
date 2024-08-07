@@ -5,17 +5,25 @@ import TemplateCreationZone from "@/components/DragNDrop/TemplateCreationZone";
 import DroppableArea from "@/components/DragNDrop/DroppableArea";
 import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
 import { useTemplate } from "@/contexts/TemplateContext";
+import { useAuth } from "@/contexts/AuthContext";
 import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 import ProtectedComponent from "@/components/ProtectedComponent";
-import { useAuth } from "@/contexts/AuthContext";
+import { StaticImageData } from "next/image";
+
+interface SocialLink {
+  socialMedia: string;
+  src: StaticImageData;
+  link: string;
+}
 
 const TemplatePage = () => {
-  const { zones, setZones, template, setTemplate, setIsModalOpen } =
-    useTemplate();
-  const { user } = useAuth();
+  const { zones, setZones, template, setTemplate, setIsModalOpen } = useTemplate();
   const [draggingType, setDraggingType] = useState("");
+  const { user, loading, error } = useAuth();
+
+  const socialLinks = user?.socialLinks[0] || {};
 
   useEffect(() => {
     if (user && user.id) {
@@ -24,23 +32,29 @@ const TemplatePage = () => {
       setZones([]);
     }
   }, [user, setTemplate, setZones]);
-  const socialModule = [
-    {
+
+  const socialModule: SocialLink[] = [];
+  if (socialLinks.facebook) {
+    socialModule.push({
       socialMedia: "Facebook",
       src: facebookIcon,
-      link: "https://www.facebook.com/?locale=fr_FR",
-    },
-    {
+      link: socialLinks.facebook,
+    });
+  }
+  if (socialLinks.twitter) {
+    socialModule.push({
       socialMedia: "Twitter",
       src: twitterIcon,
-      link: "https://x.com/?lang=fr&mx=2",
-    },
-    {
+      link: socialLinks.twitter,
+    });
+  }
+  if (socialLinks.linkedin) {
+    socialModule.push({
       socialMedia: "Linkedin",
       src: linkedinIcon,
-      link: "https://fr.linkedin.com/",
-    },
-  ];
+      link: socialLinks.linkedin,
+    });
+  }
 
   const onDragStart = (start) => {
     const { draggableId } = start;
@@ -123,7 +137,7 @@ const TemplatePage = () => {
         order: index + 1,
         moduleType: "",
         content: "",
-        size: "",
+        width: "",
       }));
 
       setZones((prevZones) =>

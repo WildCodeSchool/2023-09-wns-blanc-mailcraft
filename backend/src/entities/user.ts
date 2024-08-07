@@ -12,6 +12,7 @@ import { Contact } from "./contactList";
 import { Asset } from "./assets";
 import { Template } from "./template";
 import { Folder } from "./folder";
+import { SocialLink } from "./socialLink";
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
@@ -69,4 +70,8 @@ export class User extends BaseEntity {
   @OneToMany(() => Folder, (folder) => folder.user)
   @Field(() => [Folder], { nullable: true })
   folders: Folder[];
+
+  @OneToMany(() => SocialLink, (socialLink) => socialLink.user)
+  @Field(() => [SocialLink], { nullable: true })
+  socialLinks?: SocialLink[];
 }
