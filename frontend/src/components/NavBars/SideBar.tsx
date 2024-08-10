@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from 'next/router';
 
 interface SideBarProps {
   onSelect: (form: string) => void;
 }
 
 const SideBar = ({ onSelect }: SideBarProps) => {
+  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+
+  const logOut = () => {
+    router.push("/").then(() => window.location.reload());
+    localStorage.removeItem("token");
+
+    setIsAuthenticated(false);
+  };
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -73,31 +84,11 @@ const SideBar = ({ onSelect }: SideBarProps) => {
               </button>
             </li>
           </ul>
-          <div className="flex flex-col items-center justify-center space-y-8">
-            <button
-              type="button"
-              className="flex justify-center items-center gap-4 w-4/5 h-10 text-white text-sm md:text-base bg-[#E83B4E] hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-200 font-medium rounded-lg"
-            >
-              <svg
-                className="hidden md:block shadow-xl h-7 w-7"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 48"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  id="_42.Badge"
-                  data-name="42.Badge"
-                  d="M36.992,20.483V24.5l-3.485,2.011L31.5,30h-.511V45s0,.007,0,.011A.967.967,0,0,1,30,46l-.01,0a.978.978,0,0,1-.775-.4L23.987,40.38,18.762,45.6a.976.976,0,0,1-.775.4l-.01,0a.967.967,0,0,1-.988-.987s0-.007,0-.011V30h-.507l-2.012-3.482L10.985,24.5v-4.02L8.974,17l2.011-3.483V9.495l3.484-2.013L16.481,4h4.025l3.48-2.012L27.47,4h4.025L33.5,7.482,36.99,9.495v4.022L39,17ZM18.987,30V42.619l4.19-4.19a.942.942,0,0,1,.095-.144,1.05,1.05,0,0,1,1.43,0,1.023,1.023,0,0,1,.095.144l4.19,4.19V30H27.471l-3.484,2.013L20.507,30H18.986S18.987,30,18.987,30Zm16-15.948v-3.4l-2.948-1.7L30.34,6H26.934L23.989,4.3,21.046,6H17.64l-1.7,2.942-2.949,1.7v3.4L11.289,17l1.7,2.947v3.4l2.949,1.7,1.7,2.945h3.405l2.943,1.7,2.945-1.7h3.405l1.7-2.945,2.949-1.7v-3.4L36.686,17Z"
-                  transform="translate(-8.974 -1.991)"
-                  fill-rule="evenodd"
-                />
-              </svg>
-              <p>Changer d'offre</p>
-            </button>
+          <div className="flex justify-center items-center">
             <button
               type="button"
               className="flex justify-center items-center gap-4 w-4/5 h-10 text-white text-md bg-[#E83B4E] hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-200 font-medium rounded-lg"
+              onClick={logOut}
             >
               <svg
                 className="hidden md:block shadow-xl h-6 w-6 me-3"

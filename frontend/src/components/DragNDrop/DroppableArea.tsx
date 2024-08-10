@@ -24,19 +24,19 @@ const DroppableArea = () => {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex flex-col justify-center items-start gap-6 2xl:gap-28 p-2 bg-white h-full border border-gray-300 rounded-lg shadow-xl"
+            className="flex flex-col justify-center items-start gap-16 2xl:gap-28 p-2 bg-white h-full border border-gray-300 rounded-lg shadow-xl"
           >
-            <div className="flex flex-col 2xl:items-center w-full gap-3 ms-2">
+            <div className="flex flex-col items-center w-full gap-3">
               <h1 className="font-medium text-xl 2xl:mb-3">Structures</h1>
               <ZoneCreation />
             </div>
-            <div className="flex flex-col items-start 2xl:items-center w-full gap-3 ms-2">
+            <div className="flex flex-col items-center w-full gap-3">
               <h1 className="font-medium text-xl 2xl:mb-3">Modules</h1>
               <div className="grid grid-cols-2 gap-5">
                 {listElements.map((el, index) => {
                   const isSocialModule = el.title.toLowerCase() === "social";
                   const moduleContent = (
-                    <div className={`rounded-md w-20 h-auto flex justify-center shadow-md ${isSocialModule && !hasSocialLinks ? "bg-gray-400" : "bg-gray-100"}`}>
+                    <div className={`rounded-md w-16 xl:w-20 h-auto flex justify-center shadow-md ${isSocialModule && !hasSocialLinks ? "bg-gray-400" : "bg-gray-100"}`}>
                       {isSocialModule && !hasSocialLinks ? (
                         <div className="flex flex-col justify-center items-center p-3"
                           onMouseEnter={() => setIsHovered(true)}

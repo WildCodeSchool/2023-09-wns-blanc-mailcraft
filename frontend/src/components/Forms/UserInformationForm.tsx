@@ -9,8 +9,6 @@ import {
 
 export default function UserInformationForm({ setErrorMessage, setSuccessMessage }: ProfileForm) {
     const { user, loading, error } = useAuth();
-    const [prenom, setPrenom] = useState('');
-    const [nom, setNom] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -23,8 +21,6 @@ export default function UserInformationForm({ setErrorMessage, setSuccessMessage
 
     useEffect(() => {
         if (user) {
-            setPrenom(user.firstname || '');
-            setNom(user.lastname || '');
             setEmail(user.email || '');
         }
     }, [user]);
@@ -53,9 +49,7 @@ export default function UserInformationForm({ setErrorMessage, setSuccessMessage
             if (verifyData.verifyPassword) {
                 const { data: updateData } = await updateUser({
                     variables: {
-                        email: email,
-                        firstname: prenom,
-                        lastname: nom
+                        email: email
                     }
                 });
 
@@ -73,28 +67,6 @@ export default function UserInformationForm({ setErrorMessage, setSuccessMessage
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4 max-w-full md:max-w-3xl">
-            <div className="flex flex-col md:flex-row items-center">
-                <label htmlFor="prenom" className="w-full md:w-1/5 text-sm font-medium text-gray-700">Prénom :</label>
-                <input
-                    type="text"
-                    id="prenom"
-                    placeholder={prenom}
-                    value={prenom}
-                    onChange={(e) => setPrenom(e.target.value)}
-                    className="shadow-md w-full md:w-1/2 bg-rose-100 p-2 border border-rose-100 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                />
-            </div>
-            <div className="flex flex-col md:flex-row items-center">
-                <label htmlFor="nom" className="w-full md:w-1/5 text-sm font-medium text-gray-700">Nom :</label>
-                <input
-                    type="text"
-                    id="nom"
-                    value={nom}
-                    placeholder={nom}
-                    onChange={(e) => setNom(e.target.value)}
-                    className="shadow-md w-full md:w-1/2 bg-rose-100 p-2 border border-rose-100 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
-                />
-            </div>
             <div className="flex flex-col md:flex-row items-center">
                 <label htmlFor="email" className="w-full md:w-1/5 text-sm font-medium text-gray-700">Email :</label>
                 <input

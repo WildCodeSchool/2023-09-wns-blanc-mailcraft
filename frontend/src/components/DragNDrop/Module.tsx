@@ -12,7 +12,7 @@ const Module = ({ picture, title }: ModuleProps) => {
   return (
     <div className="flex flex-col justify-center items-center p-3">
       <Image
-        className="w-8 h-8"
+        className="w-6 h-6 2xl:w-8 2xl:h-8"
         src={picture}
         alt="Illustration feature"
       />

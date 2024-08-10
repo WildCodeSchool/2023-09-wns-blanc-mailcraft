@@ -12,7 +12,7 @@ interface HomeNavBarProps {
 
 export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
   const router = useRouter();
-  const { isAuthentificated, setIsAuthenticated } = useAuth();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const logOut = () => {
@@ -90,7 +90,7 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
                   </Link>
                 </li>
                 <li>
-                  {!isAuthentificated ? (
+                  {!isAuthenticated ? (
                     <Link
                       href="/prix"
                       className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
@@ -107,7 +107,7 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
                   )}
                 </li>
 
-                {isAuthentificated && (
+                {isAuthenticated && (
                   <li>
                     <button
                       onClick={logOut}
@@ -136,7 +136,7 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
         <ul className="flex flex-row items-center p-4 md:p-0 md:space-x-20">
           <li>
             <Link
-              href={isAuthentificated ? "/template/creation" : "/signIn"}
+              href={isAuthenticated ? "/template/creation" : "/signIn"}
               className={
                 !issignUpPage
                   ? "block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:text-red-500 md:text-xl"
@@ -149,7 +149,7 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
           </li>
           <li>
             <Link
-              href={isAuthentificated ? "mailing" : "/signIn"}
+              href={isAuthenticated ? "mailing" : "/signIn"}
               className={
                 !issignUpPage
                   ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
@@ -159,7 +159,7 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
               Emails
             </Link>
           </li>
-          {isAuthentificated && (
+          {isAuthenticated && (
             <li>
               <Link
                 href="/user/myProfile"
@@ -176,7 +176,7 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
         </ul>
 
         <div className="me-2">
-          {isAuthentificated ? (
+          {isAuthenticated ? (
             <RedButton
               text="Déconnexion"
               href=""
