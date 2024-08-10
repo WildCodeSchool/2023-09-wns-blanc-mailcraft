@@ -65,48 +65,38 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
               </svg>
             </button>
             <div
-              className={`fixed top-16 right-2 left-auto z-50 w-3/5 md:block md:w-auto ${
-                isMenuOpen ? "block" : "hidden"
-              }`}
+              className={`fixed top-16 right-2 left-auto z-50 w-3/5 md:block md:w-auto ${isMenuOpen ? "block" : "hidden"
+                }`}
               id="navbar-default"
             >
               <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-300 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white">
                 <li>
                   <Link
-                    href="/"
+                    href={isAuthenticated ? "user/myTemplates" : "/signIn"}
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
                     aria-current="page"
                   >
-                    Accueil
+                    Templates
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/ressources"
+                    href={isAuthenticated ? "mailing" : "/signIn"}
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
                     aria-current="page"
                   >
-                    Ressources
+                    Emails
                   </Link>
                 </li>
                 <li>
-                  {!isAuthenticated ? (
-                    <Link
-                      href="/prix"
-                      className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
-                    >
-                      Prix
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/template/creation"
-                      className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
-                    >
-                      Template
-                    </Link>
-                  )}
+                  <Link
+                    href={isAuthenticated ? "user/myProfile" : "/signIn"}
+                    className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
+                    aria-current="page"
+                  >
+                    Mon compte
+                  </Link>
                 </li>
-
                 {isAuthenticated && (
                   <li>
                     <button
@@ -132,14 +122,13 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
             alt="Mailcraft Logo"
           />
         </Link>
-
         <ul className="flex flex-row items-center p-4 md:p-0 md:space-x-20">
           <li>
             <Link
-              href={isAuthenticated ? "/template/creation" : "/signIn"}
+              href={isAuthenticated ? "/user/myTemplates" : "/signIn"}
               className={
                 !issignUpPage
-                  ? "block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:text-red-500 md:text-xl"
+                  ? "block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:hover:text-red-500 md:text-xl"
                   : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
               }
               aria-current="page"

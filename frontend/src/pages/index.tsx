@@ -13,7 +13,7 @@ import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
-  const { user, isAuthentificated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   useEffect(() => {
     console.log(`User is ---> ${JSON.stringify(user)}`);
   }, [user]);
@@ -35,7 +35,7 @@ export default function Home() {
               personnalisés en une seule plateforme, prêt à l'envoi en quelques
               minutes. Glissez, déposez, envoyez !
             </p>
-            {!isAuthentificated ? (
+            {!isAuthenticated ? (
               <div className="mx-auto xl:mx-0 w-1/2">
                 <Redbutton
                   text="S'inscrire"
