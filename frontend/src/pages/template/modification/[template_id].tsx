@@ -17,7 +17,7 @@ import {
   downloadHtmlTemplate,
 } from "@/utils/templateConversionUtils";
 import ProtectedComponent from "@/components/ProtectedComponent";
-
+import SuccessModal from "@/components/SuccessModal";
 const TemplateModificationPage = () => {
   const router = useRouter();
   const { template_id } = router.query;
@@ -222,6 +222,7 @@ const TemplateModificationPage = () => {
         saveButtonHoverColor="#BB3241"
         arrayToIterate={"templateToModify"}
       />
+      <SuccessModal message={"Template en cours de modification..."} />
       <section className="w-full h-[90vh] flex justify-between bg-[#766060] gap-24">
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <DataTemplate arrayToIterate={"templateToModify"} />

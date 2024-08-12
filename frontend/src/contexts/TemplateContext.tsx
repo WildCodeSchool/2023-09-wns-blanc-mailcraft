@@ -6,14 +6,16 @@ import {
 } from "@/types/interfaces/template/template-interfaces";
 
 interface TemplateContextType {
-  template: Template;
-  setTemplate: React.Dispatch<React.SetStateAction<Template>>;
+  template: any;
+  setTemplate: React.Dispatch<React.SetStateAction<any>>;
   zones: any;
   setZones: React.Dispatch<React.SetStateAction<any>>;
   imgPreview: string | undefined;
   setImgPreview: React.Dispatch<React.SetStateAction<string | undefined>>;
   imgPreviews: ImgPreviews[] | undefined;
-  setImgPreviews: React.Dispatch<React.SetStateAction<ImgPreviews[] | undefined>>;
+  setImgPreviews: React.Dispatch<
+    React.SetStateAction<ImgPreviews[] | undefined>
+  >;
   templateToModify: Template | null;
   setTemplateToModify: React.Dispatch<React.SetStateAction<Template | null>>;
   oldTemplateToModify: Template | null;
@@ -24,12 +26,16 @@ interface TemplateContextType {
   setOldZonesId: React.Dispatch<React.SetStateAction<Number[] | null>>;
   isModalModifyOpen: boolean;
   setIsModalModifyOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isSuccessModalOpen: boolean;
+  setIsSuccessModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isModalErrorOpen: boolean;
   setIsModalErrorOpen: React.Dispatch<React.SetStateAction<boolean>>;
   errorMessage: string;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  creationGifLoading: boolean;
+  setCreationGifLoading: React.Dispatch<React.SetStateAction<boolean>>;
   // listElements: IListElement[];
 }
 
@@ -65,9 +71,10 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
   const [oldZonesId, setOldZonesId] = useState<Number[] | null>(null);
   const [isModalModifyOpen, setIsModalModifyOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isModalErrorOpen, setIsModalErrorOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [creationGifLoading, setCreationGifLoading] = useState(false);
   // const listElements: IListElement[] = [
   //   {
   //     id: "1",
@@ -107,12 +114,16 @@ export const TemplateProvider = ({ children }: TemplateProviderProps) => {
         setOldZonesId,
         isModalModifyOpen,
         setIsModalModifyOpen,
+        isSuccessModalOpen,
+        setIsSuccessModalOpen,
         isModalOpen,
         setIsModalOpen,
         isModalErrorOpen,
         setIsModalErrorOpen,
         errorMessage,
-        setErrorMessage
+        setErrorMessage,
+        creationGifLoading,
+        setCreationGifLoading,
       }}
     >
       {children}

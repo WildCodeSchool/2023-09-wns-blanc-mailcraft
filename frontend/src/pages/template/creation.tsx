@@ -6,12 +6,13 @@ import DroppableArea from "@/components/DragNDrop/DroppableArea";
 import TemplateNavBar from "@/components/NavBars/TemplateNavBar";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/router";
 import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 import ProtectedComponent from "@/components/ProtectedComponent";
 import { StaticImageData } from "next/image";
-
+import SuccessModal from "@/components/SuccessModal";
 interface SocialLink {
   socialMedia: string;
   src: StaticImageData;
@@ -19,12 +20,20 @@ interface SocialLink {
 }
 
 const TemplatePage = () => {
-  const { zones, setZones, template, setTemplate, setIsModalOpen } = useTemplate();
+  const {
+    zones,
+    setZones,
+    template,
+    setTemplate,
+    setIsModalOpen,
+    isSuccessModalOpen,
+    setIsSuccessModalOpen,
+  } = useTemplate();
   const [draggingType, setDraggingType] = useState("");
   const { user, loading, error } = useAuth();
 
   const socialLinks = user?.socialLinks[0] || {};
-
+  const router = useRouter();
   useEffect(() => {
     if (user && user.id) {
       setIsModalOpen(false);
@@ -187,6 +196,7 @@ const TemplatePage = () => {
         saveButtonHoverColor="#BB3241"
         arrayToSave={"template"}
       />
+      <SuccessModal message={"Template en cours de création..."} />
       <section className="w-full h-[90dvh] flex justify-between bg-[#FFEDED] bg-opacity-100 gap-24">
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <DataTemplate arrayToIterate={"template"} />

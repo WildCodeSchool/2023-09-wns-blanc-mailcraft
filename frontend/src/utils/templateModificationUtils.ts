@@ -2,7 +2,10 @@ import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
-import { DELETE_TEMPLATE, MODIFY_TEMPLATE } from "@/client/mutations/template/template-mutations";
+import {
+  DELETE_TEMPLATE,
+  MODIFY_TEMPLATE,
+} from "@/client/mutations/template/template-mutations";
 import {
   CREATE_ZONE,
   UPDATE_ZONE,
@@ -29,12 +32,13 @@ export const useTemplateModificationUtils = () => {
     setIsModalErrorOpen,
     errorMessage,
     setErrorMessage,
+    setCreationGifLoading,
   } = useTemplate();
 
   const [modifyTemplate] = useMutation(MODIFY_TEMPLATE);
   const [updateZone] = useMutation(UPDATE_ZONE);
   const [createZone] = useMutation(CREATE_ZONE);
-  const [deleteTemplateMutation] = useMutation(DELETE_TEMPLATE)
+  const [deleteTemplateMutation] = useMutation(DELETE_TEMPLATE);
   const [deleteTemplateZones] = useMutation(DELETE_TEMPLATE_ZONES);
   const [createSubZone] = useMutation(CREATE_SUBZONE);
   const [modifySubZone] = useMutation(MODIFY_SUBZONE);
@@ -73,6 +77,10 @@ export const useTemplateModificationUtils = () => {
   };
 
   const saveTemplateToModify = async (template, status) => {
+    if (isModalModifyOpen) {
+      closeModifyModal();
+    }
+    setCreationGifLoading(true);
     const templateData = {
       title: template.title,
       description: template.description,
@@ -160,10 +168,7 @@ export const useTemplateModificationUtils = () => {
 
       console.log(JSON.stringify(templateToModify.zones));
 
-      if (isModalModifyOpen) {
-        closeModifyModal();
-      }
-
+      setCreationGifLoading(false);
       console.log("Zones have been successfully updated.");
 
       // Redirection en fonction du status
