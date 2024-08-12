@@ -1,15 +1,16 @@
+import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 import * as UserService from "./user.service";
 import * as argon2 from "argon2";
 
-export function verifyToken(token: string) {
-  if (process.env.JWT_SECRET_KEY === undefined) {
-    throw new Error();
+export function verifyToken(token: string): JwtPayload {
+  const secret = process.env.JWT_SECRET_KEY;
+  if (!secret) {
+    throw new Error("JWT secret key is not defined.");
   }
 
-  return jwt.verify(token, process.env.JWT_SECRET_KEY);
+  return jwt.verify(token, secret) as JwtPayload;
 }
-
 export async function signIn(email: string, password: string) {
   try {
     const userFromDB = await UserService.getByEmail(email);
@@ -17,7 +18,6 @@ export async function signIn(email: string, password: string) {
     if (await verifyPassword(password, userFromDB.hashedPassword)) {
       const token = signJwt({
         email: userFromDB.email,
-        role: userFromDB.role,
       });
 
       return token;

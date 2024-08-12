@@ -8,10 +8,11 @@ import Link from "next/link";
 import Modal from "react-modal";
 import { Editor } from "@tinymce/tinymce-react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-
+import SuccessModal from "../SuccessModal";
 const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
-  const { zones, setZones, isModalErrorOpen, errorMessage, isModalOpen } = useTemplate();
-  const { saveTemplate, handleCreationError } = useTemplateCreationUtils();
+  const { zones, setZones, isModalErrorOpen, errorMessage, isModalOpen } =
+    useTemplate();
+  const { saveTemplate } = useTemplateCreationUtils();
 
   const {
     handleTextChange,
@@ -31,7 +32,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
   const handleEditorChange = (content, subZoneId) => {
     handleTextChange(content, subZoneId, "template");
   };
-  
+
   useEffect(() => {
     if (zones.length === 0) {
       setZones([
@@ -40,7 +41,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
         { id: "zone-3", dndId: "zone-3", order: 3, subZones: [] },
       ]);
     }
-  }, [zones, setZones]);  
+  }, [zones, setZones]);
 
   useEffect(() => {
     console.log(`New Zones are ${JSON.stringify(zones)}`);
@@ -62,7 +63,6 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
       }))
     );
   };
-
 
   return (
     <>
@@ -109,10 +109,10 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
       >
         {(provided) => (
           <section
-          ref={(el) => {
-            provided.innerRef(el);
-            containerRef.current = el;
-          }}
+            ref={(el) => {
+              provided.innerRef(el);
+              containerRef.current = el;
+            }}
             {...provided.droppableProps}
             className="zones-container relative flex flex-col w-[60%] p-4 bg-white justify-center mt-7"
           >
@@ -178,7 +178,10 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                     <Droppable
                       droppableId={zone.id}
                       direction="horizontal"
-                      isDropDisabled={draggingItemType !== "column" && draggingItemType !== "subZone"}
+                      isDropDisabled={
+                        draggingItemType !== "column" &&
+                        draggingItemType !== "subZone"
+                      }
                     >
                       {(providedSub, snapshotSub) => (
                         <div
@@ -194,16 +197,25 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                   key={subZone.id}
                                   defaultSize={100 / zone.subZones.length}
                                   minSize={20}
-                                  onResize={(size) => handlePanelResize(subZone.id, size)}
+                                  onResize={(size) =>
+                                    handlePanelResize(subZone.id, size)
+                                  }
                                 >
-                                  <Draggable key={subZone.id} draggableId={subZone.id} index={subIndex}>
+                                  <Draggable
+                                    key={subZone.id}
+                                    draggableId={subZone.id}
+                                    index={subIndex}
+                                  >
                                     {(providedSubZone, snapshotSubZone) => (
                                       <div
-                                        ref={useCallback((node) => {
-                                          if (node) {
-                                            providedSubZone.innerRef(node);
-                                          }
-                                        }, [subZone.id])}
+                                        ref={useCallback(
+                                          (node) => {
+                                            if (node) {
+                                              providedSubZone.innerRef(node);
+                                            }
+                                          },
+                                          [subZone.id]
+                                        )}
                                         {...providedSubZone.draggableProps}
                                         {...providedSubZone.dragHandleProps}
                                         className={`subzone flex justify-around items-center flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${
@@ -212,7 +224,12 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                             : ""
                                         }`}
                                       >
-                                        <Droppable droppableId={subZone.id} isDropDisabled={draggingItemType !== 'module'}>
+                                        <Droppable
+                                          droppableId={subZone.id}
+                                          isDropDisabled={
+                                            draggingItemType !== "module"
+                                          }
+                                        >
                                           {(providedModule) => (
                                             <div
                                               ref={providedModule.innerRef}
@@ -222,48 +239,60 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                               {!subZone.moduleType && (
                                                 <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                                               )}
-                                              {subZone.moduleType === "texte" && (
-                                            <Editor
-                                              key={`${subZone.id}-${subZone.order}`}
-                                              apiKey={
-                                                process.env
-                                                  .NEXT_PUBLIC_TINYMCE_API_KEY
-                                              }
-                                              value={subZone.content || ""}
-                                              onEditorChange={(content) =>
-                                                handleEditorChange(
-                                                  content,
-                                                  subZone.id
-                                                )
-                                              }
-                                              init={{
-                                                height: 100,
-                                                menubar: false,
-                                                toolbar_sticky: true,
-                                                statusbar: false,
-                                                branding: false,
-                                                language: "fr_FR",
-                                                language_url: "/langs/fr_FR.js", // à debug marche pas
-                                                plugins: [
-                                                  "advlist autolink lists link image charmap print preview anchor",
-                                                  "searchreplace visualblocks code fullscreen",
-                                                  "insertdatetime media table paste code help wordcount",
-                                                ],
-                                                toolbar:
-                                                  "undo redo | bold italic underline  | " +
-                                                  "forecolor | fontsizeselect | alignleft aligncenter alignright alignjustify | ",
-                                                placeholder:
-                                                  "Entrez votre texte ici...",
-                                                content_style:
-                                                  "body { font-family:Helvetica,Arial,sans-serif; font-size:14px } .mce-content-body { width: 100%; height: 100%; border: 0; focus-ring: 0; resize: none; background: transparent; padding: 0; margin: 0; overflow: hidden; }",
-                                              }}
-                                            />
-                                          )}
-                                              {subZone.moduleType === 'image' && (
+                                              {subZone.moduleType ===
+                                                "texte" && (
+                                                <Editor
+                                                  key={`${subZone.id}-${subZone.order}`}
+                                                  apiKey={
+                                                    process.env
+                                                      .NEXT_PUBLIC_TINYMCE_API_KEY
+                                                  }
+                                                  value={subZone.content || ""}
+                                                  onEditorChange={(content) =>
+                                                    handleEditorChange(
+                                                      content,
+                                                      subZone.id
+                                                    )
+                                                  }
+                                                  init={{
+                                                    height: 100,
+                                                    menubar: false,
+                                                    toolbar_sticky: true,
+                                                    statusbar: false,
+                                                    branding: false,
+                                                    language: "fr_FR",
+                                                    language_url:
+                                                      "/langs/fr_FR.js", // à debug marche pas
+                                                    plugins: [
+                                                      "advlist autolink lists link image charmap print preview anchor",
+                                                      "searchreplace visualblocks code fullscreen",
+                                                      "insertdatetime media table paste code help wordcount",
+                                                    ],
+                                                    toolbar:
+                                                      "undo redo | bold italic underline  | " +
+                                                      "forecolor | fontsizeselect | alignleft aligncenter alignright alignjustify | ",
+                                                    placeholder:
+                                                      "Entrez votre texte ici...",
+                                                    content_style:
+                                                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px } .mce-content-body { width: 100%; height: 100%; border: 0; focus-ring: 0; resize: none; background: transparent; padding: 0; margin: 0; overflow: hidden; }",
+                                                  }}
+                                                />
+                                              )}
+                                              {subZone.moduleType ===
+                                                "image" && (
                                                 <div className="flex justify-center ms-5 mt-2">
-                                                  <button onClick={() => fileInputRefs.current[subZone.id]?.click()}>
+                                                  <button
+                                                    onClick={() =>
+                                                      fileInputRefs.current[
+                                                        subZone.id
+                                                      ]?.click()
+                                                    }
+                                                  >
                                                     <Image
-                                                      src={getImageSrc(subZone, 'image')}
+                                                      src={getImageSrc(
+                                                        subZone,
+                                                        "image"
+                                                      )}
                                                       alt="Template Image"
                                                       width={70}
                                                       height={70}
@@ -271,21 +300,42 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                                     <input
                                                       type="file"
                                                       hidden
-                                                      ref={(el) => (fileInputRefs.current[subZone.id] = el)}
+                                                      ref={(el) =>
+                                                        (fileInputRefs.current[
+                                                          subZone.id
+                                                        ] = el)
+                                                      }
                                                       onChange={(event) =>
-                                                        createHandleFileChange(subZone.id)(event, zones, 'template')
+                                                        createHandleFileChange(
+                                                          subZone.id
+                                                        )(
+                                                          event,
+                                                          zones,
+                                                          "template"
+                                                        )
                                                       }
                                                     />
                                                   </button>
                                                 </div>
                                               )}
-                                              {subZone.moduleType === 'social' && (
+                                              {subZone.moduleType ===
+                                                "social" && (
                                                 <div className="flex justify-around w-full mt-3">
-                                                  {socialModule.map((social) => (
-                                                    <Link key={social.link} href={social.link}>
-                                                      <Image src={social.src} alt="Social Media Icon" width={50} height={50} />
-                                                    </Link>
-                                                  ))}
+                                                  {socialModule.map(
+                                                    (social) => (
+                                                      <Link
+                                                        key={social.link}
+                                                        href={social.link}
+                                                      >
+                                                        <Image
+                                                          src={social.src}
+                                                          alt="Social Media Icon"
+                                                          width={50}
+                                                          height={50}
+                                                        />
+                                                      </Link>
+                                                    )
+                                                  )}
                                                 </div>
                                               )}
                                               {providedModule.placeholder}
@@ -294,7 +344,13 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                         </Droppable>
                                         <button
                                           className="absolute top-0 right-0 pe-1 text-lg"
-                                          onClick={() => removeSubZone(subZone, subZone.id, 'template')}
+                                          onClick={() =>
+                                            removeSubZone(
+                                              subZone,
+                                              subZone.id,
+                                              "template"
+                                            )
+                                          }
                                         >
                                           ×
                                         </button>
@@ -303,13 +359,15 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                   </Draggable>
                                   {subIndex < zone.subZones.length - 1 && (
                                     <PanelResizeHandle
-                                      style={{ cursor: 'col-resize' }}
+                                      style={{ cursor: "col-resize" }}
                                     />
                                   )}
                                 </Panel>
                               ))
                             ) : (
-                              <p className="text-gray-500 text-center flex-grow">Glissez une structure ici</p>
+                              <p className="text-gray-500 text-center flex-grow">
+                                Glissez une structure ici
+                              </p>
                             )}
                           </PanelGroup>
                           {providedSub.placeholder}

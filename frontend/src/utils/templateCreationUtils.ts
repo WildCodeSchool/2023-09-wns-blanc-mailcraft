@@ -10,19 +10,19 @@ import { CREATE_ZONE } from "@/client/mutations/template/zone-mutations";
 import { CREATE_SUBZONE } from "@/client/mutations/template/subZone-mutations";
 import { useRouter } from "next/router";
 import { useAuth } from "@/contexts/AuthContext";
-
+import { useEffect, useState } from "react";
 export const useTemplateCreationUtils = () => {
   const {
     zones,
     template,
     isModalOpen,
     setIsModalOpen,
-    isModalErrorOpen,
+    setIsSuccessModalOpen,
     setIsModalErrorOpen,
-    errorMessage,
     setErrorMessage,
-    setTemplate,
+    setCreationGifLoading,
     setZones,
+    setTemplate,
   } = useTemplate();
 
   const { user } = useAuth();
@@ -31,10 +31,10 @@ export const useTemplateCreationUtils = () => {
   const [deleteTemplate] = useMutation(DELETE_TEMPLATE);
   const [createZone] = useMutation(CREATE_ZONE);
   const [createSubZone] = useMutation(CREATE_SUBZONE);
-
   const router = useRouter();
 
-  const saveTemplate = async (templateStatus) => {
+  const saveTemplate = async (templateStatus: string) => {
+    setCreationGifLoading(true);
     let newTemplateId;
     try {
       // Vérification des champs obligatoires
@@ -110,20 +110,19 @@ export const useTemplateCreationUtils = () => {
           });
         }
       }
-
-      alert("Succès");
+      setCreationGifLoading(false);
       console.log(
         "Tous les templates, zones et subzones ont été créés avec succès."
       );
 
-      // Redirection
       const page =
         templateStatus === "created" ? "myTemplates" : "myTemplatesDrafts";
+      router.push(`/user/${page}`);
+
+      setIsSuccessModalOpen(false);
       setTemplate({ userId: user.id });
       setZones([]);
       setIsModalOpen(false);
-      router.push(`/user/${page}`);
-
       return true;
     } catch (error) {
       console.error(

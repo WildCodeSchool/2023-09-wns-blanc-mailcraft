@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { MailingContext } from "@/contexts/MailContext";
 import axios from "axios";
 import NavBar from "@/components/NavBars/HomeNavBar";
-
+import SuccessModal from "@/components/SuccessModal";
 export default function MailingPage() {
   const context = useContext(MailingContext);
 
@@ -72,9 +72,7 @@ export default function MailingPage() {
           className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] text-black"
           role="status"
         >
-          <span
-            className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-          >
+          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
             Loading...
           </span>
         </div>
@@ -87,10 +85,13 @@ export default function MailingPage() {
       <section className="w-full md:w-[90%] xl:w-[70%] mx-auto ">
         <NavBar issignUpPage={true} />
       </section>
-
+      <SuccessModal message={"Mail en cours d'envoi..."} />
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex flex-col xl:justify-center md:flex-row w-full mt-10 p-5 space-y-2 md:space-y-0 md:space-x-0">
-          <UserTemplatesList isSectionOpen={isSectionOpen} setIsSectionOpen={setIsSectionOpen} />
+          <UserTemplatesList
+            isSectionOpen={isSectionOpen}
+            setIsSectionOpen={setIsSectionOpen}
+          />
           <MailArea
             templateToSend={templateToSend}
             htmlTemplateContent={htmlTemplateContent}
@@ -104,17 +105,54 @@ export default function MailingPage() {
         onClick={() => setIsSectionOpen(!isSectionOpen)}
       >
         {isSectionOpen ? (
-          <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="30px"
+            height="30px"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <rect width="30" height="30" fill="customBrown" />
-            <path d="M7 17L16.8995 7.10051" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M7 7.00001L16.8995 16.8995" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M7 17L16.8995 7.10051"
+              stroke="#FFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M7 7.00001L16.8995 16.8995"
+              stroke="#FFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         ) : (
-          <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="30px"
+            height="30px"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <rect width="30" height="30" fill="customBrown" />
-            <path d="M6 12H18" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M6 15.5H18" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M6 8.5H18" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M6 12H18"
+              stroke="#FFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M6 15.5H18"
+              stroke="#FFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M6 8.5H18"
+              stroke="#FFF"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         )}
       </button>

@@ -1,6 +1,9 @@
 import * as dotenv from "dotenv";
 import { dataSource } from "./db";
 import { buildSchema } from "type-graphql";
+import { ApolloServer } from "apollo-server-express";
+import express from "express";
+import cors from "cors";
 import { UserResolver } from "../resolvers/user.resolver";
 import { TemplateResolver } from "../resolvers/template.resolver";
 import { ZoneResolver } from "../resolvers/zone.resolver";
@@ -8,9 +11,8 @@ import { SubZoneResolver } from "../resolvers/subZone.resolver";
 import { verifyToken } from "../services/auth.service";
 import { getByEmail } from "../services/user.service";
 import { GraphQLError } from "graphql";
-import { ApolloServer } from "apollo-server";
 
-async function createServer(): Promise<ApolloServer> {
+async function createServer() {
   dotenv.config();
   await dataSource.initialize();
 
@@ -19,55 +21,33 @@ async function createServer(): Promise<ApolloServer> {
     validate: { forbidUnknownValues: false },
     authChecker: async ({ context }, roles) => {
       try {
-        const payload: any = verifyToken(context.token);
+        const payload = verifyToken(context.token);
         const userFromDB = await getByEmail(payload.email);
         context.user = userFromDB;
-
-        if (roles.length >= 1) {
-          if (roles.includes(context.user.role)) {
-            return true;
-          } else {
-            throw new Error();
-          }
-        }
-
-        return true;
+        return roles.length ? roles.includes(context.user.role) : true;
       } catch (e) {
         throw new GraphQLError(
-          "You are not authorized to perform this action.",
-          null,
-          null,
-          null,
-          null,
-          null,
-          {
-            code: "UNAUTHENTICATED",
-          }
+          "You are not authorized to perform this action."
         );
       }
     },
   });
 
-  return new ApolloServer({
-    schema,
-    context: ({ req }) => {
-      if (
-        req?.headers.authorization === undefined ||
-        process.env.JWT_SECRET_KEY === undefined
-      ) {
-        return {};
-      } else {
-        try {
-          const bearer = req.headers.authorization.split("Bearer ")[1];
+  const app = express();
+  app.use(cors({ origin: "http://localhost:3000", credentials: true })); // mettre url de prod après
 
-          return { token: bearer };
-        } catch (e) {
-          console.log(e);
-          return {};
-        }
-      }
-    },
+  const server = new ApolloServer({
+    schema,
+    context: ({ req }) => ({
+      token: req.headers.authorization
+        ? req.headers.authorization.split("Bearer ")[1]
+        : null,
+    }),
   });
+  await server.start();
+  server.applyMiddleware({ app });
+
+  return { app, server };
 }
 
 export default createServer;
