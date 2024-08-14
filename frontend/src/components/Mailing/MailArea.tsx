@@ -3,7 +3,6 @@ import { useContext, useState } from "react";
 import { useMailingUtils } from "@/utils/mailingUtils";
 import { Droppable } from "react-beautiful-dnd";
 import Modal from "react-modal";
-import { downloadHtmlTemplate } from "@/utils/templateConversionUtils";
 
 interface MailAreaProps {
   templateToSend: any;

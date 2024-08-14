@@ -8,7 +8,7 @@ import Link from "next/link";
 import Modal from "react-modal";
 import { Editor } from "@tinymce/tinymce-react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import SuccessModal from "../SuccessModal";
+
 const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
   const { zones, setZones, isModalErrorOpen, errorMessage, isModalOpen } =
     useTemplate();

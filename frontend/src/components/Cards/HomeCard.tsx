@@ -1,4 +1,3 @@
-import { StaticImageData } from "next/image";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 type HomeCardProps = {

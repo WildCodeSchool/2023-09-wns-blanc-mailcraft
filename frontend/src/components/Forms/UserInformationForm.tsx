@@ -1,11 +1,8 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { ProfileForm } from '@/types/interfaces/profile/profileForm'
-import {
-    UPDATE_USER_INFORMATION,
-    VERIFY_PASSWORD
-} from "@/client/mutations/user/user-mutations";
+import { UPDATE_USER_INFORMATION, VERIFY_PASSWORD } from "@/client/mutations/user/user-mutations";
 
 export default function UserInformationForm({ setErrorMessage, setSuccessMessage }: ProfileForm) {
     const { user, loading, error } = useAuth();
