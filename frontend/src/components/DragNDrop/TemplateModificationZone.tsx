@@ -351,8 +351,9 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                                       "image"
                                                     )}
                                                     alt="Template Image"
-                                                    width={150}
-                                                    height={150}
+                                                    width={70}
+                                                    height={70}
+                                                     className="object-cover h-full w-full max-h-28"
                                                   />
                                                   <input
                                                     type="file"

@@ -234,7 +234,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                             <div
                                               ref={providedModule.innerRef}
                                               {...providedModule.droppableProps}
-                                              className="module-container flex-1"
+                                              className="module-container flex justify-center items-center"
                                             >
                                               {!subZone.moduleType && (
                                                 <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />

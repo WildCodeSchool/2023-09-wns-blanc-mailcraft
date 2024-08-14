@@ -36,11 +36,19 @@ const DroppableArea = () => {
                 {listElements.map((el, index) => {
                   const isSocialModule = el.title.toLowerCase() === "social";
                   const moduleContent = (
-                    <div className={`rounded-md w-16 xl:w-20 h-auto flex justify-center shadow-md ${isSocialModule && !hasSocialLinks ? "bg-gray-400" : "bg-gray-100"}`}>
+                    <div
+                      className={`rounded-md w-16 xl:w-20 h-auto flex justify-center shadow-md ${
+                        isSocialModule && !hasSocialLinks
+                          ? "bg-gray-400"
+                          : "bg-gray-100"
+                      }`}
+                    >
                       {isSocialModule && !hasSocialLinks ? (
-                        <div className="flex flex-col justify-center items-center p-3"
+                        <div
+                          className="flex flex-col justify-center items-center p-3"
                           onMouseEnter={() => setIsHovered(true)}
-                          onMouseLeave={() => setIsHovered(false)}>
+                          onMouseLeave={() => setIsHovered(false)}
+                        >
                           <svg
                             width="24"
                             height="24"
@@ -75,6 +83,7 @@ const DroppableArea = () => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
+                          className="max-w-full max-h-full"
                         >
                           {moduleContent}
                         </div>
@@ -84,11 +93,14 @@ const DroppableArea = () => {
                 })}
               </div>
               {isHovered && !hasSocialLinks && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 absolute bottom-0" role="alert">
+                <div
+                  className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 absolute bottom-0"
+                  role="alert"
+                >
                   <strong className="font-bold">Aucun lien enregistré !</strong>
                 </div>
               )}
-              {provided.placeholder}{" "}
+              {provided.placeholder}
             </div>
           </div>
         )}
