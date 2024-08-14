@@ -121,7 +121,7 @@ const MyTemplates = () => {
         <SearchBar value={searchTerm} onChange={handleChange} />
         <div className="w-full flex justify-between items-center px-6 md:px-16">
           <Link href="/template/creation">
-            <button className="flex justify-center items-center gap-3 text-white bg-red-500 hover:bg-red-600 rounded-xl w-44 xl:w-[14dvw] h-12 xl:h-[7dvh] shadow-lg">
+            <button className="flex justify-center items-center gap-3 md:text-lg text-white bg-red-500 hover:bg-red-600 rounded-xl w-44 xl:w-[14dvw] h-12 xl:h-[7dvh] shadow-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
