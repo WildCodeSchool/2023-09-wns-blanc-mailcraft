@@ -1,29 +1,39 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+import Modal from "react-modal";
+import { useState } from "react";
 import { downloadHtmlTemplate } from "@/utils/templateConversionUtils";
 import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
-import { useRouter } from "next/router";
 
 interface ActionPanelTemplateCardProps {
-    templateId: number;
-    templateTitle: string;
-    templateZones: any;
-    templateStatus: string;
-    showDataPanel: boolean;
-    onTogglePanel?: () => void;
+  templateId: number;
+  templateTitle: string;
+  templateZones: any;
+  templateStatus: string;
+  showDataPanel: boolean;
+  onTogglePanel?: () => void;
 }
 
-const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templateId, templateTitle, templateZones, templateStatus, showDataPanel, onTogglePanel }) => {
-    const router = useRouter();
-    const { deleteTemplate } = useTemplateModificationUtils();
+const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({
+  templateId,
+  templateTitle,
+  templateZones,
+  templateStatus,
+  showDataPanel,
+  onTogglePanel,
+}) => {
+  const router = useRouter();
+  const { deleteTemplate } = useTemplateModificationUtils();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleDelete = async () => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce template ?")) {
-      await deleteTemplate(templateId);
-      router.reload();
-    }
+    await deleteTemplate(templateId);
+    router.reload();
   };
 
-  // pour annuler certaines options sur la page brouillon
+  const openModal = () => setModalIsOpen(true);
+  const closeModal = () => setModalIsOpen(false);
+
   const isDraftsPage = router.pathname.endsWith("/user/myTemplatesDrafts");
 
   return (
@@ -117,7 +127,7 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templ
         )}
         <button
           className="mb-2 text-white hover:text-gray-300 relative group"
-          onClick={() => handleDelete()}
+          onClick={openModal}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -136,6 +146,32 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({ templ
           <span className="tooltip z-50">Supprimer le template</span>
         </button>
       </div>
+
+      <Modal
+        className="bg-white w-2/5 h-1/4 m-auto fixed inset-0 border border-gray-400 rounded-lg flex flex-col justify-center items-center p-4 z-50"
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Confirmation de suppression"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-40"
+      >
+        <h2 className="text-lg font-semibold mb-4">
+          Êtes-vous sûr de vouloir supprimer ce template ?
+        </h2>
+        <div className="flex space-x-4">
+          <button
+            onClick={handleDelete}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 focus:outline-none"
+          >
+            Oui
+          </button>
+          <button
+            onClick={closeModal}
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none"
+          >
+            Non
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
