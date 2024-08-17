@@ -19,6 +19,8 @@ interface AuthContextType {
   setUser: React.Dispatch<React.SetStateAction<any>>;
   loading: boolean;
   error: any;
+  refreshUser: boolean;
+  setRefreshUser: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -52,6 +54,7 @@ const GET_ME = gql`
 `;
 
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
+  const [refreshUser, setRefreshUser] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     const token = localStorage.getItem("token");
     return !!token; // Convertit la présence du token en un booléen
@@ -79,12 +82,23 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
     const token = localStorage.getItem("token");
     if (token) {
       getMe();
+      setRefreshUser(false);
     } else {
       setLoading(false);
+      setRefreshUser(false);
     }
-  }, [getMe]);
+  }, [getMe, refreshUser]);
 
-  const value = { isAuthenticated, setIsAuthenticated, user, setUser, loading, error };
+  const value = {
+    isAuthenticated,
+    setIsAuthenticated,
+    user,
+    setUser,
+    loading,
+    error,
+    refreshUser,
+    setRefreshUser,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
