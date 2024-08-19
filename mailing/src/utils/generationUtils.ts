@@ -25,15 +25,24 @@ const isValidText = (content: string): boolean => {
   return typeof content === "string" && content.trim() !== "";
 };
 
+// const validateURL = (url: string): boolean => {
+//   const urlPattern = /^(https:\/\/)[\w.-]+\.[a-zA-Z]{2,}$/;
+//   console.log(urlPattern);
+//   return urlPattern.test(url);
+// };
+
 const validateURL = (url: string): boolean => {
-  const urlPattern = /^(https:\/\/)[\w.-]+\.[a-zA-Z]{2,}$/;
-  console.log(urlPattern);
-  return urlPattern.test(url);
+  try {
+    new URL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
-const isValidUrl = (content: string[]): boolean => {
-  return content.every((url) => validateURL(url));
-};
+// const isValidUrl = (content: string[]): boolean => {
+//   return content.every((url) => validateURL(url));
+// };
 
 const escapeHtml = (unsafe: string): string => {
   return unsafe
@@ -54,12 +63,44 @@ const createImageElement = (src: string): string => {
   return `<img src="${sanitizedSrc}" alt="Image" style="max-width: 100%; height: auto; display: block;" />`;
 };
 
-const createLinkElement = (content: string, links: string[]): string => {
-  const userSocialMedias = content.split(",").map((item) => item.trim());
-  return userSocialMedias
-    .map((socialMedia, index) => {
+// const createLinkElement = (content: string, links: string[]): string => {
+//   const userSocialMedias = content.split(",").map((item) => item.trim());
+//   return userSocialMedias
+//     .map((socialMedia, index) => {
+//       // ajouter lien user ici pour créer une icone et un lien
+//       let iconSrc = "";
+//       switch (socialMedia.toLowerCase()) {
+//         case "facebook":
+//           iconSrc =
+//             "https://res.cloudinary.com/dyhn66mah/image/upload/v1720706135/Mailcraft/hdhhisfe0vwc8qg5rcb4.png";
+//           break;
+//         case "twitter":
+//           iconSrc =
+//             "https://res.cloudinary.com/dyhn66mah/image/upload/v1720706136/Mailcraft/i05pdxve7ld58salwefj.png";
+//           break;
+//         case "linkedin":
+//           iconSrc =
+//             "https://res.cloudinary.com/dyhn66mah/image/upload/v1720706137/Mailcraft/kppjcg5nrk2pwwpfktpe.png";
+//           break;
+//         default:
+//           iconSrc = "";
+//       }
+//       const sanitizedLink = escapeHtml(links[index] || "");
+//       return iconSrc
+//         ? `<a href="${sanitizedLink}" target="_blank" rel="noopener noreferrer"><img src="${iconSrc}" alt="${socialMedia}" style="width: 24px; height: 24px; margin-right: 10px; display: inline-block;" /></a>`
+//         : `<a href="${sanitizedLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block;">${sanitizedLink}</a>`;
+//     })
+//     .join(" ");
+// };
+
+const createLinkElement = (userLinks: any) => {
+  let html = "";
+
+  userLinks.forEach((linkObject: any) => {
+    Object.entries(linkObject).forEach(([key, value]) => {
+      if (typeof value !== "string" || !value || !validateURL(value)) return;
       let iconSrc = "";
-      switch (socialMedia.toLowerCase()) {
+      switch (key.toLowerCase()) {
         case "facebook":
           iconSrc =
             "https://res.cloudinary.com/dyhn66mah/image/upload/v1720706135/Mailcraft/hdhhisfe0vwc8qg5rcb4.png";
@@ -73,14 +114,18 @@ const createLinkElement = (content: string, links: string[]): string => {
             "https://res.cloudinary.com/dyhn66mah/image/upload/v1720706137/Mailcraft/kppjcg5nrk2pwwpfktpe.png";
           break;
         default:
-          iconSrc = "";
+          return;
       }
-      const sanitizedLink = escapeHtml(links[index] || "");
-      return iconSrc
-        ? `<a href="${sanitizedLink}" target="_blank" rel="noopener noreferrer"><img src="${iconSrc}" alt="${socialMedia}" style="width: 24px; height: 24px; margin-right: 10px; display: inline-block;" /></a>`
-        : `<a href="${sanitizedLink}" target="_blank" rel="noopener noreferrer" style="display: inline-block;">${sanitizedLink}</a>`;
-    })
-    .join(" ");
+
+      if (iconSrc) {
+        html += `<a href="${escapeHtml(
+          value
+        )}" target="_blank" rel="noopener noreferrer"><img src="${iconSrc}" alt="${key}" style="width: 24px; height: 24px; margin-right: 10px; display: inline-block;" /></a>`;
+      }
+    });
+  });
+
+  return html;
 };
 
 const updateHtmlFile = (newHtml: string, file: string): Promise<void> => {
@@ -99,13 +144,13 @@ const updateHtmlFile = (newHtml: string, file: string): Promise<void> => {
 };
 
 export const convertTemplateToHtmlInline = async (
-  templateZones: TemplateZone[]
+  templateZones: TemplateZone[],
+  userLinks: any[]
 ): Promise<string> => {
   let templateHtml = `
     <!DOCTYPE html>
     <html>
     <head>
-      
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
@@ -121,22 +166,17 @@ export const convertTemplateToHtmlInline = async (
         ? "width: 33.33%;"
         : "width: 100%;";
 
-    let zoneHtml = `
-      <div style="width: 100%; display: flex; flex-wrap: wrap; margin-bottom: 20px;">`;
+    let zoneHtml = `<div style="width: 100%; display: flex; flex-wrap: wrap; margin-bottom: 20px;">`;
 
     zone.subZones.forEach((subZone) => {
-      let subZoneHtml = `
-        <div style="display: inline-block; vertical-align: top; ${subzoneClass} box-sizing: border-box; padding: 10px; overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;">`;
+      let subZoneHtml = `<div style="display: inline-block; vertical-align: top; ${subzoneClass} box-sizing: border-box; padding: 10px; overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;">`;
 
       if (subZone.moduleType === "texte" && isValidText(subZone.content)) {
         subZoneHtml += createTextElement(subZone.content);
       } else if (subZone.moduleType === "image") {
         subZoneHtml += createImageElement(subZone.content);
-      } else if (
-        subZone.moduleType === "social" &&
-        isValidUrl(subZone.links || [])
-      ) {
-        subZoneHtml += createLinkElement(subZone.content, subZone.links || []);
+      } else if (subZone.moduleType === "social" && userLinks) {
+        subZoneHtml += createLinkElement(userLinks);
       } else {
         subZoneHtml += `<p style="margin: 0;">Invalid content</p>`;
       }
@@ -149,10 +189,7 @@ export const convertTemplateToHtmlInline = async (
     templateHtml += zoneHtml;
   });
 
-  templateHtml += `
-        </div>
-    </body>
-    </html>`;
+  templateHtml += `</div></body></html>`;
 
   const sanitizedHtml = sanitizeHtml(templateHtml, {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),

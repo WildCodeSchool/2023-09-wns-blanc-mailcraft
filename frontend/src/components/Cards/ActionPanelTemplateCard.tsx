@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Modal from "react-modal";
-import { useState } from "react";
+import { use, useState } from "react";
 import { downloadHtmlTemplate } from "@/utils/templateConversionUtils";
 import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ActionPanelTemplateCardProps {
   templateId: number;
@@ -25,7 +26,7 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({
   const router = useRouter();
   const { deleteTemplate } = useTemplateModificationUtils();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
+  const { user } = useAuth();
   const handleDelete = async () => {
     await deleteTemplate(templateId);
     router.reload();
@@ -105,7 +106,13 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({
             </Link>
             <button
               className="mb-2 text-white hover:text-gray-300 relative group"
-              onClick={() => downloadHtmlTemplate(templateTitle, templateZones)}
+              onClick={() =>
+                downloadHtmlTemplate(
+                  templateTitle,
+                  templateZones,
+                  user.socialLinks
+                )
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

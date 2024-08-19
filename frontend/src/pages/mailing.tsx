@@ -6,9 +6,10 @@ import { MailingContext } from "@/contexts/MailContext";
 import axios from "axios";
 import NavBar from "@/components/NavBars/HomeNavBar";
 import SuccessModal from "@/components/SuccessModal";
+import { useAuth } from "@/contexts/AuthContext";
 export default function MailingPage() {
   const context = useContext(MailingContext);
-
+  const { user } = useAuth();
   if (context === undefined) {
     throw new Error("MailingPage must be used within a MailingProvider");
   }
@@ -39,7 +40,7 @@ export default function MailingPage() {
         try {
           const response = await axios.post(
             "http://localhost:5050/convertTemplateToHtmlInline",
-            { templateZones: template.zones },
+            { templateZones: template.zones, userLinks: user.socialLinks },
             {
               headers: {
                 "Content-Type": "application/json",

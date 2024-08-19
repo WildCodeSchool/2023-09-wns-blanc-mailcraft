@@ -33,10 +33,14 @@ app.get("/", (req: Request, res: Response) => {
 app.post(
   "/convertTemplateToHtmlInline",
   async (req: Request, res: Response) => {
-    const { templateZones } = req.body;
+    // envoyer également les user.links pour faire correspondance
+    const { templateZones, userLinks } = req.body;
     console.log(JSON.stringify(templateZones, null, 2));
     try {
-      const htmlTemplate = await convertTemplateToHtmlInline(templateZones);
+      const htmlTemplate = await convertTemplateToHtmlInline(
+        templateZones,
+        userLinks
+      );
       res.status(200).json({ html: htmlTemplate });
     } catch (error: any) {
       console.error("Error during HTML conversion:", error);
