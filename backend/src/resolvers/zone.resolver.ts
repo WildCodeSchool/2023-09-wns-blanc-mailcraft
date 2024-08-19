@@ -13,7 +13,7 @@ export class ZoneResolver {
     try {
       return await zoneService.createZone(templateId, zoneOrder);
     } catch (e) {
-      throw new Error("Error creating zone" + e); // à typer et renvoyer error
+      throw new Error("Error creating zone" + e);
     }
   }
 

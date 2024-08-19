@@ -8,12 +8,13 @@ import Link from "next/link";
 import Modal from "react-modal";
 import { Editor } from "@tinymce/tinymce-react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { useAuth } from "@/contexts/AuthContext";
 
 const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
   const { zones, setZones, isModalErrorOpen, errorMessage, isModalOpen } =
     useTemplate();
   const { saveTemplate } = useTemplateCreationUtils();
-
+  const { user } = useAuth();
   const {
     handleTextChange,
     removeSubZone,
@@ -88,7 +89,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
           </h2>
           <div className="flex justify-around gap-8">
             <button
-              onClick={() => saveTemplate("draft")}
+              onClick={() => saveTemplate("draft", user.id)}
               className="px-7 py-2 bg-gray-100 text-black hover:bg-gray-200 rounded border border-gray-300 shadow-md"
             >
               Oui, sauvegarder en tant que brouillon

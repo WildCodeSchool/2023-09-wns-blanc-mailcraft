@@ -33,7 +33,8 @@ export const useTemplateCreationUtils = () => {
   const [createSubZone] = useMutation(CREATE_SUBZONE);
   const router = useRouter();
 
-  const saveTemplate = async (templateStatus: string) => {
+  const saveTemplate = async (templateStatus: string, userId: number) => {
+    setTemplate({ ...template, userId });
     setCreationGifLoading(true);
     let newTemplateId;
     try {

@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { useMailingUtils } from "@/utils/mailingUtils";
 import { Droppable } from "react-beautiful-dnd";
 import Modal from "react-modal";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface MailAreaProps {
   templateToSend: any;
@@ -14,7 +15,7 @@ export default function MailArea({
   htmlTemplateContent,
 }: MailAreaProps) {
   const context = useContext(MailingContext);
-
+  const { user } = useAuth();
   if (context === undefined) {
     throw new Error("ContactList.tsx must be used within a MailingProvider");
   }
@@ -31,7 +32,7 @@ export default function MailArea({
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
+  let icon;
   return (
     <section className="flex flex-col h-full w-full sm:w-[90%] md:w-[70%] lg:w-[60%] mx-auto mt-1 border-[1px] border-gray-200 rounded-lg shadow-sm">
       <div className="bg-customBrown text-white text-center py-4 text-xl font-bold border rounded-t-lg">
@@ -109,17 +110,11 @@ export default function MailArea({
                                 />
                               )}
                               {subZone.moduleType === "social" && (
-                                <a
-                                  href={subZone.content}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src="/path/to/social/icon.png"
-                                    alt="Social Icon"
-                                    className="w-4 h-4"
-                                  />
-                                </a>
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: subZone.content,
+                                  }}
+                                />
                               )}
                             </div>
                           ))}

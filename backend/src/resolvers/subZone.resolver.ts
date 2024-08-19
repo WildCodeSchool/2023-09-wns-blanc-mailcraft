@@ -11,7 +11,7 @@ export class SubZoneResolver {
     try {
       return await subZoneService.createSubZone(subZoneData);
     } catch (e) {
-      throw new Error("Error creating subzone" + e); // à typer et renvoyer error
+      throw new Error("Error creating subzone" + e);
     }
   }
 

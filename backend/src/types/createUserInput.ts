@@ -30,6 +30,6 @@ export class UserInput {
   @Field({ nullable: true })
   subscriptionType?: string;
 
-  @Field(() => [SocialLinkInput])
-  socialLinks: SocialLink[];
+  @Field(() => [SocialLinkInput], { nullable: true })
+  socialLinks?: SocialLink[];
 }

@@ -5,6 +5,7 @@ import { useTemplate } from "@/contexts/TemplateContext";
 import { useTemplateCreationUtils } from "@/utils/templateCreationUtils";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface TemplateNavBarProps {
   arrayToIterate: string;
@@ -12,6 +13,7 @@ interface TemplateNavBarProps {
 
 const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
   const router = useRouter();
+  const { user } = useAuth();
   const isTemplateToModify = arrayToIterate === "templateToModify";
   const saveButtonColor = isTemplateToModify ? "#766060" : undefined;
   const saveButtonHoverColor = isTemplateToModify ? "#5F4D4D" : undefined;
@@ -22,7 +24,7 @@ const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
     if (isTemplateToModify) {
       setIsModalModifyOpen(true);
     } else {
-      saveTemplate("created");
+      saveTemplate("created", user.id);
     }
   };
 

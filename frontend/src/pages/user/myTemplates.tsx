@@ -6,41 +6,44 @@ import UserPagesNavBar from "@/components/NavBars/UserPagesNavBar";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import FilterButton from "@/components/Buttons/FilterButton";
-import { TailSpin } from "react-loader-spinner"
+import { TailSpin } from "react-loader-spinner";
 import { templateNatures } from "@/utils/templateNatures";
+import { useAuth } from "@/contexts/AuthContext";
 
 const GET_USER_TEMPLATES = gql`
-    query GetAllUserCreatedTemplates($userId: Float!) {
-      getAllUserCreatedTemplates(userId: $userId) {
+  query GetAllUserCreatedTemplates($userId: Float!) {
+    getAllUserCreatedTemplates(userId: $userId) {
+      id
+      title
+      description
+      templateNature
+      zones {
         id
-        title
-        description
-        templateNature
-        zones {
+        templateId
+        order
+        subZones {
           id
-          templateId
+          content
+          links
+          moduleType
+          width
+          zoneId
           order
-          subZones {
-            id
-            content
-            links
-            moduleType
-            width
-            zoneId
-            order
-          }
         }
       }
     }
-  `;
+  }
+`;
 
 const MyTemplates = () => {
-  const [userId, setUserId] = useState(1);
+  const { user } = useAuth();
+  const userId = user?.id;
   const [searchTerm, setSearchTerm] = useState("");
   const [templates, setTemplates] = useState<any[]>([]);
-  const [selectedNature, setSelectedNature] = useState<string>('');
+  const [selectedNature, setSelectedNature] = useState<string>("");
   const { data, loading, error, refetch } = useQuery(GET_USER_TEMPLATES, {
     variables: { userId },
+    skip: !userId,
     fetchPolicy: "cache-and-network",
   });
 
@@ -49,12 +52,19 @@ const MyTemplates = () => {
   useEffect(() => {
     if (data) {
       const filteredAndSortedTemplates = data.getAllUserCreatedTemplates
-        .filter(template =>
-          (!searchTerm || template.title.toLowerCase().includes(searchTerm.toLowerCase())) &&
-          (!selectedNature || template.templateNature.includes(selectedNature))
+        .filter(
+          (template) =>
+            (!searchTerm ||
+              template.title
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())) &&
+            (!selectedNature ||
+              template.templateNature.includes(selectedNature))
         )
-        .map(template => {
-          const sortedZones = template.zones.slice().sort((a, b) => a.order - b.order);
+        .map((template) => {
+          const sortedZones = template.zones
+            .slice()
+            .sort((a, b) => a.order - b.order);
           return { ...template, zones: sortedZones };
         });
       setTemplates(filteredAndSortedTemplates);
@@ -65,24 +75,24 @@ const MyTemplates = () => {
     let templates = data.getAllUserCreatedTemplates;
 
     if (searchTerm) {
-      templates = data.getAllUserCreatedTemplates.filter(template =>
+      templates = data.getAllUserCreatedTemplates.filter((template) =>
         template.title.toLowerCase().includes(searchTerm)
       );
     }
 
     if (selectedNature) {
-      templates = data.getAllUserCreatedTemplates.filter(template =>
+      templates = data.getAllUserCreatedTemplates.filter((template) =>
         template.templateNature.includes(selectedNature)
       );
     }
     setTemplates(templates);
   };
-  // Fonction de recherche 
+  // Fonction de recherche
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
     if (value) {
-      const filtered = data.getAllUserCreatedTemplates.filter(template =>
+      const filtered = data.getAllUserCreatedTemplates.filter((template) =>
         template.title.toLowerCase().includes(value)
       );
       setTemplates([...filtered]);
@@ -94,17 +104,17 @@ const MyTemplates = () => {
 
   // Fonction de filtrage
   const handleFilter = (event: ChangeEvent<HTMLSelectElement>) => {
-    const selectedNature = event.target.value
-    console.log('selected nature :', selectedNature)
-    if (selectedNature === 'Tous') {
-    setSelectedNature('');
+    const selectedNature = event.target.value;
+    console.log("selected nature :", selectedNature);
+    if (selectedNature === "Tous") {
+      setSelectedNature("");
     } else {
-    setSelectedNature(selectedNature);
+      setSelectedNature(selectedNature);
     }
     applyFilters();
-    };
+  };
 
-  console.log('templates : ', templates)
+  console.log("templates : ", templates);
 
   return (
     <>
@@ -134,10 +144,7 @@ const MyTemplates = () => {
               Nouveau modèle
             </button>
           </Link>
-          <FilterButton
-            onChange={handleFilter}
-            options={templateNatures}
-          />
+          <FilterButton onChange={handleFilter} options={templateNatures} />
         </div>
         {loading && (
           <div className="loader flex flex-col justify-center items-center gap-6">
