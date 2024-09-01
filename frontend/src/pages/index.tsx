@@ -50,8 +50,8 @@ export default function Home() {
               </div>
             ) : (
               <Link href="/template/creation">
-                <p className="underline text-red-500">
-                  Je crée mon premier template
+                <p className="underline text-red-500 text-xl">
+                  Créer un template
                 </p>
               </Link>
             )}
