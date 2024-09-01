@@ -18,6 +18,15 @@ import {
 } from "@/utils/templateConversionUtils";
 import ProtectedComponent from "@/components/ProtectedComponent";
 import SuccessModal from "@/components/SuccessModal";
+import { StaticImageData } from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
+
+interface SocialLink {
+  socialMedia: string;
+  src: StaticImageData;
+  link: string;
+}
+
 const TemplateModificationPage = () => {
   const router = useRouter();
   const { template_id } = router.query;
@@ -70,23 +79,32 @@ const TemplateModificationPage = () => {
     },
   });
 
-  const socialModule = [
-    {
+  const { user } = useAuth();
+
+  const socialLinks = user?.socialLinks[0] || {};
+
+  const socialModule: SocialLink[] = [];
+  if (socialLinks.facebook) {
+    socialModule.push({
       socialMedia: "Facebook",
       src: facebookIcon,
-      link: "https://www.facebook.com/?locale=fr_FR",
-    },
-    {
+      link: socialLinks.facebook,
+    });
+  }
+  if (socialLinks.twitter) {
+    socialModule.push({
       socialMedia: "Twitter",
       src: twitterIcon,
-      link: "https://x.com/?lang=fr&mx=2",
-    },
-    {
+      link: socialLinks.twitter,
+    });
+  }
+  if (socialLinks.linkedin) {
+    socialModule.push({
       socialMedia: "Linkedin",
       src: linkedinIcon,
-      link: "https://fr.linkedin.com/",
-    },
-  ];
+      link: socialLinks.linkedin,
+    });
+  }
 
   const onDragStart = (start) => {
     const { draggableId } = start;

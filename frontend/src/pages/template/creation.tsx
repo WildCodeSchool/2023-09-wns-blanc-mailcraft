@@ -13,6 +13,7 @@ import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 import ProtectedComponent from "@/components/ProtectedComponent";
 import { StaticImageData } from "next/image";
 import SuccessModal from "@/components/SuccessModal";
+
 interface SocialLink {
   socialMedia: string;
   src: StaticImageData;
