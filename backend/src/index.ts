@@ -1,16 +1,15 @@
 import createServer from "./config/server";
-import * as dotenv from "dotenv";
-const port: number = 3001;
+import dotenv from "dotenv";
 
-const start = async () => {
-  const server = await createServer();
+dotenv.config();
+const port = process.env.PORT || 3001;
 
-  try {
-    const { url } = await server.listen({ port });
-    console.log(`Server running at ${url}`);
-  } catch (err) {
-    console.error("Error starting the server");
-  }
-};
+async function start() {
+  const { app } = await createServer();
+
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+  });
+}
 
 void start();

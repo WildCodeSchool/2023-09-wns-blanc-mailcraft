@@ -231,52 +231,6 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                             draggingItemType !== "module"
                                           }
                                         >
-<<<<<<< HEAD
-                                          {!subZone.moduleType && (
-                                            <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-                                          )}
-                                          {subZone.moduleType === "texte" && (
-                                            <textarea
-                                              value={subZone.content || ""}
-                                              onChange={(e) =>
-                                                handleTextChange(
-                                                  e,
-                                                  zone.subZones,
-                                                  subZone.id,
-                                                  "template"
-                                                )
-                                              }
-                                              placeholder="Entrez votre texte ici..."
-                                              className="w-full h-20 border-0 focus:ring-0 resize-none bg-transparent p-0 m-0 overflow-hidden"
-                                            />
-                                          )}
-                                          {subZone.moduleType === "image" && (
-                                            <div className="flex justify-center ms-5 mt-2">
-                                              <button
-                                                onClick={() =>
-                                                  fileInputRefs.current[
-                                                    subZone.id
-                                                  ]?.click()
-                                                }
-                                              >
-                                                <Image
-                                                  src={getImageSrc(
-                                                    subZone,
-                                                    "image"
-                                                  )}
-                                                  alt="Template Image"
-                                                  width={150}
-                                                  height={150}
-                                                />
-                                                <input
-                                                  type="file"
-                                                  hidden
-                                                  // @ts-ignore
-                                                  ref={(el) =>
-                                                  (fileInputRefs.current[
-                                                    subZone.id
-                                                  ] = el)
-=======
                                           {(providedModule) => (
                                             <div
                                               ref={providedModule.innerRef}
@@ -293,7 +247,6 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                                   apiKey={
                                                     process.env
                                                       .NEXT_PUBLIC_TINYMCE_API_KEY
->>>>>>> origin/dev
                                                   }
                                                   value={subZone.content || ""}
                                                   onEditorChange={(content) =>
@@ -423,12 +376,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                         </div>
                       )}
                     </Droppable>
-<<<<<<< HEAD
-                    
-                    {// @ts-ignore
-                    providedZone.placeholder} 
-=======
->>>>>>> origin/dev
+                    {providedZone.placeholder}
                   </div>
                 )}
               </Draggable>

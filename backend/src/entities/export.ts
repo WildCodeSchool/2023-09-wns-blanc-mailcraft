@@ -5,4 +5,5 @@ export { Zone } from "./zone";
 export { Template } from "./template";
 export { Folder } from "./folder";
 export { SubZone } from "./subZone";
+export { SocialLink } from "./socialLink";
 // Ce fichier ne sert qu'à faciliter les exports d'entities
