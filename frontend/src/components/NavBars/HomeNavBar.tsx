@@ -12,28 +12,31 @@ interface HomeNavBarProps {
 
 export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
   const router = useRouter();
-
-  const { isAuthentificated, setIsAuthenticated } = useAuth();
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const logOut = () => {
-    localStorage.removeItem("token");
     router.push("/").then(() => window.location.reload());
-  };
+    localStorage.removeItem("token");
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+    setIsAuthenticated(false);
+  };
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
   return (
     <div className="max-w-screen-xl flex flex-wrap items-center justify-between border-b border-gray-400 md:border-none py-8 mb-10">
       {/* Vue mobile */}
       <div className="flex items-center md:hidden">
-        <Image
-          src={logo}
-          className="h-[5dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7"
-          alt="Mailcraft Logo"
-        />
+        <Link href="/">
+          <Image
+            src={logo}
+            className="h-[5dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7 md:mr-4"
+            alt="Mailcraft Logo"
+          />
+        </Link>
       </div>
       <div className="flex items-center md:hidden">
         <div className="flex ml-auto">
@@ -69,47 +72,41 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
               <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-300 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white">
                 <li>
                   <Link
-                    href="/"
+                    href={isAuthenticated ? "user/myTemplates" : "/signIn"}
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
                     aria-current="page"
                   >
-                    Accueil
+                    Templates
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/ressources"
+                    href={isAuthenticated ? "mailing" : "/signIn"}
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
                     aria-current="page"
                   >
-                    Ressources
+                    Emails
                   </Link>
-                </li>
-                <li>
-                  {!isAuthentificated ? (
-                    <Link
-                      href="/prix"
-                      className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
-                    >
-                      Prix
-                    </Link>
-                  ) : (
-                    <Link
-                      href="/template/creation"
-                      className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
-                    >
-                      Template
-                    </Link>
-                  )}
                 </li>
                 <li>
                   <Link
-                    href="/about"
+                    href={isAuthenticated ? "user/myProfile" : "/signIn"}
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
+                    aria-current="page"
                   >
-                    A propos
+                    Mon compte
                   </Link>
                 </li>
+                {isAuthenticated && (
+                  <li>
+                    <button
+                      onClick={logOut}
+                      className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
+                    >
+                      Se déconnecter
+                    </button>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
@@ -118,85 +115,78 @@ export default function HomeNavBar({ issignUpPage }: HomeNavBarProps) {
 
       {/* Vue desktop */}
       <div className="hidden md:flex justify-between items-center w-full">
-        <Image
-          src={logo}
-          className="h-[5dvh] w-[30dvw] md:h-[8dvh] md:w-[11dvw] ms-7"
-          alt="Mailcraft Logo"
-        />
+        <Link href="/">
+          <Image
+            src={logo}
+            className="xl:h-[7dvh] w-[30dvw] md:h-[3dvh] md:w-[10dvw] ms-2"
+            alt="Mailcraft Logo"
+          />
+        </Link>
         <ul className="flex flex-row items-center p-4 md:p-0 md:space-x-20">
           <li>
             <Link
-              href="/"
+              href={isAuthenticated ? "/user/myTemplates" : "/signIn"}
               className={
                 !issignUpPage
-                  ? "block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:text-red-500 md:text-xl"
+                  ? "block py-2 px-3 md:p-0 text-lg text-white bg-red-500 rounded md:bg-transparent md:hover:text-red-500 md:text-xl"
                   : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
               }
               aria-current="page"
             >
-              Accueil
+              Templates
             </Link>
           </li>
           <li>
             <Link
-              href="/ressources"
+              href={isAuthenticated ? "mailing" : "/signIn"}
               className={
                 !issignUpPage
                   ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
                   : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
               }
             >
-              Ressources
+              Emails
             </Link>
           </li>
-          <li>
-            {!isAuthentificated ? (
+          {isAuthenticated && (
+            <li>
               <Link
-                href="/prix"
+                href="/user/myProfile"
                 className={
                   !issignUpPage
                     ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
                     : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
                 }
               >
-                Prix
+                Mon Compte
               </Link>
-            ) : (
-              <Link
-                href="/template/creation"
-                className={
-                  !issignUpPage
-                    ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
-                    : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
-                }
-              >
-                Template
-              </Link>
-            )}
-          </li>
-          <li>
-            <Link
-              href="/about"
-              className={
-                !issignUpPage
-                  ? "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-white md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
-                  : "block py-2 px-3 md:p-0 text-lg text-black rounded hover:bg-gray-100 md:text-black md:hover:bg-transparent md:hover:text-red-500 md:text-xl"
-              }
-            >
-              A propos
-            </Link>
-          </li>
+            </li>
+          )}
         </ul>
-        <div className="me-7">
-          <RedButton
-            text="Mon compte"
-            padding={"py-2"}
-            isBold={false}
-            size={"lg"}
-            shadow={"lg"}
-          />
+
+        <div className="me-2">
+          {isAuthenticated ? (
+            <RedButton
+              text="Déconnexion"
+              href=""
+              onClick={logOut}
+              padding={"p-2"}
+              isBold={false}
+              size={"lg"}
+              shadow={"lg"}
+            />
+          ) : (
+            <RedButton
+              text="Se connecter"
+              href="/signIn"
+              padding={"p-2"}
+              isBold={false}
+              size={"lg"}
+              shadow={"lg"}
+            />
+          )}
         </div>
       </div>
     </div>
   );
-};
+}

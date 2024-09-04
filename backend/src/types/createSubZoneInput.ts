@@ -14,7 +14,7 @@ export class SubZoneInput {
   content: string;
 
   @Field()
-  size: string;
+  width: string;
 
   @Field(() => [String], { nullable: true })
   links?: string[];

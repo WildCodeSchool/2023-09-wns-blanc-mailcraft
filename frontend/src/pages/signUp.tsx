@@ -1,5 +1,5 @@
 import NavBar from "@/components/NavBars/HomeNavBar";
-import SignUpForm from "@/components/SignUpForm";
+import SignUpForm from "@/components/Forms/SignUpForm";
 
 export default function signUpPage() {
   return (
@@ -9,7 +9,7 @@ export default function signUpPage() {
           <section className="w-full">
             <NavBar issignUpPage={true} />
           </section>
-          <section className="flex xl:justify-between flex-col xl:flex-row">
+          <section className="">
             <SignUpForm />
           </section>
         </section>

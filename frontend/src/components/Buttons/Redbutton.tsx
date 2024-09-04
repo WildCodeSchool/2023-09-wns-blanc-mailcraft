@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/router";
 
 type RedButtonProps = {
   text: string;
@@ -7,7 +8,7 @@ type RedButtonProps = {
   shadow: string;
   color?: string;
   size: string;
-  link?: string;
+  href: string;
   type?: "submit" | "reset" | "button";
   onClick?: () => void;
 };
@@ -19,7 +20,7 @@ const RedButton = ({
   shadow,
   color,
   size,
-  link,
+  href,
   type,
   onClick,
 }: RedButtonProps) => {
@@ -29,7 +30,7 @@ const RedButton = ({
 
   return (
     <button type={type} className={buttonClasses} onClick={onClick}>
-      {text}
+      <a href={href}>{text}</a>
     </button>
   );
 };

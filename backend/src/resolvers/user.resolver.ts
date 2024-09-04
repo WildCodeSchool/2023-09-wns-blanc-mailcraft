@@ -3,6 +3,7 @@ import { User } from "../entities/user";
 import * as UserService from "../services/user.service";
 import * as AuthService from "../services/auth.service";
 import { UserInput } from "../types/createUserInput";
+import { SocialLinkInput } from "../types/createSocialLinkInput";
 
 @Resolver(User)
 export class UserResolver {
@@ -34,6 +35,34 @@ export class UserResolver {
     }
   }
 
+  @Authorized()
+  @Mutation(() => String)
+  async updateUserName(
+    @Arg("email") email: string,
+    @Arg("firstname") firstname: string,
+    @Arg("lastname") lastname: string
+  ): Promise<string> {
+    try {
+      const updateResult = await UserService.updateUserName(
+        email,
+        firstname,
+        lastname
+      );
+      return updateResult;
+    } catch (error) {
+      throw new Error(String(error));
+    }
+  }
+
+  @Mutation(() => Boolean)
+  async verifyPassword(
+    @Arg("email") email: string,
+    @Arg("password") password: string
+  ): Promise<boolean> {
+    const user = await UserService.getByEmail(email);
+    return AuthService.verifyPassword(password, user.hashedPassword);
+  }
+
   @Mutation(() => String)
   async resetPassword(
     @Arg("token") token: string,
@@ -54,6 +83,41 @@ export class UserResolver {
     } catch (error) {
       console.error("Error evaluating mail", error);
       throw new Error("Failed to check user mail");
+    }
+  }
+
+  @Mutation(() => String)
+  async createUserLinks(
+    @Arg("email") email: string,
+    @Arg("socialLinkData") socialLinkData: SocialLinkInput
+  ): Promise<string> {
+    try {
+      return await UserService.createSocialLink(email, socialLinkData);
+    } catch (error) {
+      console.error("Error adding social link: ", error);
+      throw new Error("Failed to add social link");
+    }
+  }
+
+  @Mutation(() => String)
+  async updateUserLinks(
+    @Arg("email") email: string,
+    @Arg("id") id: number,
+    @Arg("facebook") facebook: string,
+    @Arg("twitter") twitter: string,
+    @Arg("linkedin") linkedin: string
+  ): Promise<string> {
+    try {
+      const updateSocialLink = await UserService.updateSocialLink(
+        email,
+        id,
+        facebook,
+        twitter,
+        linkedin
+      );
+      return updateSocialLink;
+    } catch (error) {
+      throw new Error(String(error));
     }
   }
 }

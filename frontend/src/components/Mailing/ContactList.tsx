@@ -1,15 +1,16 @@
 import defaultIcon from "@/assets/mailing-page/icon.png";
 import AddContactModal from "./AddContactModal";
 import Image from "next/image";
-import Modal from "react-modal";
 import { contactData } from "@/types/interfaces/mailing/mailing-interface";
 import { useState, useContext } from "react";
 import { MailingContext } from "@/contexts/MailContext";
 import { GET_USER_CONTACTS } from "@/client/queries/mailing/mailing-queries";
-import { DELETE_CONTACT } from "@/client/mutations/mailing/mailing-mutations";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useMailingUtils } from "@/utils/mailingUtils";
+import { useAuth } from "@/contexts/AuthContext";
+
 export default function ContactList() {
+  const { user } = useAuth();
   const context = useContext(MailingContext);
 
   if (context === undefined) {
@@ -21,7 +22,7 @@ export default function ContactList() {
   const [contactList, setContactList] = useState<contactData[] | []>([]);
 
   const { data, loading, error } = useQuery(GET_USER_CONTACTS, {
-    variables: { userId: 1 },
+    variables: { userId: user.id },
     onCompleted: (data) => {
       setContactList(data.getAllUserContacts);
     },

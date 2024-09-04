@@ -1,4 +1,3 @@
-import { StaticImageData } from "next/image";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 type HomeCardProps = {
@@ -29,7 +28,7 @@ export default function HomeCard({
   return (
     <div>
       {isDesktop ? (
-        <div className="flex flex-col px-2 bg-[#fff] w-[90dvw] my-8 md:w-[18dvw] md:h-[64dvh] rounded-xl xl:shadow-lg">
+        <div className="flex flex-col px-2 bg-[#ffffff] w-[90dvw] my-8 md:w-[18dvw] md:h-[64dvh] rounded-xl xl:shadow-lg">
         <h1 className="font-bold text-lg text-center mt-7">{title}</h1>
   
         <Image

@@ -17,3 +17,23 @@
   margin: 0;
   padding: 0;
 }
+
+.tooltip {
+  visibility: hidden;
+  background-color: #2d2d2d;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 50%;
+  left: 110%;
+  opacity: 0;
+  transition: opacity 0.3s;
+  width: 160px;
+}
+
+.group:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}

@@ -24,10 +24,11 @@ export const useTemplateCommonUtils = () => {
     zones,
     imgPreview,
     imgPreviews,
-    setIsModalErrorOpen
+    setIsModalErrorOpen,
+    isModalOpen,
+    setIsModalOpen,
   } = useTemplate();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const listElements: IListElement[] = [
     {
       id: "module-Texte",
@@ -47,14 +48,24 @@ export const useTemplateCommonUtils = () => {
   ];
   const handleResetZones = (keyToIdentify: string) => {
     if (keyToIdentify === "templateToModify") {
+<<<<<<< HEAD
       const oldZonesId = templateToModify?.zones
         ?.filter((zone) => typeof zone.id === "number")
         .map((zone) => zone.id) || [];
       //@ts-ignore
+=======
+      const oldZonesId =
+        templateToModify?.zones
+          ?.filter((zone) => typeof zone.id === "number")
+          .map((zone) => zone.id) || [];
+
+>>>>>>> origin/dev
       setOldZonesId(oldZonesId);
       resetZones(keyToIdentify);
     } else {
-      if (zones.some((zone) => zone.content)) {
+      if (
+        zones.some((zone) => zone.subZones.some((subZone) => subZone.content))
+      ) {
         setIsModalOpen(true);
       } else {
         resetZones("zones");
@@ -187,14 +198,7 @@ export const useTemplateCommonUtils = () => {
       }
     };
 
-  const handleTextChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-    subZones: IZone[],
-    subZoneId: string,
-    keyToIdentify: string
-  ) => {
-    const value = event.target.value;
-
+  const handleTextChange = (content, subZoneId, keyToIdentify) => {
     const updateSubZones = (zones, subZoneId, newContent) => {
       return zones.map((zone) => {
         return {
@@ -214,7 +218,7 @@ export const useTemplateCommonUtils = () => {
         const updatedZones = updateSubZones(
           templateToModify.zones,
           subZoneId,
-          value
+          content
         );
 
         setTemplateToModify({
@@ -225,7 +229,7 @@ export const useTemplateCommonUtils = () => {
         console.error("templateToModify is null, cannot update zones");
       }
     } else {
-      const updatedZones = updateSubZones(zones, subZoneId, value);
+      const updatedZones = updateSubZones(zones, subZoneId, content);
       setZones(updatedZones);
     }
   };
@@ -329,6 +333,6 @@ export const useTemplateCommonUtils = () => {
     isTemporarySubZone,
     listElements,
     closeModal,
-    closeErrorModal
+    closeErrorModal,
   };
 };

@@ -9,27 +9,33 @@ import {
 import { CREATE_ZONE } from "@/client/mutations/template/zone-mutations";
 import { CREATE_SUBZONE } from "@/client/mutations/template/subZone-mutations";
 import { useRouter } from "next/router";
-
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect, useState } from "react";
 export const useTemplateCreationUtils = () => {
   const {
     zones,
     template,
     isModalOpen,
     setIsModalOpen,
-    isModalErrorOpen,
+    setIsSuccessModalOpen,
     setIsModalErrorOpen,
-    errorMessage,
     setErrorMessage,
+    setCreationGifLoading,
+    setZones,
+    setTemplate,
   } = useTemplate();
+
+  const { user } = useAuth();
 
   const [createTemplate] = useMutation(CREATE_TEMPLATE);
   const [deleteTemplate] = useMutation(DELETE_TEMPLATE);
   const [createZone] = useMutation(CREATE_ZONE);
   const [createSubZone] = useMutation(CREATE_SUBZONE);
-
   const router = useRouter();
 
-  const saveTemplate = async (templateStatus) => {
+  const saveTemplate = async (templateStatus: string, userId: number) => {
+    setTemplate({ ...template, userId });
+    setCreationGifLoading(true);
     let newTemplateId;
     try {
       // Vérification des champs obligatoires
@@ -97,7 +103,7 @@ export const useTemplateCreationUtils = () => {
                 order: subZone.order,
                 moduleType: subZone.moduleType,
                 content: subZoneContent,
-                size: subZone.size,
+                width: subZone.width.toString(),
                 links: subZone.links,
                 zoneId: newZoneId,
               },
@@ -105,15 +111,19 @@ export const useTemplateCreationUtils = () => {
           });
         }
       }
-
-      alert("Succès");
+      setCreationGifLoading(false);
       console.log(
         "Tous les templates, zones et subzones ont été créés avec succès."
       );
-      // Redirection avec  rechargement de la page
-      router.replace(router.asPath).then(() => {
-        router.push("/user/myTemplates");
-      });
+
+      const page =
+        templateStatus === "created" ? "myTemplates" : "myTemplatesDrafts";
+      router.push(`/user/${page}`);
+
+      setIsSuccessModalOpen(false);
+      setTemplate({ userId: user.id });
+      setZones([]);
+      setIsModalOpen(false);
       return true;
     } catch (error) {
       console.error(

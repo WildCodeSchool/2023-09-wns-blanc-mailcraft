@@ -9,7 +9,7 @@ export interface IZone {
   dndId?: string;
   moduleType: string;
   content: any;
-  size?: string;
+  width?: string;
   subZones: ISubZone[];
 }
 
@@ -18,7 +18,7 @@ export interface ISubZone {
   dndId?: string;
   moduleType: string;
   content: any;
-  size?: string;
+  width: string;
 }
 
 export interface MainZone {

@@ -2,8 +2,10 @@ import Image from "next/image";
 import TemplateHeaderButton from "../Buttons/TemplateHeaderButton";
 import logo from "@/assets/homepage/logo.png";
 import { useTemplate } from "@/contexts/TemplateContext";
-import { useTemplateCreationUtils } from "@/utils/templateCreationUtils"
+import { useTemplateCreationUtils } from "@/utils/templateCreationUtils";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface TemplateNavBarProps {
   arrayToIterate: string;
@@ -11,6 +13,7 @@ interface TemplateNavBarProps {
 
 const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
   const router = useRouter();
+  const { user } = useAuth();
   const isTemplateToModify = arrayToIterate === "templateToModify";
   const saveButtonColor = isTemplateToModify ? "#766060" : undefined;
   const saveButtonHoverColor = isTemplateToModify ? "#5F4D4D" : undefined;
@@ -21,17 +24,19 @@ const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
     if (isTemplateToModify) {
       setIsModalModifyOpen(true);
     } else {
-      saveTemplate("created");
+      saveTemplate("created", user.id);
     }
   };
 
   return (
     <div className="h-[10vh] bg-white flex justify-between items-center border-b border-gray-400">
-      <Image
-        src={logo}
-        className="h-[5vh] w-[30vw] md:h-[7vh] md:w-[10vw] ms-7"
-        alt="Mailcraft Logo"
-      />
+      <Link href="/">
+        <Image
+          src={logo}
+          className="h-[5vh] w-[30vw] md:h-[7vh] md:w-[10vw] ms-7"
+          alt="Mailcraft Logo"
+        />
+      </Link>
       <TemplateHeaderButton
         link="/user/myTemplates"
         text="Mes templates"
@@ -45,12 +50,12 @@ const TemplateNavBar: React.FC<TemplateNavBarProps> = ({ arrayToIterate }) => {
       <div className="me-7">
         <button
           type="button"
-          className={`px-6 py-2 text-white rounded-xl text-md w-full xl:w-[9vw] shadow-lg ${isTemplateToModify
-            ? "bg-[#766060] hover:bg-[#5F4D4D]"
-            : "bg-red-500 hover:bg-red-600"
-            }`}
+          className={`px-6 py-2 text-white rounded-xl text-md w-full xl:w-[9vw] shadow-lg ${
+            isTemplateToModify
+              ? "bg-[#766060] hover:bg-[#5F4D4D]"
+              : "bg-red-500 hover:bg-red-600"
+          }`}
           onClick={handleClick}
-
         >
           Terminer
         </button>

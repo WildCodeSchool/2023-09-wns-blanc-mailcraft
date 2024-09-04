@@ -1,18 +1,20 @@
 import { useContext } from "react";
 import { useMutation } from "@apollo/client";
 import { MailingContext } from "@/contexts/MailContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DELETE_CONTACT,
   ADD_NEW_CONTACT,
 } from "@/client/mutations/mailing/mailing-mutations";
 import axios from "axios";
+import { useTemplate } from "@/contexts/TemplateContext";
 export const useMailingUtils = () => {
   const context = useContext(MailingContext);
 
   if (context === undefined) {
     throw new Error("useMailingUtils must be used within a MailingProvider");
   }
-
+  const { setCreationGifLoading } = useTemplate();
   const {
     contactInputs,
     setContactInputs,
@@ -26,6 +28,8 @@ export const useMailingUtils = () => {
     recipient,
     htmlTemplateContent,
   } = context;
+
+  const { user } = useAuth();
 
   const [addContact, { data, loading, error }] = useMutation(ADD_NEW_CONTACT);
 
@@ -56,7 +60,7 @@ export const useMailingUtils = () => {
           lastname: "",
           email: "",
           profilepic: "",
-          userId: 1,
+          userId: user.id,
         });
         setIsModalContactsOpen(false);
       }
@@ -120,15 +124,16 @@ export const useMailingUtils = () => {
     }
 
     try {
+      setCreationGifLoading(true);
       const response = await axios.post("http://localhost:5050/sendMail", {
-        userMail: "mailcraft882@gmail.com", // temporaire remplacer par le vrai mail
+        userMail: user.email,
         recipient: recipient,
         subject: mailSubject,
         htmlContent: htmlTemplateContent,
       });
 
       if (response.status === 200) {
-        alert("Email sent successfully");
+        setCreationGifLoading(false);
       } else {
         alert("Failed to send email");
       }

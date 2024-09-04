@@ -1,4 +1,4 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
 
 // Déclaration des mutations apollo client pour les subZones ici
 

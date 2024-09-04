@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import Image from "next/image";
 import { useMailingUtils } from "@/utils/mailingUtils";
 import defaultIcon from "@/assets/mailing-page/icon.png";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { MailingContext } from "@/contexts/MailContext";
 const ModalContacts = () => {
   const context = useContext(MailingContext);

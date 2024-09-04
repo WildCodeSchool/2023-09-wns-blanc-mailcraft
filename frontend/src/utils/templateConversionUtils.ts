@@ -1,12 +1,13 @@
+import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 
-export const templateToHtml = async (templateZones) => {
+export const templateToHtml = async (templateZones, userLinks) => {
   console.log(templateZones);
 
   try {
     const response = await axios.post(
       "http://localhost:5050/convertTemplateToHtmlInline",
-      { templateZones },
+      { templateZones, userLinks },
       {
         headers: {
           "Content-Type": "application/json",
@@ -33,10 +34,11 @@ export const templateToHtml = async (templateZones) => {
 
 export const downloadHtmlTemplate = async (
   templateTitle: string,
-  templateZones
+  templateZones,
+  userLinks
 ) => {
   try {
-    const htmlData = await templateToHtml(templateZones);
+    const htmlData = await templateToHtml(templateZones, userLinks);
     const sanitizedTitle = templateTitle.replace(/\s+/g, "");
     const fileName = `${sanitizedTitle}.html`;
 

@@ -1,5 +1,7 @@
 import { Length, IsEmail } from "class-validator";
 import { Field, InputType } from "type-graphql";
+import { SocialLink } from "../entities/socialLink";
+import { SocialLinkInput } from "./createSocialLinkInput";
 
 @InputType()
 export class UserInput {
@@ -27,4 +29,7 @@ export class UserInput {
 
   @Field({ nullable: true })
   subscriptionType?: string;
+
+  @Field(() => [SocialLinkInput], { nullable: true })
+  socialLinks?: SocialLink[];
 }

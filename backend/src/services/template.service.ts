@@ -11,7 +11,7 @@ export const createTemplate = async (
     newTemplate.description = templateData.description || "";
     newTemplate.templateNature = templateData.templateNature || "Autre";
     newTemplate.status = templateData.status;
-    newTemplate.userId = 1;
+    newTemplate.userId = templateData.userId;
     await newTemplate.save();
     return newTemplate;
   } catch (error: any) {

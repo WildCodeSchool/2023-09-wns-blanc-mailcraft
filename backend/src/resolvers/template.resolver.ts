@@ -14,7 +14,7 @@ export class TemplateResolver {
     try {
       return await templateService.createTemplate(templateData);
     } catch (e) {
-      throw new Error("error while creating template" + e); // à typer
+      throw new Error("error while creating template" + e);
     }
   }
 

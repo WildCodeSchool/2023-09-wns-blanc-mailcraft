@@ -1,0 +1,18 @@
+.resize-handle {
+    width: 10px;
+    background-color: transparent;
+    cursor: ew-resize; /* Changer pour 'ns-resize' pour direction="s" ou "n" */
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .resize-handle::after {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 100%;
+    margin-left: 4px;
+    background-color: #000; /* Couleur de la poignée de redimensionnement */
+  }

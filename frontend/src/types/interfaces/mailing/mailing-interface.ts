@@ -3,7 +3,6 @@ export interface contactInputs {
   lastname?: string;
   email: string;
   profilepic?: string;
-  userId: number;
 }
 
 export interface contactData {
