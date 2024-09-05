@@ -21,6 +21,7 @@ const TemplateSaveButton = ({
         if (arrayToSave === "templateToModify") {
           setIsModalModifyOpen(true);
         } else {
+          //@ts-ignore
           saveTemplate("created");
           router.push("/myTemplates");
         }

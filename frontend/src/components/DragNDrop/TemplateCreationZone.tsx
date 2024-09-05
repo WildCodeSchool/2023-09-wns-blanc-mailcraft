@@ -166,6 +166,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
             </Modal>
 
             {zones.map((zone, index) => (
+              //@ts-ignore
               <Draggable key={zone.id} draggableId={zone.id} index={index}>
                 {(providedZone, snapshotZone) => (
                   <div
@@ -176,6 +177,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                       snapshotZone.isDragging ? "opacity-50" : ""
                     } flex flex-col gap-2.5 p-5 border-2 border-dashed border-gray-400 mb-5`}
                   >
+                    
                     <Droppable
                       droppableId={zone.id}
                       direction="horizontal"
@@ -302,6 +304,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                                     <input
                                                       type="file"
                                                       hidden
+                                                      //@ts-ignore
                                                       ref={(el) =>
                                                         (fileInputRefs.current[
                                                           subZone.id
@@ -375,7 +378,9 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                           {providedSub.placeholder}
                         </div>
                       )}
+                      //@ts-ignore
                     </Droppable>
+                    //@ts-ignore
                     {providedZone.placeholder}
                   </div>
                 )}

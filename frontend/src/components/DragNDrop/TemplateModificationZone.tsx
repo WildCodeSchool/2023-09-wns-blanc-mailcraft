@@ -25,11 +25,6 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
     handleTextChange,
     // @ts-ignore
     removeZone,
-<<<<<<< HEAD
-    // @ts-ignore
-    isModalOpen,
-=======
->>>>>>> origin/dev
     closeErrorModal,
     resetZones,
     removeSubZone,
@@ -345,52 +340,6 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                               }}
                                             />
                                           )}
-<<<<<<< HEAD
-                                          {subZone.moduleType === "image" && (
-                                            <button
-                                              onClick={() =>
-                                                fileInputRefs.current[
-                                                  subZone.id
-                                                ]?.click()
-                                              }
-                                            >
-                                              <Image
-                                                src={getImageSrc(
-                                                  subZone,
-                                                  "image"
-                                                )}
-                                                alt="Template Image"
-                                                width={150}
-                                                height={150}
-                                              />
-                                              <input
-                                                type="file"
-                                                hidden
-                                                // @ts-ignore
-                                                ref={(el) =>
-                                                (fileInputRefs.current[
-                                                  subZone.id
-                                                ] = el)
-                                                }
-                                                onChange={(event) =>
-                                                  createHandleFileChange(
-                                                    subZone.id
-                                                  )(
-                                                    event,
-                                                    templateToModify.zones,
-                                                    "templateToModify"
-                                                  )
-                                                }
-                                              />
-                                            </button>
-                                          )}
-                                          {subZone.moduleType === "social" && (
-                                            <div className="flex justify-around w-full mt-4"> 
-                                              {socialModule.map((social) => (
-                                                <Link
-                                                  key={social.link}
-                                                  href={social.link}
-=======
                                               {subZone.moduleType === "image" && (
                                                 <button
                                                   onClick={() =>
@@ -398,7 +347,6 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                                       subZone.id
                                                     ]?.click()
                                                   }
->>>>>>> origin/dev
                                                 >
                                                   <Image
                                                     src={getImageSrc(

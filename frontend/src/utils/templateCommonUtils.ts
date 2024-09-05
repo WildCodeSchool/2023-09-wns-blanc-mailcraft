@@ -48,18 +48,10 @@ export const useTemplateCommonUtils = () => {
   ];
   const handleResetZones = (keyToIdentify: string) => {
     if (keyToIdentify === "templateToModify") {
-<<<<<<< HEAD
       const oldZonesId = templateToModify?.zones
         ?.filter((zone) => typeof zone.id === "number")
         .map((zone) => zone.id) || [];
       //@ts-ignore
-=======
-      const oldZonesId =
-        templateToModify?.zones
-          ?.filter((zone) => typeof zone.id === "number")
-          .map((zone) => zone.id) || [];
-
->>>>>>> origin/dev
       setOldZonesId(oldZonesId);
       resetZones(keyToIdentify);
     } else {

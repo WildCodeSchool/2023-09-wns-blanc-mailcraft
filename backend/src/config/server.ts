@@ -34,7 +34,15 @@ async function createServer() {
   });
 
   const app = express();
-  app.use(cors({ origin: "http://localhost:3000", credentials: true })); // mettre url de prod après
+  const corsOptions = {
+    origin: [
+      "http://localhost:3000", // URL pour développement local
+      "https://staging.0923-blanc-1.wns.wilders.dev", // URL pour staging
+    ],
+    credentials: true, // Permet l'envoi des cookies
+  };
+
+  app.use(cors(corsOptions));
 
   const server = new ApolloServer({
     schema,
