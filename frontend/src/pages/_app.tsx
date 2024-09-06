@@ -20,7 +20,7 @@ Modal.setAppElement("#__next");
 const Layout = dynamic(() => import("@/components/Layout"), { ssr: false });
 
 const httpLink = createHttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_URI || "https://staging.0923-blanc-1.wns.wilders.dev/graphql",
+  uri: "http://localhost:4000/graphql", // temporaire à passer en variable d'env
 });
 
 const authLink = setContext((_, { headers }) => {
