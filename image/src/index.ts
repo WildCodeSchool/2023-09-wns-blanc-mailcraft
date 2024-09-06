@@ -35,7 +35,7 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "http://localhost:3000", // URL pour développement local
-    "https://staging.0923-blanc-1.wns.wilders.dev", // URL pour staging
+    "https://mailcraft.0923-blanc-1.wns.wilders.dev", // URL pour staging
   ],
   optionsSuccessStatus: 200,
 };
