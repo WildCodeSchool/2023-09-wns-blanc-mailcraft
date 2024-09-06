@@ -20,7 +20,7 @@ Modal.setAppElement("#__next");
 const Layout = dynamic(() => import("@/components/Layout"), { ssr: false });
 
 const httpLink = createHttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_URI || "http://localhost:4000/graphql",
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_URI,
 });
 
 const authLink = setContext((_, { headers }) => {
