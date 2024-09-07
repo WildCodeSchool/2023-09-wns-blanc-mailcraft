@@ -244,10 +244,7 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                                 "texte" && (
                                                 <Editor
                                                   key={`${subZone.id}-${subZone.order}`}
-                                                  apiKey={
-                                                    process.env
-                                                      .NEXT_PUBLIC_TINYMCE_API_KEY
-                                                  }
+                                                  apiKey={"oewyr36fbxxe9wghh10g2p7xj8sj07d13xjviw6o8hli6zcg"}
                                                   value={subZone.content || ""}
                                                   onEditorChange={(content) =>
                                                     handleEditorChange(
