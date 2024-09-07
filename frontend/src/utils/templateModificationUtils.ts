@@ -44,8 +44,6 @@ export const useTemplateModificationUtils = () => {
   const [modifySubZone] = useMutation(MODIFY_SUBZONE);
   const [deleteOldSubZones] = useMutation(DELETE_OLD_SUBZONES);
 
-  const apiEndpoint = process.env.NEXT_PUBLIC_EXPRESS_API;
-
   const router = useRouter();
 
   const performPreSaveChecks = (template) => {
@@ -210,7 +208,7 @@ export const useTemplateModificationUtils = () => {
         const formData = new FormData();
         formData.append("file", subZone.content[0]);
         const uploadResponse = await axios.post(
-          `${apiEndpoint}/template-images-upload`,
+          "http://localhost:5000/template-images-upload",
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );

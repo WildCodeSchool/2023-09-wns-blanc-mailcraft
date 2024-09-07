@@ -23,7 +23,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async () => {
     return {
-      folder: process.env.NEXT_PUBLIC_UPLOAD_FOLDER,
+      folder: process.env.UPLOAD_FOLDER,
     };
   },
 });
