@@ -97,7 +97,7 @@ export const useTemplateCreationUtils = () => {
             const formData = new FormData();
             formData.append("file", subZone.content[0]);
             const uploadResponse = await axios.post(
-              `${apiEndpoint}/template-images-upload`,
+              `https://mailcraft.0923-blanc-1.wns.wilders.dev/template-images-upload`,
               formData,
               { headers: { "Content-Type": "multipart/form-data" } }
             );
