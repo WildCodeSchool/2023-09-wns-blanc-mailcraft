@@ -11,6 +11,11 @@ import { CREATE_SUBZONE } from "@/client/mutations/template/subZone-mutations";
 import { useRouter } from "next/router";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
+import * as dotenv from 'dotenv';
+
+// Charge les variables d'environnement à partir du fichier .env
+dotenv.config();
+
 export const useTemplateCreationUtils = () => {
   const {
     zones,
@@ -32,6 +37,8 @@ export const useTemplateCreationUtils = () => {
   const [createZone] = useMutation(CREATE_ZONE);
   const [createSubZone] = useMutation(CREATE_SUBZONE);
   const router = useRouter();
+  const apiEndpoint = process.env.NEXT_PUBLIC_EXPRESS_API;
+  console.log(apiEndpoint);
 
   const saveTemplate = async (templateStatus: string, userId: number) => {
     setTemplate({ ...template, userId });
@@ -90,7 +97,7 @@ export const useTemplateCreationUtils = () => {
             const formData = new FormData();
             formData.append("file", subZone.content[0]);
             const uploadResponse = await axios.post(
-              "/template-images-upload",
+              `${apiEndpoint}/template-images-upload`,
               formData,
               { headers: { "Content-Type": "multipart/form-data" } }
             );
