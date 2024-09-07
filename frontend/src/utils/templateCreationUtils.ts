@@ -90,7 +90,7 @@ export const useTemplateCreationUtils = () => {
             const formData = new FormData();
             formData.append("file", subZone.content[0]);
             const uploadResponse = await axios.post(
-              "http://localhost:5000/template-images-upload",
+              "/template-images-upload",
               formData,
               { headers: { "Content-Type": "multipart/form-data" } }
             );
