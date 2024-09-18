@@ -3,10 +3,11 @@ import RedButton from "../Buttons/Redbutton";
 import logo from "@/assets/homepage/logo.png";
 import Link from "next/link";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function UserPagesNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const { isAuthenticated } = useAuth();
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -14,11 +15,13 @@ export default function UserPagesNavBar() {
     <div className="xl:h-[10dvh] flex justify-between items-center py-4 mx-auto border-b border-gray-400 w-full bg-white">
       {/* Vue mobile */}
       <div className="flex items-center md:hidden">
-        <Image
-          src={logo}
-          className="h-[5dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7"
-          alt="Mailcraft Logo"
-        />
+        <Link href="/">
+          <Image
+            src={logo}
+            className="h-[5dvh] w-[30dvw] md:h-[7dvh] md:w-[10dvw] ms-7"
+            alt="Mailcraft Logo"
+          />
+        </Link>
       </div>
       <div className="flex items-center md:hidden">
         <div className="flex ml-auto">
@@ -64,6 +67,15 @@ export default function UserPagesNavBar() {
                 </li>
                 <li>
                   <Link
+                    href={isAuthenticated ? "myProfile" : "/signIn"}
+                    className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
+                    aria-current="page"
+                  >
+                    Mon compte
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     href="/user/myTemplates"
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
                     aria-current="page"
@@ -73,11 +85,11 @@ export default function UserPagesNavBar() {
                 </li>
                 <li>
                   <Link
-                    href="/"
+                    href="/user/myTemplatesDrafts"
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
                     aria-current="page"
                   >
-                    Aide
+                    Mes brouillons
                   </Link>
                 </li>
               </ul>
@@ -126,6 +138,7 @@ export default function UserPagesNavBar() {
         </ul>
         <div className="me-7">
           <RedButton
+            href={isAuthenticated ? "/myProfile" : "/signIn"}
             text="Mon compte"
             padding={"py-2"}
             isBold={false}
