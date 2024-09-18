@@ -35,7 +35,6 @@ export const useTemplateCreationUtils = () => {
 
   const saveTemplate = async (templateStatus: string, userId: number) => {
     setTemplate({ ...template, userId });
-    setCreationGifLoading(true);
     let newTemplateId;
     try {
       // Vérification des champs obligatoires
@@ -44,7 +43,7 @@ export const useTemplateCreationUtils = () => {
         setIsModalErrorOpen(true);
         return;
       }
-
+      setCreationGifLoading(true);
       // Vérification si les zones ou leurs subzones sont vides
       const areAllZonesEmpty = zones.every(
         (zone) => !zone.subZones || zone.subZones.length === 0
