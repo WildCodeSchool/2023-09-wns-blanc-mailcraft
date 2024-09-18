@@ -258,19 +258,17 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
                                                   init={{
                                                     height: 100,
                                                     menubar: false,
-                                                    toolbar_sticky: true,
+                                                    toolbar_sticky: false, // test sans vitesse
                                                     statusbar: false,
                                                     branding: false,
-                                                    language: "fr_FR",
-                                                    language_url:
-                                                      "/langs/fr_FR.js", // à debug marche pas
+                                                    language: "en",
                                                     plugins: [
-                                                      "advlist autolink lists link image charmap print preview anchor",
-                                                      "searchreplace visualblocks code fullscreen",
-                                                      "insertdatetime media table paste code help wordcount",
+                                                      "advlist autolink lists link",
+                                                      "searchreplace visualblocks code",
+                                                      "table paste help wordcount",
                                                     ],
                                                     toolbar:
-                                                      "undo redo | bold italic underline  | " +
+                                                      "undo redo | bold italic underline | " +
                                                       "forecolor | fontsizeselect | alignleft aligncenter alignright alignjustify | ",
                                                     placeholder:
                                                       "Entrez votre texte ici...",
