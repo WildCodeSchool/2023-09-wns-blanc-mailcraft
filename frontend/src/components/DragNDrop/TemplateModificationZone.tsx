@@ -23,14 +23,12 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
 
   const {
     handleTextChange,
-    removeZone,
     closeErrorModal,
     resetZones,
     removeSubZone,
     getImageSrc,
     createHandleFileChange,
     handleResetZones,
-    handleAddSubZone // Ensure this function is available
   } = useTemplateCommonUtils();
 
   const closeAllModals = () => {
@@ -64,7 +62,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
           ...subZone,
           order: subZone.order || subZoneIndex + 1,
           dndId: `zone-${zoneIndex + 1}-subzone-${subZoneIndex + 1}`,
-          width: subZone.width || '100'
+          width: subZone.width || "100",
         };
       });
 
@@ -183,7 +181,9 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
         ></button>
         <div className="w-full h-3 rounded-t-lg bg-red-500"></div>
         <div className="flex flex-col justify-center items-center gap-10">
-          <h2 className="text-lg font-semibold text-center mt-3">{errorMessage}</h2>
+          <h2 className="text-lg font-semibold text-center mt-3">
+            {errorMessage}
+          </h2>
           <button
             onClick={closeErrorModal}
             className="px-7 py-2 bg-gray-100 text-black hover:bg-gray-200 rounded border border-gray-300 shadow-md"
@@ -299,45 +299,46 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                               {!subZone.moduleType && (
                                                 <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                                               )}
-                                              {subZone.moduleType === "texte" && (
-                                            <Editor
-                                              key={`${subZone.id}-${subZone.order}`}
-                                              apiKey={
-                                                process.env
-                                                  .NEXT_PUBLIC_TINYMCE_API_KEY
-                                              }
-                                              value={subZone.content || ""}
-                                              onEditorChange={(content) =>
-                                                handleTextChange(
-                                                  content,
-                                                  subZone.id,
-                                                  "templateToModify"
-                                                )
-                                              }
-                                              init={{
-                                                height: 100,
-                                                menubar: false,
-                                                toolbar_sticky: true,
-                                                statusbar: false,
-                                                branding: false,
-                                                language: "fr_FR",
-                                                language_url: "/langs/fr_FR.js",
-                                                plugins: [
-                                                  "advlist autolink lists link image charmap print preview anchor",
-                                                  "searchreplace visualblocks code fullscreen",
-                                                  "insertdatetime media table paste code help wordcount",
-                                                ],
-                                                toolbar:
-                                                  "undo redo | bold italic underline | " +
-                                                  "forecolor | fontsizeselect | alignleft aligncenter alignright alignjustify | ",
-                                                placeholder:
-                                                  "Entrez votre texte ici...",
-                                                content_style:
-                                                  "body { font-family:Helvetica,Arial,sans-serif; font-size:14px } .mce-content-body { width: 100%; height: 100%; border: 0; focus-ring: 0; resize: none; background: transparent; padding: 0; margin: 0; overflow: hidden; }",
-                                              }}
-                                            />
-                                          )}
-                                              {subZone.moduleType === "image" && (
+                                              {subZone.moduleType ===
+                                                "texte" && (
+                                                <Editor
+                                                  key={`${subZone.id}-${subZone.order}`}
+                                                  apiKey={
+                                                    process.env
+                                                      .NEXT_PUBLIC_TINYMCE_API_KEY
+                                                  }
+                                                  value={subZone.content || ""}
+                                                  onEditorChange={(content) =>
+                                                    handleTextChange(
+                                                      content,
+                                                      subZone.id,
+                                                      "templateToModify"
+                                                    )
+                                                  }
+                                                  init={{
+                                                    height: 100,
+                                                    menubar: false,
+                                                    toolbar_sticky: false, // test sans vitesse
+                                                    statusbar: false,
+                                                    branding: false,
+                                                    language: "en",
+                                                    plugins: [
+                                                      "advlist autolink lists link",
+                                                      "searchreplace visualblocks code",
+                                                      "table paste help wordcount",
+                                                    ],
+                                                    toolbar:
+                                                      "undo redo | bold italic underline | " +
+                                                      "forecolor | fontsizeselect | alignleft aligncenter alignright alignjustify | ",
+                                                    placeholder:
+                                                      "Entrez votre texte ici...",
+                                                    content_style:
+                                                      "body { font-family:Helvetica,Arial,sans-serif; font-size:14px } .mce-content-body { width: 100%; height: 100%; border: 0; focus-ring: 0; resize: none; background: transparent; padding: 0; margin: 0; overflow: hidden; }",
+                                                  }}
+                                                />
+                                              )}
+                                              {subZone.moduleType ===
+                                                "image" && (
                                                 <button
                                                   onClick={() =>
                                                     fileInputRefs.current[
@@ -353,15 +354,15 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                                     alt="Template Image"
                                                     width={70}
                                                     height={70}
-                                                     className="object-cover h-full w-full max-h-28"
+                                                    className="object-cover h-full w-full max-h-28"
                                                   />
                                                   <input
                                                     type="file"
                                                     hidden
                                                     ref={(el) =>
-                                                    (fileInputRefs.current[
-                                                      subZone.id
-                                                    ] = el)
+                                                      (fileInputRefs.current[
+                                                        subZone.id
+                                                      ] = el)
                                                     }
                                                     onChange={(event) =>
                                                       createHandleFileChange(
@@ -375,21 +376,24 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                                   />
                                                 </button>
                                               )}
-                                              {subZone.moduleType === "social" && (
+                                              {subZone.moduleType ===
+                                                "social" && (
                                                 <div className="flex justify-around w-full mt-4">
-                                                  {socialModule.map((social) => (
-                                                    <Link
-                                                      key={social.link}
-                                                      href={social.link}
-                                                    >
-                                                      <Image
-                                                        src={social.src}
-                                                        alt="Social Media Icon"
-                                                        width={50}
-                                                        height={50}
-                                                      />
-                                                    </Link>
-                                                  ))}
+                                                  {socialModule.map(
+                                                    (social) => (
+                                                      <Link
+                                                        key={social.link}
+                                                        href={social.link}
+                                                      >
+                                                        <Image
+                                                          src={social.src}
+                                                          alt="Social Media Icon"
+                                                          width={50}
+                                                          height={50}
+                                                        />
+                                                      </Link>
+                                                    )
+                                                  )}
                                                 </div>
                                               )}
                                               {providedModule.placeholder}
@@ -413,7 +417,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                   </Draggable>
                                   {subIndex < zone.subZones.length - 1 && (
                                     <PanelResizeHandle
-                                      style={{ cursor: 'col-resize' }}
+                                      style={{ cursor: "col-resize" }}
                                     />
                                   )}
                                 </Panel>

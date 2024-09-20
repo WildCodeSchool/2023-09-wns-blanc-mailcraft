@@ -120,4 +120,14 @@ export class UserResolver {
       throw new Error(String(error));
     }
   }
+
+  @Mutation(() => String)
+  async updateUserTour(@Arg("userId") userId: number): Promise<string> {
+    try {
+      return await UserService.updateUserTour(userId);
+    } catch (error) {
+      console.error("Error updating user tour: ", error);
+      throw new Error("Failed to update user tour");
+    }
+  }
 }

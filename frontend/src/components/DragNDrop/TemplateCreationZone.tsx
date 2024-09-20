@@ -9,8 +9,13 @@ import Modal from "react-modal";
 import { Editor } from "@tinymce/tinymce-react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useAuth } from "@/contexts/AuthContext";
+import questionMark from "@/assets/template-page/question-mark-circle-svgrepo-com.svg";
 
-const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
+const TemplateCreationZone = ({
+  draggingItemType,
+  socialModule,
+  setStartTour,
+}) => {
   const { zones, setZones, isModalErrorOpen, errorMessage, isModalOpen } =
     useTemplate();
   const { saveTemplate } = useTemplateCreationUtils();
@@ -117,6 +122,19 @@ const TemplateCreationZone = ({ draggingItemType, socialModule }) => {
             {...provided.droppableProps}
             className="zones-container relative flex flex-col w-[60%] p-4 bg-white justify-center mt-7"
           >
+            <button
+              className="absolute top-2 left-2"
+              onClick={() => {
+                setStartTour(true);
+              }}
+            >
+              <Image
+                src={questionMark}
+                alt="question mark"
+                width={30}
+                height={50}
+              />
+            </button>
             <button
               className="absolute top-2 right-2"
               onClick={() => {

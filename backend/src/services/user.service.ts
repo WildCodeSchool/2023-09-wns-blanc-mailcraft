@@ -117,7 +117,7 @@ export async function updateSocialLink(
       throw new Error("No social links found for the user");
     }
 
-    const socialLink = user.socialLinks.find(link => link.id === id);
+    const socialLink = user.socialLinks.find((link) => link.id === id);
     if (!socialLink) {
       throw new Error("Social link not found");
     }
@@ -133,3 +133,18 @@ export async function updateSocialLink(
     throw new Error("Failed to update the social link");
   }
 }
+
+export const updateUserTour = async (userId: number): Promise<string> => {
+  try {
+    const user = await User.findOneByOrFail({ id: userId });
+
+    user.isFirstTourCompleted = true;
+
+    await user.save();
+
+    return "first tour completed";
+  } catch (error) {
+    console.error("Error updating user tour:", error);
+    throw new Error("Unable to update user tour");
+  }
+};

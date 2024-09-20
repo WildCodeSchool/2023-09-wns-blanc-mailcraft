@@ -55,6 +55,10 @@ export class User extends BaseEntity {
   @Column()
   role: string;
 
+  @Field()
+  @Column({ default: false })
+  isFirstTourCompleted: boolean;
+
   @OneToMany(() => Contact, (contact) => contact.user)
   @Field(() => [Contact], { nullable: true })
   contacts?: Contact[];

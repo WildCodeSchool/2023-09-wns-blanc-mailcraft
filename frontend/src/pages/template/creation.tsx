@@ -13,6 +13,7 @@ import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
 import ProtectedComponent from "@/components/ProtectedComponent";
 import { StaticImageData } from "next/image";
 import SuccessModal from "@/components/SuccessModal";
+import TourGuide from "@/components/Guide/TourGuide";
 
 interface SocialLink {
   socialMedia: string;
@@ -32,7 +33,7 @@ const TemplatePage = () => {
   } = useTemplate();
   const [draggingType, setDraggingType] = useState("");
   const { user, loading, error } = useAuth();
-
+  const [startTour, setStartTour] = useState(false);
   const socialLinks = user?.socialLinks[0] || {};
   const router = useRouter();
   useEffect(() => {
@@ -190,6 +191,16 @@ const TemplatePage = () => {
     // setDraggingType("");
   };
 
+  useEffect(() => {
+    if (!loading && user) {
+      if (!user.isFirstTourCompleted) {
+        setStartTour(true);
+      }
+    } else if (!loading && !user) {
+      console.warn("No user data available.");
+    }
+  }, [user, loading]);
+
   return (
     <ProtectedComponent>
       <TemplateNavBar
@@ -198,10 +209,17 @@ const TemplatePage = () => {
         arrayToSave={"template"}
       />
       <SuccessModal message={"Template en cours de création..."} />
+      <TourGuide
+        start={startTour}
+        setStartTour={setStartTour}
+        onTourEnd={() => console.log("Le tour est terminé")}
+        userId={user?.id ?? 0}
+      />
       <section className="w-full h-[90dvh] flex justify-between bg-[#FFEDED] bg-opacity-100 gap-24">
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <DataTemplate arrayToIterate={"template"} />
           <TemplateCreationZone
+            setStartTour={setStartTour}
             draggingItemType={draggingType}
             socialModule={socialModule}
           />

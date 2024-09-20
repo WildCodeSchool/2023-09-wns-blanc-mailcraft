@@ -49,6 +49,7 @@ const GET_ME = gql`
         twitter
         linkedin
       }
+      isFirstTourCompleted
     }
   }
 `;
