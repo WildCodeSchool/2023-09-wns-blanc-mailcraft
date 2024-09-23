@@ -9,7 +9,7 @@ import FilterButton from "@/components/Buttons/FilterButton";
 import { TailSpin } from "react-loader-spinner";
 import { templateNatures } from "@/utils/templateNatures";
 import { useAuth } from "@/contexts/AuthContext";
-import MobileRedirectLink from "@/components/Links/CreationLink";
+import MobileRedirectLink from "@/components/Links/MobileRedirectLink";
 
 const GET_USER_TEMPLATES = gql`
   query GetAllUserCreatedTemplates($userId: Float!) {

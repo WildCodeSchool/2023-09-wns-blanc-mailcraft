@@ -253,13 +253,12 @@ const TemplateCreationZone = ({
                                             <div
                                               ref={providedModule.innerRef}
                                               {...providedModule.droppableProps}
-                                              className="module-container flex justify-center items-center"
+                                              className="module-container flex justify-center items-center w-full"
                                             >
                                               {!subZone.moduleType && (
                                                 <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                                               )}
-                                              {subZone.moduleType ===
-                                                "texte" && (
+                                              {subZone.moduleType ==="texte" && (
                                                 <Editor
                                                   key={`${subZone.id}-${subZone.order}`}
                                                   apiKey={
@@ -275,6 +274,7 @@ const TemplateCreationZone = ({
                                                   }
                                                   init={{
                                                     height: 100,
+                                                    width: "100%",
                                                     menubar: false,
                                                     toolbar_sticky: false, // test sans vitesse
                                                     statusbar: false,

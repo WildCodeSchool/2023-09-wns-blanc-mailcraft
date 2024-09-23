@@ -35,7 +35,7 @@ const MobileRedirectLink = ({ href, children }: MobileRedirectLinkProps) => {
             router.push("/redirection");
         } else {
             // Sinon, rediriger vers /template/creation
-            router.push("/template/creation");
+            router.push(href);
         }
     };
 

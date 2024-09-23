@@ -5,7 +5,7 @@ import { useState } from "react";
 import { downloadHtmlTemplate } from "@/utils/templateConversionUtils";
 import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
 import { useAuth } from "@/contexts/AuthContext";
-import MobileRedirectLink from "../Links/CreationLink";
+import MobileRedirectLink from "../Links/MobileRedirectLink";
 
 interface ActionPanelTemplateCardProps {
   templateId: number;
