@@ -43,7 +43,7 @@ export const useTemplateCreationUtils = () => {
         setIsModalErrorOpen(true);
         return;
       }
-      setCreationGifLoading(true);
+
       // Vérification si les zones ou leurs subzones sont vides
       const areAllZonesEmpty = zones.every(
         (zone) => !zone.subZones || zone.subZones.length === 0
@@ -64,7 +64,7 @@ export const useTemplateCreationUtils = () => {
           }
         }
       }
-
+      setCreationGifLoading(true);
       // Création du template
       const templateResponse = await createTemplate({
         variables: {

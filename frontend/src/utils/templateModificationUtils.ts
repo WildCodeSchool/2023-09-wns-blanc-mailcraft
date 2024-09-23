@@ -80,7 +80,7 @@ export const useTemplateModificationUtils = () => {
     if (isModalModifyOpen) {
       closeModifyModal();
     }
-    setCreationGifLoading(true);
+
     const templateData = {
       title: template.title,
       description: template.description,
@@ -96,7 +96,7 @@ export const useTemplateModificationUtils = () => {
       setIsModalErrorOpen(true);
       return;
     }
-
+    setCreationGifLoading(true);
     try {
       await modifyTemplate({
         variables: {

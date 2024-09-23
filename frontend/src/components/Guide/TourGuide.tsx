@@ -6,6 +6,7 @@ import Image from "next/image";
 import resize from "@/assets/template-page/tour-guide/ResizeMailCraft.png";
 import zoneSwap from "@/assets/template-page/tour-guide/zone-swap.png";
 import subZoneSwap from "@/assets/template-page/tour-guide/subZones-swap.png";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface TourGuideProps {
   start: boolean;
@@ -27,7 +28,7 @@ const TourGuide = ({
   userId,
 }: TourGuideProps) => {
   const totalSteps: number = 5;
-
+  const { setRefreshUser } = useAuth();
   // Fonction pour générer les étapes du tour
   const generateSteps = (val: number): Step[] => [
     {
@@ -169,6 +170,7 @@ const TourGuide = ({
       } catch (error) {
         console.error("Error updating user tour:", error);
       }
+      setRefreshUser(true);
       setState({ steps, run: false, stepIndex: 0 });
       setStartTour(false); // Arrêter le tour et réinitialiser
       onTourEnd(); // Callback pour notifier la fin du tour

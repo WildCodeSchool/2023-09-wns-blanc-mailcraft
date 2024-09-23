@@ -39,6 +39,6 @@ export function signJwt(payload: any) {
   }
 
   return jwt.sign(payload, process.env.JWT_SECRET_KEY, {
-    expiresIn: 60 * 60,
+    expiresIn: 60 * 60 * 10,
   });
 }

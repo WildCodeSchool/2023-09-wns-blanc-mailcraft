@@ -220,6 +220,7 @@ const TemplatePage = () => {
           <DataTemplate arrayToIterate={"template"} />
           <TemplateCreationZone
             setStartTour={setStartTour}
+            isFirstTourCompleted={user?.isFirstTourCompleted ?? true}
             draggingItemType={draggingType}
             socialModule={socialModule}
           />

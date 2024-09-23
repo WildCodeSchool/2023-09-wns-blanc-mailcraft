@@ -15,6 +15,7 @@ const TemplateCreationZone = ({
   draggingItemType,
   socialModule,
   setStartTour,
+  isFirstTourCompleted,
 }) => {
   const { zones, setZones, isModalErrorOpen, errorMessage, isModalOpen } =
     useTemplate();
@@ -122,19 +123,20 @@ const TemplateCreationZone = ({
             {...provided.droppableProps}
             className="zones-container relative flex flex-col w-[60%] p-4 bg-white justify-center mt-7"
           >
-            <button
-              className="absolute top-2 left-2"
-              onClick={() => {
-                setStartTour(true);
-              }}
-            >
-              <Image
-                src={questionMark}
-                alt="question mark"
-                width={30}
-                height={50}
-              />
-            </button>
+            {isFirstTourCompleted && (
+              <button
+                className="absolute top-2 left-2"
+                onClick={() => setStartTour(true)}
+                aria-label="Start tour"
+              >
+                <Image
+                  src={questionMark}
+                  alt="question mark"
+                  width={30}
+                  height={50}
+                />
+              </button>
+            )}
             <button
               className="absolute top-2 right-2"
               onClick={() => {
@@ -258,7 +260,8 @@ const TemplateCreationZone = ({
                                               {!subZone.moduleType && (
                                                 <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                                               )}
-                                              {subZone.moduleType ==="texte" && (
+                                              {subZone.moduleType ===
+                                                "texte" && (
                                                 <Editor
                                                   key={`${subZone.id}-${subZone.order}`}
                                                   apiKey={
