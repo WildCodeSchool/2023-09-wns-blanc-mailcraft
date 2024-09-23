@@ -278,7 +278,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                         ref={providedSubZone.innerRef}
                                         {...providedSubZone.draggableProps}
                                         {...providedSubZone.dragHandleProps}
-                                        className={`subzone flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${
+                                        className={`subzone flex-1 min-w-[50px] h-[120px] border border-dashed border-blue-500 p-2.5 relative ${
                                           snapshotSubZone.isDragging
                                             ? "opacity-50"
                                             : ""
@@ -294,7 +294,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                             <div
                                               ref={providedModule.innerRef}
                                               {...providedModule.droppableProps}
-                                              className="module-container flex justify-center items-center"
+                                              className="module-container flex justify-center items-center w-full"
                                             >
                                               {!subZone.moduleType && (
                                                 <i className="fas fa-plus-circle text-gray-500 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
@@ -317,6 +317,7 @@ const TemplateModificationZone = ({ draggingItemType, socialModule }) => {
                                                   }
                                                   init={{
                                                     height: 100,
+                                                    width: "100%",
                                                     menubar: false,
                                                     toolbar_sticky: false, // test sans vitesse
                                                     statusbar: false,
