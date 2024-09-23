@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import MobileRedirectLink from "@/components/Links/CreationLink";
 
 export default function Home() {
   const router = useRouter();
@@ -49,11 +50,11 @@ export default function Home() {
                 />
               </div>
             ) : (
-              <Link href="/template/creation">
+              <MobileRedirectLink href="/template/creation">
                 <p className="underline text-red-500 text-xl">
                   Créer un template
                 </p>
-              </Link>
+              </MobileRedirectLink>
             )}
           </div>
           {/* <div className="hidden xl:block">

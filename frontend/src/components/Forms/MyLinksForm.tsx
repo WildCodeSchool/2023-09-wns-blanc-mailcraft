@@ -29,11 +29,11 @@ export default function MyLinksForm({
 
   const validateLinks = (facebookLink, twitterLink, linkedinLink) => {
     const facebookRegex =
-      /^(https?:\/\/)?(www\.)?facebook.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+      /^(https?:\/\/)?(www\.)?facebook.com\/([A-Za-z0-9._%-]+)?\/?.*$/;
     const twitterRegex =
-      /^(https?:\/\/)?(www\.)?x.com\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+      /^(https?:\/\/)?(www\.)?x.com\/([A-Za-z0-9._%-]+)?\/?.*$/;
     const linkedinRegex =
-      /^(https?:\/\/)?(www\.)?linkedin.com\/in\/[A-Za-z0-9._%-]+\/?(\?.*)?$/;
+      /^(https?:\/\/)?(www\.)?linkedin.com\/(in|pub|company|school)\/([A-Za-z0-9._%-]+)?\/?.*$/;
 
     let errors = [];
 

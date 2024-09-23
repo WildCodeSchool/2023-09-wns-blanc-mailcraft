@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Modal from "react-modal";
-import { use, useState } from "react";
+import { useState } from "react";
 import { downloadHtmlTemplate } from "@/utils/templateConversionUtils";
 import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
 import { useAuth } from "@/contexts/AuthContext";
+import MobileRedirectLink from "../Links/CreationLink";
 
 interface ActionPanelTemplateCardProps {
   templateId: number;
@@ -41,9 +42,8 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({
     <div className="action-panel h-[90%] w-12 xl:w-16 bg-[#9F3D3D] flex flex-col rounded-s-md relative">
       <div className="flex justify-center md:justify-start items-start p-2 relative">
         <button
-          className={`text-white hover:text-gray-300 rounded-full relative group ${
-            showDataPanel ? "bg-[#7F1D1D]" : "bg-transparent"
-          }`}
+          className={`text-white hover:text-gray-300 rounded-full relative group ${showDataPanel ? "bg-[#7F1D1D]" : "bg-transparent"
+            }`}
           onClick={onTogglePanel}
         >
           <svg
@@ -64,7 +64,7 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({
         </button>
       </div>
       <div className="flex flex-col items-center justify-center gap-12 mb-3 flex-grow">
-        <Link href={`/template/modification/${templateId}`}>
+        <MobileRedirectLink href={`/template/modification/${templateId}`}>
           <button className="mb-2 text-white hover:text-gray-300 relative group">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +82,7 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({
             </svg>
             <span className="tooltip z-50">Modifier le template</span>
           </button>
-        </Link>
+        </MobileRedirectLink>
         {!isDraftsPage && (
           <>
             <Link href="/mailing">

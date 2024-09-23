@@ -237,7 +237,7 @@ const TemplateCreationZone = ({
                                         )}
                                         {...providedSubZone.draggableProps}
                                         {...providedSubZone.dragHandleProps}
-                                        className={`subzone flex justify-around items-center flex-1 min-w-[50px] min-h-[100px] border border-dashed border-blue-500 p-2.5 relative ${
+                                        className={`subzone flex justify-around items-center flex-1 min-w-[50px] h-[120px] border border-dashed border-blue-500 p-2.5 relative ${
                                           snapshotSubZone.isDragging
                                             ? "opacity-50"
                                             : ""
