@@ -5,7 +5,6 @@ import { useState } from "react";
 import { downloadHtmlTemplate } from "@/utils/templateConversionUtils";
 import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
 import { useAuth } from "@/contexts/AuthContext";
-import MobileRedirectLink from "../Links/MobileRedirectLink";
 
 interface ActionPanelTemplateCardProps {
   templateId: number;
@@ -64,7 +63,7 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({
         </button>
       </div>
       <div className="flex flex-col items-center justify-center gap-12 mb-3 flex-grow">
-        <MobileRedirectLink href={`/template/modification/${templateId}`}>
+        <Link href={`/template/modification/${templateId}`}>
           <button className="mb-2 text-white hover:text-gray-300 relative group">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +81,7 @@ const ActionPanelTemplateCard: React.FC<ActionPanelTemplateCardProps> = ({
             </svg>
             <span className="tooltip z-50">Modifier le template</span>
           </button>
-        </MobileRedirectLink>
+        </Link>
         {!isDraftsPage && (
           <>
             <Link href="/mailing">

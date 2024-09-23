@@ -14,6 +14,7 @@ import ProtectedComponent from "@/components/ProtectedComponent";
 import { StaticImageData } from "next/image";
 import SuccessModal from "@/components/SuccessModal";
 import TourGuide from "@/components/Guide/TourGuide";
+import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
 
 interface SocialLink {
   socialMedia: string;
@@ -35,7 +36,7 @@ const TemplatePage = () => {
   const { user, loading, error } = useAuth();
   const [startTour, setStartTour] = useState(false);
   const socialLinks = user?.socialLinks[0] || {};
-  const router = useRouter();
+  const { useMobileRedirect } = useTemplateCommonUtils();
   useEffect(() => {
     if (user && user.id) {
       setIsModalOpen(false);
@@ -43,6 +44,8 @@ const TemplatePage = () => {
       setZones([]);
     }
   }, [user, setTemplate, setZones]);
+
+  useMobileRedirect();
 
   const socialModule: SocialLink[] = [];
   if (socialLinks.facebook) {

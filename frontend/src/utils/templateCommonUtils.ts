@@ -1,15 +1,14 @@
 import { useTemplate } from "@/contexts/TemplateContext";
 import { zoneHasNoValue } from "@/utils/templateCommonFunctions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import imageIconSrc from "@/assets/template-page/icon-image.png";
 import logoIconSrc from "@/assets/template-page/lien-de-partage.png";
 import texteIconSrc from "@/assets/template-page/icon-texte.png";
 import {
   IListElement,
   IZone,
-  Template,
 } from "@/types/interfaces/template/template-interfaces";
-import { useTemplateModificationUtils } from "./templateModificationUtils";
+import { useRouter } from "next/router";
 
 export const useTemplateCommonUtils = () => {
   const {
@@ -313,6 +312,34 @@ export const useTemplateCommonUtils = () => {
     setIsModalErrorOpen(false);
   };
 
+  const useMobileRedirect = () => {
+    const router = useRouter();
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+      // Fonction pour vérifier la taille de l'écran
+      const checkIfMobile = () => {
+        setIsMobile(window.innerWidth <= 768);
+      };
+
+      // Vérifier lors du chargement de la page
+      checkIfMobile();
+
+      // Vérifier lorsque la fenêtre est redimensionnée
+      window.addEventListener("resize", checkIfMobile);
+
+      // Rediriger si mobile et sur la page concernée
+      if (isMobile && router.pathname === "/template/creation") {
+        router.push("/redirection");
+      }
+
+      // Cleanup l'event listener pour éviter les fuites de mémoire
+      return () => window.removeEventListener("resize", checkIfMobile);
+    }, [isMobile, router]);
+
+    return isMobile;
+  };
+
   return {
     zoneHasNoValue,
     handleResetZones,
@@ -327,5 +354,6 @@ export const useTemplateCommonUtils = () => {
     listElements,
     closeModal,
     closeErrorModal,
+    useMobileRedirect,
   };
 };

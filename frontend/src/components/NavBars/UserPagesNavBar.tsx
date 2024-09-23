@@ -67,7 +67,7 @@ export default function UserPagesNavBar() {
                 </li>
                 <li>
                   <Link
-                    href={isAuthenticated ? "myProfile" : "/signIn"}
+                    href={isAuthenticated ? "/user/myProfile" : "/signIn"}
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
                     aria-current="page"
                   >
@@ -76,16 +76,16 @@ export default function UserPagesNavBar() {
                 </li>
                 <li>
                   <Link
-                    href="/user/myTemplates"
+                    href={isAuthenticated ? "/user/myTemplates" : "/signIn"}
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
                     aria-current="page"
                   >
-                    Mes projets
+                    Mes templates
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/user/myTemplatesDrafts"
+                    href={isAuthenticated ? "/user/myTemplatesDrafts" : "/signIn"}
                     className="block py-2 px-3 md:p-0 text-lg text-black rounded md:bg-transparent md:text-red-500 md:text-xl"
                     aria-current="page"
                   >
@@ -138,7 +138,7 @@ export default function UserPagesNavBar() {
         </ul>
         <div className="me-7">
           <RedButton
-            href={isAuthenticated ? "/myProfile" : "/signIn"}
+            href={isAuthenticated ? "/user/myProfile" : "/signIn"}
             text="Mon compte"
             padding={"py-2"}
             isBold={false}

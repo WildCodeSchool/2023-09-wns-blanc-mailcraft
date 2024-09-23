@@ -167,10 +167,10 @@ export default function MyLinksForm({
           className="shadow-md w-full md:w-1/2 bg-rose-100 p-2 border border-rose-100 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"
         />
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex justify-center items-center">
         <button
           type="submit"
-          className="shadow-xl inline-flex items-center px-4 py-2 mr-11 mt-8 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#E83B4E] hover:bg-red-600 hover:shadow-red-500/50 focus:ring-4 focus:outline-none"
+          className="shadow-xl inline-flexitems-center px-4 py-2 md:mr-11 mt-8 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-[#E83B4E] hover:bg-red-600 hover:shadow-red-500/50 focus:ring-4 focus:outline-none"
         >
           Mettre à jour
         </button>

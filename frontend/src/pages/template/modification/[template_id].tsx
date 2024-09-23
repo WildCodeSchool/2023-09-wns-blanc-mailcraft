@@ -11,6 +11,7 @@ import { GET_TEMPLATE_BY_ITS_ID } from "@/client/queries/template/template-queri
 import facebookIcon from "@/assets/template-page/social/facebook_145802.png";
 import twitterIcon from "@/assets/template-page/social/twitter_152809.png";
 import linkedinIcon from "@/assets/template-page/social/linkedin_145807.png";
+import { useTemplateCommonUtils } from "@/utils/templateCommonUtils";
 import { useTemplateModificationUtils } from "@/utils/templateModificationUtils";
 import {
   templateToHtml,
@@ -38,6 +39,9 @@ const TemplateModificationPage = () => {
   } = useTemplate();
   const { addZoneSubZonesToDelete } = useTemplateModificationUtils();
   const [draggingType, setDraggingType] = useState("");
+  const { useMobileRedirect } = useTemplateCommonUtils();
+
+  useMobileRedirect();
 
   function removeTypenames(obj) {
     if (Array.isArray(obj)) {

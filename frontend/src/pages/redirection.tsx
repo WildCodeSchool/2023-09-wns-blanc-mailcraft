@@ -1,8 +1,28 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import RedButton from "@/components/Buttons/Redbutton";
 import NavBar from "@/components/NavBars/UserPagesNavBar";
 import React from 'react';
 
 export default function RedirectionPage() {
+  const router = useRouter();
+
+  //Si l'utilisateur se connecte sur cette page en desktop, il est immédiatement redirigé vers l'accueil
+  useEffect(() => {
+    const checkScreenWidth = () => {
+      if (window.innerWidth > 768) {
+        router.push("/");
+      }
+    };
+
+    checkScreenWidth();
+
+    window.addEventListener("resize", checkScreenWidth);
+
+    return () => {
+      window.removeEventListener("resize", checkScreenWidth);
+    };
+  }, [router]);
 
   return (
     <>
