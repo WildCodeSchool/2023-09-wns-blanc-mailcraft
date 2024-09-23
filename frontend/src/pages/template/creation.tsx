@@ -37,6 +37,7 @@ const TemplatePage = () => {
   const [startTour, setStartTour] = useState(false);
   const socialLinks = user?.socialLinks[0] || {};
   const { useMobileRedirect } = useTemplateCommonUtils();
+  
   useEffect(() => {
     if (user && user.id) {
       setIsModalOpen(false);

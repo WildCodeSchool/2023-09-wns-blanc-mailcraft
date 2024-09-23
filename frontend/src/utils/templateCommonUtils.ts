@@ -329,7 +329,11 @@ export const useTemplateCommonUtils = () => {
       window.addEventListener("resize", checkIfMobile);
 
       // Rediriger si mobile et sur la page concernée
-      if (isMobile && router.pathname === "/template/creation") {
+      if (
+        isMobile &&
+        (router.pathname === "/template/creation" ||
+          router.pathname.startsWith("/template/modification"))
+      ) {
         router.push("/redirection");
       }
 

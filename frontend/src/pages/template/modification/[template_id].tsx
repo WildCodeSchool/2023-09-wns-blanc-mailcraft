@@ -41,8 +41,6 @@ const TemplateModificationPage = () => {
   const [draggingType, setDraggingType] = useState("");
   const { useMobileRedirect } = useTemplateCommonUtils();
 
-  useMobileRedirect();
-
   function removeTypenames(obj) {
     if (Array.isArray(obj)) {
       return obj.map(removeTypenames);
@@ -233,6 +231,8 @@ const TemplateModificationPage = () => {
 
     setTemplateToModify((prev) => ({ ...prev, zones: newZones }));
   };
+
+  useMobileRedirect();
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
