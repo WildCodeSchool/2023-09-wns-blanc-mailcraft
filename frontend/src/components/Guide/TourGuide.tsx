@@ -34,7 +34,7 @@ const TourGuide = ({
     {
       content: (
         <section className="flex flex-col">
-          <h2>Saisissez une structure et déposez la sur une zone</h2>
+          <h2>Saisissez une structure et déposez-la sur une zone</h2>
           <div>
             {val} sur {totalSteps}
           </div>
@@ -46,7 +46,7 @@ const TourGuide = ({
     {
       content: (
         <section>
-          <h2>Saisissez un module et déposez le sur une sous-zone</h2>
+          <h2>Saisissez un module et déposez-le sur une sous-zone</h2>
           <div>
             {val} sur {totalSteps}
           </div>
