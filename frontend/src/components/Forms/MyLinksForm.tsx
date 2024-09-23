@@ -27,7 +27,7 @@ export default function MyLinksForm({
     }
   }, [user]);
 
-  const validateLinks = (facebookLink, twitterLink, linkedinLink) => {
+  const validateLinks = (facebookLink: string, twitterLink: string, linkedinLink: string) => {
     const facebookRegex =
       /^(https?:\/\/)?(www\.)?facebook.com\/([A-Za-z0-9._%-]+)?\/?.*$/;
     const twitterRegex =
@@ -56,7 +56,7 @@ export default function MyLinksForm({
     return errors;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");

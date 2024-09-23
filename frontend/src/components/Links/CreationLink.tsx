@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
-const MobileRedirectLink = ({ href, children }) => {
+interface MobileRedirectLinkProps {
+    href: string;
+    children: ReactNode; 
+}
+
+const MobileRedirectLink = ({ href, children }: MobileRedirectLinkProps) => {
     const router = useRouter();
     const [isMobile, setIsMobile] = useState(false);
 
@@ -23,7 +28,7 @@ const MobileRedirectLink = ({ href, children }) => {
         return () => window.removeEventListener("resize", checkIfMobile);
     }, []);
     
-    const handleClick = (e) => {
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
         if (isMobile) {
             // Rediriger vers la page /redirection si mobile
